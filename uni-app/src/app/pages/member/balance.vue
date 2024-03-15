@@ -1,8 +1,7 @@
 <template>
 	<u-loading-page :loading="loading" loadingText=""></u-loading-page>
 	<view class="account-info-wrap" v-show="!loading">
-		<view class="account-info-head"
-			:style="{ background: 'url(' + img('static/resource/images/member/balance_bg.png') + ') no-repeat 95% 30% / auto 250rpx, linear-gradient(314deg, #FE7849 0%, #FF1959 100%)'}">
+		<view class="account-info-head" :style="{ background: 'url(' + img('static/resource/images/member/balance_bg.png') + ') no-repeat 95% 30% / auto 250rpx, linear-gradient(314deg, #FE7849 0%, #FF1959 100%)'}">
 			<view class="name">{{t('balanceInfo')}}</view>
 			<view class="content">
 				<view class="money">
@@ -10,15 +9,13 @@
 				</view>
 				<view class="text">{{t('accountBalance')}}</view>
 				<view class="money-wrap">
-					<view class="money-item"
-						@click="redirect({ url: '/app/pages/member/detailed_account', param: { type : 'balance' } })">
+					<view class="money-item" @click="redirect({ url: '/app/pages/member/detailed_account', param: { type : 'balance' } })">
 						<view class="money">
 							{{ moneyFormat(memberStore.info?.balance)|| '0.00' }}
 						</view>
 						<view class="text leading-none">{{ t('balance') }}</view>
 					</view>
-					<view class="money-item"
-						@click="redirect({ url: '/app/pages/member/detailed_account', param: { type : 'money' } })">
+					<view class="money-item" @click="redirect({ url: '/app/pages/member/detailed_account', param: { type : 'money' } })">
 						<view class="money">
 							{{ moneyFormat(memberStore.info?.money)|| '0.00' }}
 						</view>
@@ -29,18 +26,12 @@
 		</view>
 
 		<view class="account-info-btn">
-			<u-button type="primary" shape="circle" class="btn"
-				:customStyle="{backgroundColor: '#FE4E50',color: '#fff', borderColor: '#FE4E50',width: 'calc(100vw - 64rpx)'}"
-				@click="topUpFn">
-				<img class="max-w-[36rpx] max-h-[36rpx] mr-1" :src="img('static/resource/images/member/reset.png')"
-					alt="">
+			<u-button type="primary" shape="circle" class="btn" :customStyle="{backgroundColor: '#FE4E50',color: '#fff', borderColor: '#FE4E50',width: 'calc(100vw - 64rpx)'}" @click="topUpFn">
+				<img class="max-w-[36rpx] max-h-[36rpx] mr-1" :src="img('static/resource/images/member/reset.png')" alt="">
 				<text>{{t('recharge')}}</text>
 			</u-button>
-			<u-button v-if="cashOutConfigObj.is_open == 1" type="primary" :plain="true" shape="circle" class="btn"
-				:customStyle="{backgroundColor: '#fff',color: '#FE4E50', borderColor: '#FE4E50',width: 'calc(100vw - 64rpx)'}"
-				@click="applyCashOut">
-				<img class="max-w-[36rpx] max-h-[36rpx] mr-1"
-					:src="img('static/resource/images/member/withdraw_deposit.png')" alt="">
+			<u-button v-if="cashOutConfigObj.is_open == 1" type="primary" :plain="true" shape="circle" class="btn" :customStyle="{backgroundColor: '#fff',color: '#FE4E50', borderColor: '#FE4E50',width: 'calc(100vw - 64rpx)'}" @click="applyCashOut">
+				<img class="max-w-[36rpx] max-h-[36rpx] mr-1" :src="img('static/resource/images/member/withdraw_deposit.png')" alt="">
 				<text>{{t('cashOut')}}</text>
 			</u-button>
 		</view>
@@ -48,9 +39,7 @@
 		<!-- 充值 -->
 		<u-popup :show="topUpShow" mode="center" :round="10" @close="closePopup" :closeable="true">
 			<view class="w-80 px-3 pb-4 pt-7 box-border">
-				<u--input :placeholder="t('rechargeAmountPlaceholder')" v-model="rechargeAmount" border="bottom"
-					type="number" clearable>
-				</u--input>
+				<u--input :placeholder="t('rechargeAmountPlaceholder')" v-model="rechargeAmount" border="bottom" type="number" clearable/>
 				<view class="top-up-wrap flex flex-wrap justify-around mt-3">
 					<view v-for="(item,index) in rechargePackage" :key="index"
 						:class="['top-up-item w-22 box-border border-1 text-center rounded mt-2 py-3 px-4 border-gray-400 border-solid',{'border-primary text-primary':rechargeAmount == item}]"
@@ -59,11 +48,9 @@
 					</view>
 				</view>
 				<view class="mt-5 px-2">
-					<u-button type="primary" shape="circle" :loading="rechargeLoading" :text="t('clickRecharge')"
-						@click="recharge"></u-button>
+					<u-button type="primary" shape="circle" :loading="rechargeLoading" :text="t('clickRecharge')" @click="recharge"></u-button>
 				</view>
-				<view class="mt-[20rpx] text-center text-sm"
-					@click="redirect({ url: '/app/pages/member/recharge_record' })">{{t('rechargeRecord')}}</view>
+				<view class="mt-[20rpx] text-center text-sm" @click="redirect({ url: '/app/pages/member/recharge_record' })">{{t('rechargeRecord')}}</view>
 			</view>
 		</u-popup>
 

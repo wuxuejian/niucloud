@@ -12,6 +12,7 @@
 namespace app\service\admin\sys;
 
 use app\service\admin\site\SiteService;
+use app\service\core\channel\CoreH5Service;
 use app\service\core\sys\CoreConfigService;
 use app\service\core\sys\CoreSysConfigService;
 use core\base\BaseAdminService;
@@ -133,6 +134,9 @@ class ConfigService extends BaseAdminService
         $data = [
             'key' => $value['key'],
         ];
+        if ($this->site_id == request()->defaultSiteId()) {
+            (new CoreH5Service())->mapKeyChange($value['key']);
+        }
         return $this->core_config_service->setConfig($this->site_id,'MAPKEY', $data);
     }
 

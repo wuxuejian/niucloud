@@ -141,6 +141,11 @@ class CoreWeappCloudService extends CoreCloudBaseService
                 $this->uninstallPageCode($dir . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR);
                 // 编译 加载插件标题语言包
                 $this->compileLocale($dir . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR, $addon);
+
+                $manifest_json = root_path() . 'addon' . DIRECTORY_SEPARATOR . $addon . DIRECTORY_SEPARATOR . 'package' . DIRECTORY_SEPARATOR . 'manifest.json';
+                if (file_exists($manifest_json)) {
+                    $this->mergeManifestJson($dir . DIRECTORY_SEPARATOR, json_decode($manifest_json, true));
+                }
             }
         }
     }

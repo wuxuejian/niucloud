@@ -7,7 +7,7 @@
                 <!-- 风格切换 -->
                 <div class="setting-item flex items-center justify-between mb-[10px]">
                     <div class="title text-base text-tx-secondary">{{ t('layout.sidebarMode') }}</div>
-                    <div class="">
+                    <div>
                         <el-radio-group v-model="sidebar" class="ml-4">
                             <el-radio label="oneType" size="large">
                                 <img class="w-[35px] h-[35px]" src="@/app/assets/images/theme_white.png" alt="">
@@ -21,14 +21,14 @@
                 <!-- 黑暗模式 -->
                 <div class="setting-item flex items-center justify-between mb-[10px]">
                     <div class="title text-base text-tx-secondary">{{ t('layout.darkMode') }}</div>
-                    <div class="">
+                    <div>
                         <el-switch v-model="dark" :active-value="true" :inactive-value="false" />
                     </div>
                 </div>
                 <!-- 主题颜色 -->
                 <div class="setting-item flex items-center justify-between mb-[10px]">
                     <div class="title text-base text-tx-secondary">{{ t('layout.themeColor') }}</div>
-                    <div class="">
+                    <div>
                         <el-color-picker v-model="theme" />
                     </div>
                 </div>

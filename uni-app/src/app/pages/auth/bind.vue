@@ -40,14 +40,14 @@
                         </view>
                     </view>
                     <view class="mt-[60rpx]">
-                        <u-button type="primary" :loading="loading" :loadingText="t('logining')" @click="handleBind">
+                        <u-button type="primary" :loading="loading" :loadingText="t('binding')" @click="handleBind">
                             {{ t('bind') }}
                         </u-button>
                     </view>
                     <!-- #ifdef MP-WEIXIN -->
                     <view class="mt-[30rpx]">
                         <u-button type="primary" :plain="true" :text="t('weixinUserAuth')" open-type="getPhoneNumber"
-                            @getphonenumber="mobileAuth" v-if="!info.value || !config.agreement_show || isAgree"></u-button>
+                                  @getphonenumber="mobileAuth" v-if="info || (!info || !config.agreement_show || isAgree)"></u-button>
                         <u-button type="primary" :plain="true" :text="t('weixinUserAuth')" v-else @click="agreeTips"></u-button>
                     </view>
                     <!-- #endif -->
@@ -96,8 +96,13 @@
                 trigger: ['blur', 'change'],
             },
             {
-                validator(rule, value) {
-                    return uni.$u.test.mobile(value)
+                validator(rule, value, callback) {
+                    let mobile = /^1[3-9]\d{9}$/;
+                    if (!mobile.test(value)){
+                        callback(new Error('请输入正确的手机号'))
+                    } else {
+                        callback()
+                    }
                 },
                 message: t('mobileError'),
                 trigger: ['change', 'blur'],
@@ -148,9 +153,10 @@
             uni.showToast({ title: `${t('pleaceAgree')}《${t('userAgreement')}》《${t('privacyAgreement')}》`, icon: 'none' })
             return
         }
-        uni.showLoading({ title: '' })
 
         if (e.detail.errMsg == 'getPhoneNumber:ok') {
+            uni.showLoading({ title: '' })
+
             const request = info.value ? bindMobile : bind
 
             request({

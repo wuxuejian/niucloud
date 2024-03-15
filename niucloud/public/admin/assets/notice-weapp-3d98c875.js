@@ -1,0 +1,1 @@
+import{_ as o}from"./notice-weapp.vue_vue_type_script_setup_true_lang-c261e980.js";import"./index-9fd19666.js";/* empty css                   *//* empty css                   *//* empty css                  *//* empty css                     *//* empty css                 */import"./notice-b251ab1a.js";export{o as default};

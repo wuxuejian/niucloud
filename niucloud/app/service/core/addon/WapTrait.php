@@ -33,8 +33,8 @@ trait WapTrait
         $content = "<template>\n";
         $content .= "    <view class=\"diy-group\" id=\"componentList\">\n";
         $content .= "        <view v-for=\"(component, index) in data.value\" :key=\"component.id\"\n";
-        $content .= "        @click=\"diyStore.changeCurrentIndex(index, component)\" class=\"draggable-element relative\"\n";
-        $content .= "        :class=\"{ selected: diyStore.currentIndex == index,decorate : diyStore.mode == 'decorate' }\" :style=\"component.pageStyle\">\n";
+        $content .= "        @click=\"diyStore.changeCurrentIndex(index, component)\"\n";
+        $content .= "        :class=\"getComponentClass(index,component)\" :style=\"component.pageStyle\">\n";
 
         $root_path = $compile_path . str_replace('/', DIRECTORY_SEPARATOR, 'app/components/diy'); // 系统自定义组件根目录
         $file_arr = getFileMap($root_path);
@@ -141,12 +141,28 @@ trait WapTrait
         $content .= "       return useConfigStore().addon;\n";
         $content .= "   })\n\n";
 
+        $content .= "   const getComponentClass = (index:any,component:any) => {\n\n";
+        $content .= "      let obj: any = {\n\n";
+        $content .= "         relative: true,\n\n";
+        $content .= "         selected: diyStore.currentIndex == index,\n\n";
+        $content .= "         decorate: diyStore.mode == 'decorate'\n\n";
+        $content .= "      }\n\n";
+        $content .= "      obj['top-fixed-' + diyStore.topFixedStatus] = true;\n\n";
+        $content .= "      if (component.position && component.position == 'top_fixed') {\n\n";
+        $content .= "        //  找出置顶组件，设置禁止拖动\n\n";
+        $content .= "        obj['ignore-draggable-element'] = true;\n\n";
+        $content .= "      } else {\n\n";
+        $content .= "        obj['draggable-element'] = true;\n\n";
+        $content .= "      }\n\n";
+        $content .= "      return obj;\n\n";
+        $content .= "   }\n\n";
+
         $content .= "   onMounted(() => {\n";
         $content .= "       // #ifdef H5\n";
         $content .= "       if (diyStore.mode == 'decorate') {\n";
         $content .= "           var el = document.getElementById('componentList');\n";
         $content .= "           const sortable = Sortable.create(el, {\n";
-        $content .= "               group: 'draggable-element',\n";
+        $content .= "               draggable: '.draggable-element',\n";
         $content .= "               animation: 200,\n";
         $content .= "               // 结束拖拽\n";
         $content .= "               onEnd: event => {\n";
@@ -425,4 +441,33 @@ trait WapTrait
         }
     }
 
+    /**
+     * 合并manifest.json
+     * @param string $compile_path
+     * @param array $merge_data
+     * @return void
+     */
+    public function mergeManifestJson(string $compile_path, array $merge_data) {
+        $manifest_json = str_replace('/',  DIRECTORY_SEPARATOR, $compile_path . 'src/manifest.json');
+        $manifest_content = $this->jsonStringToArray(file_get_contents($manifest_json));
+
+        (new CoreAddonBaseService())->writeArrayToJsonFile(array_merge2($manifest_content, $merge_data), $manifest_json);
+    }
+
+    /**
+     * json 字符串解析成数组
+     * @param $string
+     * @return array
+     */
+    private function jsonStringToArray($string) {
+        $list = explode(PHP_EOL, $string);
+
+        $json_array = [];
+        foreach ($list as $index => $item) {
+            if (strpos($item, '/*') === false) {
+                $json_array[] = $item;
+            }
+        }
+        return json_decode(implode(PHP_EOL, $json_array), true);
+    }
 }

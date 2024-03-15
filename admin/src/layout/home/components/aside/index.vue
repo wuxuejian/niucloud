@@ -1,10 +1,9 @@
 <template>
     <el-aside class="h-screen group layout-aside w-[80px] bg-[#F7F8FA] w-[230px] ease-in duration-200">
         <!-- <side class="hidden-xs-only" /> -->
-        <div class="">
+        <div>
             <el-header class="logo-wrap w-100 h-auto mb-[30px]">
-                <div class="logo flex items-center m-auto max-w-[230px] h-[60px] justify-center"
-                    v-if="!systemStore.menuIsCollapse">
+                <div class="logo flex items-center m-auto max-w-[230px] h-[60px] justify-center" v-if="!systemStore.menuIsCollapse">
                     <img class="max-h-full max-w-full" v-if="siteInfo.logo" :src="img(siteInfo.logo)" alt="">
                     <img class="max-h-full max-w-full" v-else src="@/app/assets/images/login_logo.png" alt="">
                 </div>

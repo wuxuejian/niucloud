@@ -110,7 +110,7 @@ class AuthService extends BaseApiService
         if($member->isEmpty()) throw new AuthException('MEMBER_NOT_EXIST');
 
         $o_mobile = $member['mobile'];//原始手机号
-        if(!empty($o_mobile)) throw new AuthException('MOBILE_IS_BIND_MEMBER');
+        if(!empty($o_mobile) && $o_mobile == $mobile) throw new AuthException('MOBILE_NOT_CHANGE');
 
         $mobile_member = $member_service->findMemberInfo(['mobile' => $mobile, 'site_id' => $this->site_id]);
         if(!$mobile_member->isEmpty()) throw new AuthException('MOBILE_IS_EXIST');

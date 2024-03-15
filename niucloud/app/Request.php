@@ -169,7 +169,7 @@ class Request extends \think\Request
     public function apiSiteId(){
         $site_id = (int)$this->header(system_name('api_site_id_name'));
         if (!$site_id) {
-            $domain = str_replace(['http://', 'https://'], '', $this->header('origin'));
+            $domain = str_replace(['http://', 'https://'], '', $this->header('host'));
             $site_id = (new CoreSiteService())->getSiteIdByDomain($domain);
         }
         return $site_id;

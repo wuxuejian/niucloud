@@ -5,8 +5,7 @@
 				<div class="flex justify-between items-center">
 					<div class="flex">
 						<div>
-							<img v-if="statInfo.site_info.icon" class="w-[50px] h-[50px]"
-								:src="img(statInfo.site_info.icon)" />
+							<img v-if="statInfo.site_info.icon" class="w-[50px] h-[50px]" :src="img(statInfo.site_info.icon)" />
 							<img v-else class="w-[50px] h-[50px]" src="@/app/assets/images/index/site_img.png" />
 						</div>
 						<div class="ml-[12px]">
@@ -15,14 +14,9 @@
 								<span class="text-[12px] ml-[12px]">ID:{{ statInfo.site_info.site_id }}</span>
 							</div>
 							<div>
-								<span class="text-[14px] text-[#666] mr-[12px]">{{ t('siteType') }}：{{
-									statInfo.site_info.group_name }}</span>
-								<span v-if="statInfo.site_info.status == 1"
-									class="text-[10px] py-[3px] px-[10px] bg-[#E6EFFF] text-[#2D5FFF] rounded-[3px]">{{
-										statInfo.site_info.status_name }}</span>
-								<span v-else
-									class="text-[10px] py-[3px] px-[10px] bg-[#FFE6E9] text-[#FF2D2D] rounded-[3px]">{{
-										statInfo.site_info.status_name }}</span>
+								<span class="text-[14px] text-[#666] mr-[12px]">{{ t('siteType') }}：{{ statInfo.site_info.group_name }}</span>
+								<span v-if="statInfo.site_info.status == 1" class="text-[10px] py-[3px] px-[10px] bg-[#E6EFFF] text-[#2D5FFF] rounded-[3px]">{{ statInfo.site_info.status_name }}</span>
+								<span v-else class="text-[10px] py-[3px] px-[10px] bg-[#FFE6E9] text-[#FF2D2D] rounded-[3px]">{{ statInfo.site_info.status_name }}</span>
 							</div>
 						</div>
 					</div>
@@ -33,16 +27,13 @@
 									{{ statInfo.site_info.expire_time ? statInfo.site_info.expire_time.split(' ')[0] : ''
 									}}</span></div>
 							<div class="w-[225px] h-[12px] bg-[#E6EFFF] rounded-[999px] mt-1">
-								<div class="bg-primary site-date rounded-[999px] h-[12px]"
-									:style="{ width: statInfo.site_info.mix }"></div>
+								<div class="bg-primary site-date rounded-[999px] h-[12px]" :style="{ width: statInfo.site_info.mix }"></div>
 							</div>
 						</div>
 						<div class="ml-[40px]">
 							<el-button v-if="statInfo.site_info.over_date <= 7"
-								class="bottom-back w-[80px] h-[40px] text-[14px] bg-transparent" type="primary" plain
-								@click="renew">{{ t('renew') }}</el-button>
-							<el-button class="w-[80px] h-[40px] text-[14px]" type="primary">{{ t('accessSite')
-							}}</el-button>
+								class="bottom-back w-[80px] h-[40px] text-[14px] bg-transparent" type="primary" plain @click="renew">{{ t('renew') }}</el-button>
+							<el-button class="w-[80px] h-[40px] text-[14px]" type="primary">{{ t('accessSite') }}</el-button>
 						</div>
 					</div>
 				</div>
@@ -66,14 +57,12 @@
 									<div class="ml-[24px] w-[40px]">
 										<icon :name="items.img" size="40px" color="#fff"></icon>
 									</div>
-									<span class="text-item text-[16px] text-[#fff] ml-[12px] max-w-[120px]">{{ items.name
-									}}</span>
+									<span class="text-item text-[16px] text-[#fff] ml-[12px] max-w-[120px]">{{ items.name }}</span>
 								</div>
 								<div class="item-bottom h-[32px] leading-[32px] text-center" @click="editModel(items)">
 									<span class="text-item text-[12px] text-[#fff] max-w-[150px]">{{ items.desc }}</span>
 								</div>
-								<div class="delete-item absolute w-[20px] h-[20px] rounded-[999px] overflow-hidden"
-									v-if="edit_menu" @click="removeMenu(items)">
+								<div class="delete-item absolute w-[20px] h-[20px] rounded-[999px] overflow-hidden" v-if="edit_menu" @click="removeMenu(items)">
 									<img class="w-[20px] h-[20px]" src="@/app/assets/images/index/del_model.png" />
 								</div>
 							</div>
@@ -82,12 +71,11 @@
 							<div v-for="(items, index) in shortcut_menu" :style="{ backgroundColor: items.bg_color }" :key="index"
 								class="w-[180px] h-[120px] relative mt-[30px] rounded-[5px] overflow-hidden mr-[30px] cursor-pointer">
 								<div class="flex items-center h-[88px]" @click="toLink(items.router_path)">
-									<!-- <img class="" :src="img(items.img)"/> -->
+									<!-- <img :src="img(items.img)"/> -->
 									<div class="ml-[24px] w-[40px]">
 										<icon :name="items.img" size="40px" color="#fff"></icon>
 									</div>
-									<span class="text-item text-[16px] text-[#fff] ml-[12px] max-w-[120px]">{{ items.name
-									}}</span>
+									<span class="text-item text-[16px] text-[#fff] ml-[12px] max-w-[120px]">{{ items.name }}</span>
 								</div>
 								<div class="item-bottom h-[32px] leading-[32px] text-center"
 									@click="toLink(items.router_path)">
@@ -98,12 +86,10 @@
 						<div v-if="edit_menu"
 							class="w-[180px] h-[120px] mt-[30px] rounded-[5px] overflow-hidden border-dashed border-[1px] border-[#D0D7D9] cursor-pointer"
 							@click="showFromMenu">
-							<div class="w-[40px] mx-auto mt-[20px]"><img class="w-[40px]"
-									src="@/app/assets/images/index/add_menu.png" /></div>
+							<div class="w-[40px] mx-auto mt-[20px]"><img class="w-[40px]" src="@/app/assets/images/index/add_menu.png" /></div>
 							<p class="text-center mt-[5px] text-[20px]">{{ t('addMenu') }}</p>
 						</div>
-						<div v-if="shortcut_menu.length <= 0 && !edit_menu"
-							class="flex w-full justify-center items-center min-w-[1000px] min-h-[400px]">
+						<div v-if="shortcut_menu.length <= 0 && !edit_menu" class="flex w-full justify-center items-center min-w-[1000px] min-h-[400px]">
 							<div v-if="!loading">
 								<img src="@/app/assets/images/empty.png" />
 								<p class="text-center text-gray-400">{{ t('emptyMenu') }}</p>
@@ -114,8 +100,7 @@
 			</el-card>
 		</div>
 		<el-dialog v-model="shortcutMenu" :title="t('addShortcutMenu')" width="500px" :destroy-on-close="true">
-			<el-form :model="formData" label-width="90px" ref="formRef" :rules="formRules" class="page-form"
-				v-loading="loading">
+			<el-form :model="formData" label-width="90px" ref="formRef" :rules="formRules" class="page-form" v-loading="loading">
 
 				<el-form-item :label="t('menuName')" prop="name">
 					<el-input v-model="formData.name" clearable class="w-[245px]" :placeholder="t('menuNamePlaceholder')" />
@@ -123,8 +108,7 @@
 
 				<el-form-item :label="t('path')" prop="router_path">
 					<div class="w-[245px]">
-						<el-input v-if="!model_show" v-model="formData.router_path" clearable class="w-[245px]"
-							placeholder="https://" />
+						<el-input v-if="!model_show" v-model="formData.router_path" clearable class="w-[245px]" placeholder="https://" />
 						<div v-else>
 							<span class="bg-primary py-[5px] px-[10px] text-[#fff] relative rounded-[3px]">
 								{{ formData.link_name }}
@@ -134,46 +118,31 @@
 							</span>
 						</div>
 					</div>
-					<el-button class="model-btn ml-[10px] text-[14px]" type="primary" @click="showMenu = true">{{
-						t('selectModel') }}</el-button>
+					<el-button class="model-btn ml-[10px] text-[14px]" type="primary" @click="showMenu = true">{{ t('selectModel') }}</el-button>
 				</el-form-item>
 
 				<el-form-item :label="t('menuBgColor')" prop="bg_color">
 					<div class="flex items-center">
-						<div class="mr-[8px] p-[4px] rounded-[99px]"
-							:class="formData.bg_color == '#6F77FF' ? 'border-[1px] border-[##DCDFE6]' : ''">
-							<div @click="formData.bg_color = '#6F77FF'"
-								class="w-[20px] h-[20px] cursor-pointer bg-[#6F77FF] rounded-[99px]"></div>
+						<div class="mr-[8px] p-[4px] rounded-[99px]" :class="formData.bg_color == '#6F77FF' ? 'border-[1px] border-[##DCDFE6]' : ''">
+							<div @click="formData.bg_color = '#6F77FF'" class="w-[20px] h-[20px] cursor-pointer bg-[#6F77FF] rounded-[99px]"></div>
 						</div>
-						<div class="mr-[8px] p-[4px] rounded-[99px]"
-							:class="formData.bg_color == '#0FB199' ? 'border-[1px] border-[##DCDFE6' : ''">
-							<div @click="formData.bg_color = '#0FB199'"
-								class="w-[20px] h-[20px] cursor-pointer bg-[#0FB199] rounded-[99px]"></div>
+						<div class="mr-[8px] p-[4px] rounded-[99px]" :class="formData.bg_color == '#0FB199' ? 'border-[1px] border-[##DCDFE6' : ''">
+							<div @click="formData.bg_color = '#0FB199'" class="w-[20px] h-[20px] cursor-pointer bg-[#0FB199] rounded-[99px]"></div>
 						</div>
-						<div class="mr-[8px] p-[4px] rounded-[99px]"
-							:class="formData.bg_color == '#FFA238' ? 'border-[1px] border-[##DCDFE6]' : ''">
-							<div @click="formData.bg_color = '#FFA238'"
-								class="w-[20px] h-[20px] cursor-pointer bg-[#FFA238] rounded-[99px]"></div>
+						<div class="mr-[8px] p-[4px] rounded-[99px]" :class="formData.bg_color == '#FFA238' ? 'border-[1px] border-[##DCDFE6]' : ''">
+							<div @click="formData.bg_color = '#FFA238'" class="w-[20px] h-[20px] cursor-pointer bg-[#FFA238] rounded-[99px]"></div>
 						</div>
-						<div class="mr-[8px] p-[4px] rounded-[99px]"
-							:class="formData.bg_color == '#4A78FF' ? 'border-[1px] border-[##DCDFE6]' : ''">
-							<div @click="formData.bg_color = '#4A78FF'"
-								class="w-[20px] h-[20px] cursor-pointer bg-[#4A78FF] rounded-[99px]"></div>
+						<div class="mr-[8px] p-[4px] rounded-[99px]" :class="formData.bg_color == '#4A78FF' ? 'border-[1px] border-[##DCDFE6]' : ''">
+							<div @click="formData.bg_color = '#4A78FF'" class="w-[20px] h-[20px] cursor-pointer bg-[#4A78FF] rounded-[99px]"></div>
 						</div>
-						<div class="mr-[8px] p-[4px] rounded-[99px]"
-							:class="formData.bg_color == '#FE5858' ? 'border-[1px] border-[##DCDFE6]' : ''">
-							<div @click="formData.bg_color = '#FE5858'"
-								class="w-[20px] h-[20px] cursor-pointer bg-[#FE5858] rounded-[99px]"></div>
+						<div class="mr-[8px] p-[4px] rounded-[99px]" :class="formData.bg_color == '#FE5858' ? 'border-[1px] border-[##DCDFE6]' : ''">
+							<div @click="formData.bg_color = '#FE5858'" class="w-[20px] h-[20px] cursor-pointer bg-[#FE5858] rounded-[99px]"></div>
 						</div>
-						<div class="mr-[8px] p-[4px] rounded-[99px]"
-							:class="formData.bg_color == '#6EB44E' ? 'border-[1px] border-[##DCDFE6]' : ''">
-							<div @click="formData.bg_color = '#6EB44E'"
-								class="w-[20px] h-[20px] cursor-pointer bg-[#6EB44E] rounded-[99px]"></div>
+						<div class="mr-[8px] p-[4px] rounded-[99px]" :class="formData.bg_color == '#6EB44E' ? 'border-[1px] border-[##DCDFE6]' : ''">
+							<div @click="formData.bg_color = '#6EB44E'" class="w-[20px] h-[20px] cursor-pointer bg-[#6EB44E] rounded-[99px]"></div>
 						</div>
-						<div class="mr-[8px] p-[4px] rounded-[99px]"
-							:class="formData.bg_color == '#FA6400' ? 'border-[1px] border-[##DCDFE6]' : ''">
-							<div @click="formData.bg_color = '#FA6400'"
-								class="w-[20px] h-[20px] cursor-pointer bg-[#FA6400] rounded-[99px]"></div>
+						<div class="mr-[8px] p-[4px] rounded-[99px]" :class="formData.bg_color == '#FA6400' ? 'border-[1px] border-[##DCDFE6]' : ''">
+							<div @click="formData.bg_color = '#FA6400'" class="w-[20px] h-[20px] cursor-pointer bg-[#FA6400] rounded-[99px]"></div>
 						</div>
 						<el-color-picker v-model="formData.bg_color" show-alpha />
 					</div>
