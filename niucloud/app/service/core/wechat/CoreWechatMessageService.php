@@ -15,7 +15,7 @@ use app\dict\channel\WechatDict;
 use app\service\core\scan\CoreScanService;
 use Closure;
 use core\base\BaseCoreService;
-use EasyWeChat\Kernel\Messages\Text;
+
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
@@ -133,7 +133,7 @@ class CoreWechatMessageService extends BaseCoreService
      */
     public function unsubscribe($site_id, $message){
         $core_wechat_fans_service = new CoreWechatFansService();
-        $core_wechat_fans_service->unsubscribe($site_id, $$message['FromUserName']);
+        $core_wechat_fans_service->unsubscribe($site_id, $message['FromUserName']);
         return true;
     }
 

@@ -195,9 +195,8 @@ class WechatAuthService extends BaseApiService
         $data = array(
             'channel' => $this->channel,
         );
-
         $key = (new  CoreScanService())->scan($this->site_id, ScanDict::WECHAT_LOGIN, $data, 300);
-        $url = $this->core_wechat_serve_service->scan($this->site_id, $key, 300);
+        $url = $this->core_wechat_serve_service->scan($this->site_id, $key, 300)['url'] ?? '';
         return [
             'url' => $url,
             'key' => $key

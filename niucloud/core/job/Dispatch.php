@@ -31,7 +31,7 @@ class Dispatch
     public static function dispatch($action, array $data = [], int $secs = 0, string $queue_name = null, bool $is_async = true)
     {
         $class = static::class;//调用主调类
-        if ($is_async) {
+        if (env('queue.state', false) && $is_async) {
             $queue = Queue::instance()->job($class)->secs($secs);
             if (is_array($action)) {
                 $queue->data(...$action);

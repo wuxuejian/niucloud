@@ -41,10 +41,6 @@ class CoreBalanceService extends BaseCoreService
 
 
     public function pay($params){
-//        $password = $params['password'];
-//        if(empty($password)){
-//
-//        }
         $out_trade_no = $params['out_trade_no'];//交易流水号
         $site_id = $params['site_id'];
 

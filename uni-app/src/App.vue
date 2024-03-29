@@ -25,15 +25,22 @@
         // 监听父页面发来的消息
         window.addEventListener('message', event => {
             try {
-                let data = JSON.parse(event.data);
-                if (data.type == 'appOnReady') {
+                let data = {
+                    type :''
+                };
+                if(typeof event.data == 'string') {
+                    data = JSON.parse(event.data)
+                }else if(typeof event.data == 'object') {
+                    data = event.data
+                }
+                if (data.type && data.type == 'appOnReady') {
                     window.parent.postMessage(JSON.stringify({
                         type: 'appOnReady',
                         message: '加载完成'
                     }), '*');
                 }
             } catch (e) {
-                console.log('uniapp app接受数据错误', e)
+                console.log('uni-app App.vue 接受数据错误', e)
             }
         }, false);
 
@@ -44,7 +51,7 @@
 		const configStore = useConfigStore()
 		await configStore.getLoginConfig()
 
-		useSystemStore().getSitenfo()
+		useSystemStore().getSiteInfoFn()
 
 		// 隐藏tabbar
 		uni.hideTabBar()
@@ -70,7 +77,6 @@
 	})
 
 	onShow(() => {
-
 	})
 
 	onHide(() => {

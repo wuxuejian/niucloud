@@ -274,13 +274,10 @@ class CoreWechatReplyService extends BaseCoreService
             if ($info['status'] == ReplyDict::STATUS_ON) {
                 switch($info['content_type']) {
                     case ReplyDict::CONTENT_TYPE_TEXT://文本
-                        return new Text($info['content']);
+                        return CoreWechatService::text($info['content']);
                     case ReplyDict::CONTENT_TYPE_NEW://图文
                         //todo  转化为临时素材或永久素材
-                        $items = [
-                            new NewsItem($info['content']),
-                        ];
-                        return new News($items);
+                        return CoreWechatService::news($info['content']);
                 }
             }
         }

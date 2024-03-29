@@ -30,9 +30,7 @@
 
                 <el-form-item :label="t('status')">
                     <template #default="{ }">
-                        <el-tag class="ml-2" type="success" v-if="formData.status == 1">{{ t('statusNormal') }}</el-tag>
-                        <el-tag class="ml-2" type="error" v-if="formData.status == 0">{{t('statusDeactivate') }}</el-tag>
-                        <el-tag class="ml-2" type="error" v-if="formData.status == 2">{{t('statusExpire') }}</el-tag>
+                        <el-tag class="ml-2" :type="formData.status == 1?'success':'error'">{{ formData.status_name }}</el-tag>
                     </template>
                 </el-form-item>
 
@@ -146,7 +144,8 @@ const initialFormData = {
     group_name: '',
     status: 0,
     create_time: 0,
-    site_addons: []
+    site_addons: [],
+    status_name:''
 }
 const formData: Record<string, any> = reactive({ ...initialFormData })
 

@@ -45,9 +45,9 @@ class MemberAccountService extends BaseAdminService
         if (!empty($where[ 'keywords' ])) {
             $member_where[] = [ "member.member_no|member.nickname|member.mobile", 'like', '%' . $where[ 'keywords' ] . '%' ];
         }
-        $search_model = $this->model->where([ [ 'member_account_log.site_id', '=', $this->site_id ] ])->withSearch([ 'join_member_id' => 'member_id', 'account_type', 'from_type', 'join_create_time' => 'create_time' ], $where)->withJoin([ 'member' => function($query) {
-            $query->field("member.nickname, member.headimg, member.mobile, member.member_id, member.member_no");
-        }
+        $search_model = $this->model->where([ [ 'member_account_log.site_id', '=', $this->site_id ] ])->withSearch([ 'join_member_id' => 'member_id', 'account_type', 'from_type', 'join_create_time' => 'create_time' ], $where)
+            ->withJoin(
+                [ 'member' => ['member_id','member_no', 'username', 'mobile', 'nickname', 'headimg']
         ])->where($member_where)->field($field)->order('create_time desc')->append([ 'from_type_name', 'account_type_name' ]);
         return $this->pageQuery($search_model);
     }

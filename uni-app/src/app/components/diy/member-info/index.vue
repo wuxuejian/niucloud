@@ -9,9 +9,9 @@
 					<view class="text-[#696B70] text-[24rpx] mt-[10rpx]" :style="{ color : diyComponent.textColor }">UID：{{ info.member_no }}</view>
 				</view>
 				<view class="set-icon flex items-center absolute right-0 top-2">
-					<app-link url="/app/pages/setting/index">
+					<view @click="redirect({ url: '/app/pages/setting/index' })">
 						<text class="iconfont iconshezhi text-[1.6rem] ml-[10rpx]" :style="{ color : diyComponent.textColor }"></text>
-					</app-link>
+					</view>
 				</view>
 			</view>
 			<view v-else class="flex ml-[32rpx] mr-[52rpx]  items-center relative" @click="toLogin">
@@ -22,28 +22,28 @@
 					</view>
 				</view>
 				<view class="set-icon flex items-center absolute right-0 top-2">
-					<app-link url="/app/pages/setting/index">
+					<view @click="redirect({ url: '/app/pages/setting/index' })">
 						<text class="iconfont iconshezhi text-[1.6rem] ml-[10rpx]" :style="{ color : diyComponent.textColor }"></text>
-					</app-link>
+					</view>
 				</view>
 			</view>
 
 			<view class="flex m-[30rpx] mb-0 py-[30rpx] items-center">
 				<view class="flex-1 text-center">
 					<view class="font-bold">
-						<app-link :url="(info ? '/app/pages/member/balance' : '')" :custom-style="{ color : diyComponent.textColor }">{{ money }}</app-link>
+						<view @click="redirect({ url: info ? '/app/pages/member/balance' : '' })" :style="{ color : diyComponent.textColor }">{{ money }}</view>
 					</view>
 					<view class="text-sm mt-[10rpx]">
-						<app-link :url="(info ? '/app/pages/member/balance' : '')" :custom-style="{ color : diyComponent.textColor }">{{ t('balance') }}</app-link>
+						<view @click="redirect({ url: info ? '/app/pages/member/balance' : '' })" :style="{ color : diyComponent.textColor }">{{ t('balance') }}</view>
 					</view>
 				</view>
 				<view class="border-solid border-white border-l border-b-0 border-t-0 border-r-0 h-[60rpx]"></view>
 				<view class="flex-1 text-center">
 					<view class="font-bold">
-						<app-link :url="(info ? '/app/pages/member/point' : '')" :custom-style="{ color : diyComponent.textColor }">{{ parseInt(info?.point) || 0 }}</app-link>
+						<view @click="redirect({ url: info ? '/app/pages/member/point' : '' })" :style="{ color : diyComponent.textColor }">{{ parseInt(info?.point) || 0 }}</view>
 					</view>
 					<view class="text-sm mt-[10rpx]">
-						<app-link :url="(info ? '/app/pages/member/point' : '')" :custom-style="{ color : diyComponent.textColor }">{{ t('point') }}</app-link>
+						<view @click="redirect({ url: info ? '/app/pages/member/point' : '' })" :style="{ color : diyComponent.textColor }">{{ t('point') }}</view>
 					</view>
 				</view>
 			</view>
@@ -64,7 +64,7 @@
 	import { wechatSync } from '@/app/api/system'
 	import useDiyStore from '@/app/stores/diy'
 
-	const props = defineProps(['component', 'index', 'pullDownRefresh']);
+	const props = defineProps(['component', 'index', 'pullDownRefreshCount']);
 
 	const diyStore = useDiyStore();
 
@@ -75,10 +75,12 @@
 			return props.component;
 		}
 	})
-
 	const warpCss = computed(() => {
 		var style = '';
-		if (diyComponent.value.componentBgColor) style += 'background-color:' + diyComponent.value.componentBgColor + ';';
+        if(diyComponent.value.componentStartBgColor) {
+            if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${diyComponent.value.componentGradientAngle},${diyComponent.value.componentStartBgColor},${diyComponent.value.componentEndBgColor});`;
+            else style += 'background-color:' + diyComponent.value.componentStartBgColor + ';';
+        }
 		if (diyComponent.value.bgUrl) {
 			style += 'background-image:url(' + img(diyComponent.value.bgUrl) + ');';
 			style += 'background-size: 100%;';
@@ -88,11 +90,12 @@
 		if (diyComponent.value.topRounded) style += 'border-top-right-radius:' + diyComponent.value.topRounded * 2 + 'rpx;';
 		if (diyComponent.value.bottomRounded) style += 'border-bottom-left-radius:' + diyComponent.value.bottomRounded * 2 + 'rpx;';
 		if (diyComponent.value.bottomRounded) style += 'border-bottom-right-radius:' + diyComponent.value.bottomRounded * 2 + 'rpx;';
+
 		return style;
 	})
 
 	watch(
-		() => props.pullDownRefresh,
+		() => props.pullDownRefreshCount,
 		(newValue, oldValue) => {
 			// 处理下拉刷新业务
 		}
@@ -155,7 +158,4 @@
 </script>
 
 <style lang="scss" scoped>
-	.member-info {
-		// background-image: linear-gradient(#E3F0FF, #F5F6F8)
-	}
 </style>

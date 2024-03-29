@@ -109,7 +109,16 @@ class CoreRefundService extends BaseCoreService
     }
 
 
-
+    /**
+     * 退款通知
+     * @param int $site_id
+     * @param $out_trade_no
+     * @param string $type
+     * @param array $params
+     * @param $main_type
+     * @param $main_id
+     * @return true
+     */
     public function refundNotify(int $site_id, $out_trade_no, string $type, array $params = [], $main_type = '', $main_id = 0){
         $refund_no = $params['refund_no'];
 

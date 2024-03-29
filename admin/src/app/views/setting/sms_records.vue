@@ -38,16 +38,9 @@
                     </template>
 
                     <el-table-column prop="name" :label="t('noticeKey')" min-width="120" />
-                    <el-table-column prop="notice_type" :label="t('noticeType')" min-width="120">
-                        <template #default="{ row }">
-                            <div v-if="row.notice_type == 'sms'">{{ t('sms') }}</div>
-                            <div v-if="row.notice_type == 'wechat'">{{ t('wechat') }}</div>
-                            <div v-if="row.notice_type == 'weapp'">{{ t('weapp') }}</div>
-                        </template>
-                    </el-table-column>
+                    <el-table-column prop="sms_type_name" :label="t('smsType')" min-width="120"/>
 
-                    <el-table-column prop="nickname" :label="t('nickname')" min-width="120" />
-                    <el-table-column prop="receiver" :label="t('receiver')" min-width="120" />
+                    <el-table-column prop="mobile" :label="t('receiver')" min-width="120" />
                     <el-table-column prop="create_time" :label="t('createTime')" min-width="140" />
 
                     <el-table-column :label="t('operation')" align="right" fixed="right" width="100">

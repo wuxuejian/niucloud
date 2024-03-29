@@ -22,7 +22,8 @@
 
     const warpCss = computed(() => {
         var style = '';
-        style += 'background-color:' + diyComponent.value.componentBgColor + ';';
+        if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${diyComponent.value.componentGradientAngle},${diyComponent.value.componentStartBgColor},${diyComponent.value.componentEndBgColor});`;
+        else style += 'background-color:' + diyComponent.value.componentStartBgColor + ';';
         style += 'border-top-left-radius:' + diyComponent.value.topRounded * 2 + 'rpx;';
         style += 'border-top-right-radius:' + diyComponent.value.topRounded * 2 + 'rpx;';
         style += 'border-bottom-left-radius:' + diyComponent.value.bottomRounded * 2 + 'rpx;';

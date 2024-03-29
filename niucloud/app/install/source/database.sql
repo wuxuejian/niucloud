@@ -393,6 +393,7 @@ CREATE TABLE `pay_refund`  (
   `refund_type` varchar(255) NOT NULL DEFAULT '' COMMENT '退款方式',
   `main_type` varchar(255) NOT NULL DEFAULT '' COMMENT '操作人类型',
   `main_id` int NOT NULL DEFAULT 0 COMMENT '操作人',
+  `pay_refund_no` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '外部支付方式的退款单号',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '支付记录表' ROW_FORMAT = Dynamic;
 

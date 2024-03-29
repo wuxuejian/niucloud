@@ -56,8 +56,8 @@ class SystemService extends BaseAdminService
 
         return [
             'wap_domain' => env("system.wap_domain"),
-            'wap_url' => $site_domain ? "http://" . $site_domain . "/wap/" : $wap_domain . "/wap/" . $this->site_id,
-            'web_url' => $site_domain ? "http://" . $site_domain . "/web/" : $web_domain . "/web/" . $this->site_id,
+            'wap_url' => $site_domain ? (request()->isSsl() ? "https://" : "http://") . $site_domain . "/wap" : $wap_domain . "/wap/" . $this->site_id,
+            'web_url' => $site_domain ? (request()->isSsl() ? "https://" : "http://") . $site_domain . "/web" : $web_domain . "/web/" . $this->site_id,
         ];
     }
 
@@ -156,7 +156,7 @@ class SystemService extends BaseAdminService
 //            $timeout++;
 //            sleep(1);
 //        }
-        sleep(3);
+        sleep(5);
         if (file_exists($file)) {
             @unlink($file);
             return true;

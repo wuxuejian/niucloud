@@ -33,16 +33,6 @@ class Weapp extends BaseTemplate
     {
         parent::initialize($config);
         $this->site_id = $config['site_id'] ?? '';
-
-    }
-
-    /**
-     * 实例化订阅消息业务
-     * @return Client
-     */
-    public function template()
-    {
-        return CoreWeappService::app($this->site_id)->subscribe_message;
     }
 
     /**
@@ -55,10 +45,11 @@ class Weapp extends BaseTemplate
      */
     public function send(array $data)
     {
-        return $this->template()->send([
-            'template_id' => $data['template_id'],
-            'touser' => $data['openid'],
-            'page' => $data['page'],
+        $api = CoreWeappService::appApiClient($this->site_id);
+        $api->postJson('cgi-bin/message/subscribe/send', [
+            'template_id' => $data['template_id'], // 所需下发的订阅模板id
+            'touser' => $data['openid'],     // 接收者（用户）的 openid
+            'page' => $data['page'],       // 点击模板卡片后的跳转页面，仅限本小程序内的页面。支持带参数,（示例index?foo=bar）。该字段不填则模板无跳转。
             'data' => $data['data'],
         ]);
     }
@@ -72,7 +63,12 @@ class Weapp extends BaseTemplate
      */
     public function addTemplate(array $data)
     {
-        return $this->template()->addTemplate($data['tid'], $data['kid_list'], $data['scene_desc']);
+        $api = CoreWeappService::appApiClient($this->site_id);
+        return $api->postJson('wxaapi/newtmpl/addtemplate', [
+            'tid' => $data['tid'],
+            'kidList' => $data['kid_list'],
+            'kidList' => $data['scene_desc'],
+        ]);
     }
 
     /**
@@ -84,7 +80,10 @@ class Weapp extends BaseTemplate
      */
     public function delete(array $data)
     {
-        return $this->template()->deleteTemplate($data['template_id']);
+        $api = CoreWeappService::appApiClient($this->site_id);
+        return $api->postJson('wxaapi/newtmpl/deltemplate', [
+            'priTmplId' => $data['template_id'],
+        ]);
     }
 
     /**

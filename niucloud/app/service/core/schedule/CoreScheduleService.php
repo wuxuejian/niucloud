@@ -112,22 +112,25 @@ class CoreScheduleService extends BaseCoreService
     {
         $content = '';
         $type = $data['type'] ?? '';
+        $hour = $data['hour'] ?? 0;
+        $min = $data['min'] ?? 0;
+        $day = $data['day'] ?? 0;
         switch ($type) {
             case 'min':// 每隔几分
                 $content = '每隔'.$data['min'].'分钟执行一次';
                 break;
             case 'hour':// 每隔几时第几分钟执行
-                $content = '每隔'.$data['hour'].'小时的'.$data['min'].'分执行一次';
+                $content = '每隔'.$hour.'小时的'.$min.'分执行一次';
                 break;
             case 'day':// 每隔几日几时几分几秒执行
-                $content = '每隔'.$data['day'].'天的'.$data['hour'].'时'.$data['min'].'分执行一次';
+                $content = '每隔'.$day.'天的'.$hour.'时'.$min.'分执行一次';
                 break;
             case 'week':// 每周一次,周几具体时间执行
                 $week_day = DateDict::getWeek()[$data['week']] ?? '';
-                $content = '每周的'.$week_day.'的'.$data['hour'].'时'.$data['min'].'分执行一次';
+                $content = '每周的'.$week_day.'的'.$hour.'时'.$min.'分执行一次';
                 break;
             case 'month':// 每月一次,某日具体时间执行
-                $content = '每月的'.$data['day'].'号的'.$data['hour'].'时'.$data['min'].'分执行一次';
+                $content = '每月的'.$day.'号的'.$hour.'时'.$min.'分执行一次';
                 break;
         }
         return $content;
@@ -199,15 +202,20 @@ class CoreScheduleService extends BaseCoreService
      * @param array $schedule
      * @return true
      */
-    public function execute(array $schedule){
+    public function execute(array $schedule, $output){
         $class = $schedule['class'] ?: 'app\\job\\schedule\\'.Str::studly($schedule['key']);
         $function = $schedule['function'] ?: 'doJob';
+        $job = $class.($function == 'doJob' ? '' : '['.$function.']');
+        $output->writeln('['.date('Y-m-d H:i:s').']'." Processing:" . $job.'('.$schedule['name'].')');
         try {
             $result = Container::getInstance()->invoke([$class, $function ?? 'doJob']);
+            $output->writeln('['.date('Y-m-d H:i:s').']'." Processed:" . $job.'('.$schedule['name'].')');
         }catch( Throwable $e){
-            Log::write('计划任务:'.$schedule['name'].'发生错误, 错误原因:'.$e->getMessage());
+            $error = $e->getMessage();
+            $output->writeln('['.date('Y-m-d H:i:s').']'." Error:" . $job.'('.$schedule['name'].') ,'.$error);
+            Log::write('计划任务:'.$schedule['name'].'发生错误, 错误原因:'.$error);
         }
-        $schedule = $this->find($schedule['id']);
+        $schedule = $this->model->find($schedule['id']);
         if(!$schedule->isEmpty()){
             $schedule->save([
                 'last_time' => time(),

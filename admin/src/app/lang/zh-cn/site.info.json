@@ -9,6 +9,7 @@
       "siteLogo": "店铺LOGO",
       "expireTime":"到期时间",
       "groupName": "店铺套餐",
+      "statusExpire":"已到期",
       "siteNamePlaceholder":"请输入站点名称",
       "groupIdPlaceholder":"请输入套餐",
       "addSite":"添加站点",

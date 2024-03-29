@@ -48,7 +48,7 @@ class DiyService extends BaseAdminService
     public function getPage(array $where = [])
     {
         $where[] = [ 'site_id', '=', $this->site_id ];
-        $field = 'id,site_id,title,name,template,type,mode,is_default,share,visit_count,create_time,update_time';
+        $field = 'id,site_id,title,name,template,type,mode,is_default,share,visit_count,create_time,update_time,value';
         $order = "update_time desc";
         $search_model = $this->model->where([ [ 'site_id', '=', $this->site_id ] ])->withSearch([ "title", "type", 'mode', 'addon_name' ], $where)->field($field)->order($order)->append([ 'type_name', 'type_page', 'addon_name' ]);
         return $this->pageQuery($search_model);
@@ -66,7 +66,7 @@ class DiyService extends BaseAdminService
     public function getList(array $where = [], $field = 'id,title,name,template,type,mode,is_default,share,visit_count,create_time,update_time')
     {
         $order = "update_time desc";
-        return $this->model->where([ [ 'site_id', '=', $this->site_id ] ])->withSearch([ "title", "type", 'mode' ], $where)->field($field)->select()->order($order)->toArray();
+        return $this->model->where([ [ 'site_id', '=', $this->site_id ] ])->withSearch([ "title", "type", 'mode' ], $where)->field($field)->order($order)->select()->toArray();
     }
 
     /**

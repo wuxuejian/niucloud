@@ -467,14 +467,18 @@ function array_merge2(array $array1, array $array2)
 {
     foreach ($array2 as $array2_k => $array2_v) {
         if (array_key_exists($array2_k, $array1)) {
-            foreach ($array2_v as $array2_kk => $array2_vv) {
-                if (array_key_exists($array2_kk, $array1[$array2_k])) {
-                    if (is_array($array2_vv)) {
-                        $array1[$array2_k][$array2_kk] = array_merge($array1[$array2_k][$array2_kk], $array2_vv);
+            if (is_array($array2_v)) {
+                foreach ($array2_v as $array2_kk => $array2_vv) {
+                    if (array_key_exists($array2_kk, $array1[$array2_k])) {
+                        if (is_array($array2_vv)) {
+                            $array1[$array2_k][$array2_kk] = array_merge($array1[$array2_k][$array2_kk], $array2_vv);
+                        }
+                    } else {
+                        $array1[$array2_k][$array2_kk] = $array2_vv;
                     }
-                } else {
-                    $array1[$array2_k][$array2_kk] = $array2_vv;
                 }
+            } else {
+                $array1[$array2_k] = $array2_v;
             }
         } else {
             $array1[$array2_k] = $array2_v;

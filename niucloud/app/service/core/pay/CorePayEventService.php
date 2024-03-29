@@ -94,7 +94,7 @@ class CorePayEventService extends BaseCoreService
         $params = array(
             'out_trade_no' => $out_trade_no,
             'money' => $money,
-            'boby' => $boby,
+            'boby' => mb_substr($boby,0,15,"utf-8").'...',
             'channel' => $this->channel,
             'refund_url' => $refund_url,
             'quit_url' => $quit_url,

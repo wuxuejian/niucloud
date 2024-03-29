@@ -75,15 +75,33 @@ export const launchInterceptor = () => {
 }
 
 /**
- * 检测当前访问的是系统（app）还是插件，设置插件的底部导航
+ * 检测当前访问的是系统（app）还是插件
+ * 设置插件的底部导航
+ * 设置插件应用的主色调
   * @param path
  */
-const setAddonName = (path: string) => {
+const setAddonName = async (path: string) => {
 	let pathArr = path.split('/')
 	let route = pathArr[1] == 'addon' ? pathArr[2] : 'app';
+
+	// 设置底部导航
 	const configStore = useConfigStore()
 	if (configStore.addon != route) {
 		configStore.addon = route;
 		configStore.getTabbarConfig();
 	}
+
+	// 设置插件应用的主色调，排除系统
+	if (route != 'app') {
+		try {
+			const theme = await import(`../addon/${route}/utils/theme.json`)
+			configStore.themeColor = theme.default
+			uni.setStorageSync('current_theme_color', JSON.stringify(theme.default));
+		} catch (e) {
+			console.log('设置插件应用的主色调', e)
+			uni.removeStorageSync('current_theme_color');
+		}
+
+	}
+
 }

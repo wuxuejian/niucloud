@@ -32,12 +32,19 @@ class CoreWeappAuthService extends BaseCoreService
      * 网页授权
      * @param int $site_id
      * @param string|null $code
-     * @return string
-     * @throws InvalidConfigException
+     * @return array
+     * @throws InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\HttpException
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
     public function session(int $site_id, ?string $code)
     {
-        return CoreWeappService::app($site_id)->auth->session($code);
+        $utils = CoreWeappService::app($site_id)->getUtils();
+        return $utils->codeToSession($code);
     }
 
     /**
@@ -48,20 +55,26 @@ class CoreWeappAuthService extends BaseCoreService
      * @param string $encrypted_data
      * @return array
      * @throws DecryptException
+     * @throws InvalidArgumentException
      */
     public function decryptData(int $site_id, string $session, string $iv, string $encrypted_data){
-        return CoreWeappService::app($site_id)->encryptor->decryptData($session, $iv, $encrypted_data);
+
+        $utils = CoreWeappService::app($site_id)->getUtils();
+        return $utils->decryptSession($session, $iv, $encrypted_data);
     }
 
     /**
-     * 获取小程序手机号
+     * v
      * @param int $site_id
      * @param string $code
-     * @return array|Collection|object|ResponseInterface|string
-     * @throws InvalidConfigException
-     * @throws GuzzleException
+     * @return \EasyWeChat\Kernel\HttpClient\Response|\Symfony\Contracts\HttpClient\ResponseInterface
+     * @throws InvalidArgumentException
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
     public function getUserPhoneNumber(int $site_id,string $code){
-        return CoreWeappService::app($site_id)->phone_number->getUserPhoneNumber($code);
+        $api = CoreWeappService::appApiClient($site_id);
+        return $api->postJson('wxa/business/getuserphonenumber', [
+            'code' => (string)$code
+        ]);
     }
 }

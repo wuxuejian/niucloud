@@ -37,7 +37,6 @@ const route = useRoute()
 const siteInfo = userStore.siteInfo
 
 const menuActive = computed(() => String(route.name))
-console.log("userStore.routers",userStore.routers)
 userStore.routers.forEach((item, index) => {
     item.meta.class = 1
     if (item.children) {

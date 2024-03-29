@@ -28,7 +28,10 @@ class CoreWechatApiService extends BaseCoreService
      */
     public function userInfo(int $site_id, string $openid)
     {
-        return CoreWechatService::app($site_id)->user->get($openid);
+        $api = CoreWechatService::appApiClient($site_id);
+        return $api->get('/cgi-bin/user/info', [
+            'openid' => $openid,
+        ]);
     }
 
     /**
@@ -42,7 +45,15 @@ class CoreWechatApiService extends BaseCoreService
      */
     public function userInfoBatchget(int $site_id, array $openids, string $lang = 'zh_CN')
     {
-        return CoreWechatService::app($site_id)->user->select($openids);
+        return CoreWechatService::appApiClient($site_id)->postJson('/cgi-bin/user/info/batchget', [
+            'user_list' => array_map(function ($openid) use ($lang) {
+                return [
+                    'openid' => $openid,
+                    'lang' => $lang,
+                ];
+            }, $openids)
+            ]
+        );
     }
     
     /**
@@ -50,7 +61,8 @@ class CoreWechatApiService extends BaseCoreService
      */
     public function userGet(int $site_id, ?string $next_openid = '')
     {
-        return CoreWechatService::app($site_id)->user->list($next_openid);
+        $api = CoreWechatService::appApiClient($site_id);
+        return $api->get('/cgi-bin/user/get', ['next_openid' => $next_openid]);
     }
 
 
@@ -65,8 +77,15 @@ class CoreWechatApiService extends BaseCoreService
      */
     public function menuCreate(int $site_id, array $buttons, array $match_rule = [])
     {
-//        CoreWechatService::app($site_id)->menu->current();
-        return CoreWechatService::app($site_id)->menu->create($buttons, $match_rule);
+        $api = CoreWechatService::appApiClient($site_id);
+        if (!empty($match_rule)) {
+            return $api->postJson('cgi-bin/menu/addconditional', [
+                'button' => $buttons,
+                'matchrule' => $match_rule,
+            ]);
+        }
+
+        return $api->postJson('cgi-bin/menu/create', ['button' => $buttons]);
     }
 
 

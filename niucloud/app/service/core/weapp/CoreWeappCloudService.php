@@ -16,6 +16,7 @@ use app\dict\sys\CloudDict;
 use app\model\addon\Addon;
 use app\model\weapp\WeappVersion;
 use app\service\core\addon\CoreAddonDevelopDownloadService;
+use app\service\core\addon\CoreAddonService;
 use app\service\core\addon\WapTrait;
 use app\service\core\niucloud\CoreCloudBaseService;
 use app\service\core\site\CoreSiteService;
@@ -126,6 +127,8 @@ class CoreWeappCloudService extends CoreCloudBaseService
             if (!in_array($key, $site_addon)) return $key;
         }, $local_addon));
 
+        $this->handlePageCode($dir . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR, $site_addon);
+
         if (!empty($diff_addon) ) {
             foreach ($diff_addon as $addon) {
                 $this->addon = $addon;
@@ -137,8 +140,6 @@ class CoreWeappCloudService extends CoreCloudBaseService
                 $this->compileDiyComponentsCode($dir . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR, $addon);
                 // 编译 fixed-group 固定模板组件代码文件
                 $this->compileFixedComponentsCode($dir . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR, $addon);
-                // 编译 pages.json 页面路由代码文件
-                $this->uninstallPageCode($dir . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR);
                 // 编译 加载插件标题语言包
                 $this->compileLocale($dir . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR, $addon);
 
@@ -148,6 +149,37 @@ class CoreWeappCloudService extends CoreCloudBaseService
                 }
             }
         }
+    }
+
+    private function handlePageCode($compile_path, $addon_arr) {
+        $pages = [];
+        foreach ($addon_arr as $addon) {
+            if (!file_exists($this->geAddonPackagePath($addon) . 'uni-app-pages.php')) continue;
+            $uniapp_pages = require $this->geAddonPackagePath($addon) . 'uni-app-pages.php';
+            if (empty($uniapp_pages[ 'pages' ])) continue;
+
+            $page_begin = strtoupper($addon) . '_PAGE_BEGIN';
+            $page_end = strtoupper($addon) . '_PAGE_END';
+
+            // 对0.2.0之前的版本做处理
+            $uniapp_pages[ 'pages' ] = preg_replace_callback('/(.*)(\\r\\n.*\/\/ PAGE_END.*)/s', function ($match){
+                return $match[1] . (substr($match[1], -1) == ',' ? '' : ',') .$match[2];
+            }, $uniapp_pages[ 'pages' ]);
+
+            $uniapp_pages[ 'pages' ] = str_replace('PAGE_BEGIN', $page_begin, $uniapp_pages[ 'pages' ]);
+            $uniapp_pages[ 'pages' ] = str_replace('PAGE_END', $page_end, $uniapp_pages[ 'pages' ]);
+            $uniapp_pages[ 'pages' ] = str_replace('{{addon_name}}', $addon, $uniapp_pages[ 'pages' ]);
+
+            $pages[] = $uniapp_pages[ 'pages' ];
+        }
+
+        $content = @file_get_contents($compile_path . "pages.json");
+        $content = preg_replace_callback('/(.*\/\/ \{\{ PAGE_BEGAIN \}\})(.*)(\/\/ \{\{ PAGE_END \}\}.*)/s', function ($match) use ($pages) {
+            return $match[1] . PHP_EOL . implode(PHP_EOL, $pages) . PHP_EOL . $match[3];
+        }, $content);
+
+        // 找到页面路由文件 pages.json，写入内容
+        return file_put_contents($compile_path . "pages.json", $content);
     }
 
     /**

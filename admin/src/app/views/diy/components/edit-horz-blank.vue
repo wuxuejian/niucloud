@@ -25,7 +25,7 @@ import { t } from '@/lang'
 import useDiyStore from '@/stores/modules/diy'
 
 const diyStore = useDiyStore()
-diyStore.editComponent.ignore = ['pageBgColor', 'topRounded', 'bottomRounded', 'marginTop', 'marginBottom', 'marginBoth'] // 忽略公共属性
+diyStore.editComponent.ignore = ['pageBgColor', 'componentBgUrl'] // 忽略公共属性
 
 defineExpose({})
 

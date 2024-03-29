@@ -26,15 +26,7 @@ use Psr\Http\Message\ResponseInterface;
  */
 class CoreWechatTemplateService extends BaseCoreService
 {
-    /**
-     * 获取模板消息业务对象
-     * @param $site_id
-     * @return Client
-     */
-    public function template($site_id)
-    {
-        return CoreWechatService::app($site_id)->template_message;
-    }
+
 
     /**
      * 发送模板消息
@@ -55,15 +47,18 @@ class CoreWechatTemplateService extends BaseCoreService
     {
         if (!empty($first)) $data[ 'first' ] = $first;
         if (!empty($remark)) $data[ 'remark' ] = $remark;
-
-        return $this->template($site_id)->send([
+        $api = CoreWechatService::appApiClient($site_id);
+        $param = [
             'touser' => $open_id,
             'template_id' => $wechat_template_id,
             'url' => $url,
             'miniprogram' => $miniprogram,
             'data' => $data,
-        ]);
-
+        ];
+        if(!empty($client_msg_id)){
+            $param['client_msg_id'] = $client_msg_id;
+        }
+        return $api->postJson('cgi-bin/message/template/send', $param);
     }
 
     /**
@@ -76,7 +71,11 @@ class CoreWechatTemplateService extends BaseCoreService
      */
     public function deletePrivateTemplate(int $site_id, string $templateId)
     {
-        return $this->template($site_id)->deletePrivateTemplate($templateId);
+        $api = CoreWechatService::appApiClient($site_id);
+
+        return $api->postJson('cgi-bin/template/del_private_template', [
+            'template_id' => $templateId,
+        ]);
     }
 
     /**
@@ -90,7 +89,12 @@ class CoreWechatTemplateService extends BaseCoreService
      */
     public function addTemplate(int $site_id, string $shortId, string $keyword_name_list)
     {
-        return $this->template($site_id)->addTemplate($shortId, $keyword_name_list);
+        $api = CoreWechatService::appApiClient($site_id);
+
+        return $api->postJson('cgi-bin/template/api_add_template', [
+            'template_id_short' => $shortId,
+            'keyword_name_list' => $keyword_name_list
+        ]);
     }
 
 }

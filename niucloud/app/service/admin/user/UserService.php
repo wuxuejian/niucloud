@@ -272,7 +272,7 @@ class UserService extends BaseAdminService
      * @return true
      */
     public function statusChange($uid, $status) {
-        (new SysUserRole())->where([ ['uid', '=', $uid], ['site_id', '=', $this->uid] ])->update(['status' => $status]);
+        (new SysUserRole())->where([ ['uid', '=', $uid], ['site_id', '=', $this->site_id] ])->update(['status' => $status]);
         LoginService::clearToken($uid);
         return true;
     }

@@ -66,12 +66,12 @@
                 </el-table-column>
                 <el-table-column :label="t('status')" min-width="80" align="center">
                     <template #default="{ row }">
-                        <el-tag class="ml-2" type="success" v-if="row.status == 1">{{ row.status_name }}</el-tag>
+                        <el-tag class="ml-2" type="success" v-if="row.status == 1">{{ row.site_status_name }}</el-tag>
                         <el-tag class="ml-2" type="error" v-else-if="row.status == 3">
-                            {{ row.status_name }}
+                            {{ row.site_status_name }}
                         </el-tag>
                         <el-tag class="ml-2" type="error" v-else>
-                            {{ row.status_name }}
+                            {{ row.site_status_name }}
                         </el-tag>
                     </template>
                 </el-table-column>

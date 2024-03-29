@@ -53,7 +53,11 @@ class SysNoticeSmsLog extends BaseModel
     public function getResultAttr($value, $data)
     {
         if ($value) {
-            $temp = json_decode($value, true);
+            if(is_array($value)){
+                $temp = $value;
+            }else{
+                $temp = json_decode($value, true);
+            }
         }
         if (empty($temp)) {
             $temp = $value;
@@ -98,7 +102,7 @@ class SysNoticeSmsLog extends BaseModel
      * @param $data
      * @return string
      */
-    public function getSmsTypesNameAttr($value, $data)
+    public function getSmsTypeNameAttr($value, $data)
     {
         if (empty($data['sms_type'])) return '';
         $temp = SmsDict::getType()[$data['sms_type']] ?? [];

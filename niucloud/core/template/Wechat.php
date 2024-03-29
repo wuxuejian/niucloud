@@ -37,15 +37,6 @@ class Wechat extends BaseTemplate
     }
 
     /**
-     * 实例化模板消息业务
-     * @return Client
-     */
-    public function template()
-    {
-        return CoreWechatService::app($this->site_id)->template_message;
-    }
-
-    /**
      * 消息发送
      * @param array $data
      * @return array|Collection|object|ResponseInterface|string
@@ -63,15 +54,22 @@ class Wechat extends BaseTemplate
         $url = $data[ 'url' ];
         $miniprogram = $data[ 'miniprogram' ];
 
-        if (!empty($first)) $template_data[ 'first' ] = $first;
-        if (!empty($remark)) $template_data[ 'remark' ] = $remark;
-        return $this->template()->send([
+
+
+        if (!empty($first)) $data[ 'first' ] = $first;
+        if (!empty($remark)) $data[ 'remark' ] = $remark;
+        $api = CoreWechatService::appApiClient($this->site_id);
+        $param = [
             'touser' => $openid,
             'template_id' => $template_id,
             'url' => $url,
             'miniprogram' => $miniprogram,
-            'data' => $template_data,
-        ]);
+            'data' => $data,
+        ];
+        if(!empty($client_msg_id)){
+            $param['client_msg_id'] = $client_msg_id;
+        }
+        return $api->postJson('cgi-bin/message/template/send', $param);
     }
 
     /**
@@ -83,7 +81,11 @@ class Wechat extends BaseTemplate
      */
     public function addTemplate(array $data)
     {
-        return $this->template()->addTemplate($data[ 'shortId' ], $data[ 'keyword_name_list' ]);
+        $api = CoreWechatService::appApiClient($this->site_id);
+        return $api->postJson('cgi-bin/template/api_add_template', [
+            'template_id_short' => $data[ 'shortId' ],
+            'keyword_name_list' => $data[ 'keyword_name_list' ]
+        ]);
     }
 
     /**
@@ -95,7 +97,11 @@ class Wechat extends BaseTemplate
      */
     public function delete(array $data)
     {
-        return $this->template()->deletePrivateTemplate($data[ 'templateId' ]);
+        $api = CoreWechatService::appApiClient($this->site_id);
+
+        return $api->postJson('cgi-bin/template/del_private_template', [
+            'template_id' => $data[ 'templateId' ],
+        ]);
     }
 
     /**

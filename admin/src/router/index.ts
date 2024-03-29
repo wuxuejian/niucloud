@@ -138,7 +138,6 @@ router.beforeEach(async (to, from, next) => {
                 }
 
             } catch (err) {
-                console.log(err)
                 next({ path: loginPath, query: { redirect: to.fullPath } })
             }
         }

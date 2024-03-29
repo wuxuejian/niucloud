@@ -74,9 +74,9 @@ class CoreWechatConfigService extends BaseCoreService
 //        $domain = request()->domain();
         $wap_domain = (new CoreSysConfigService())->getSceneDomain($site_id)['wap_url'] ?? '';
         $wap_domain_array = explode('/', $wap_domain);
-        if(count($wap_domain_array) > 2){
-            $wap_domain = $wap_domain_array[0].'/'.$wap_domain_array[1].'/'.$wap_domain_array[2];
-        }
+//        if(count($wap_domain_array) > 2){
+//            $wap_domain = $wap_domain_array[0].'/'.$wap_domain_array[1].'/'.$wap_domain_array[2];
+//        }
         return [
             'serve_url' => (string)url('/api/wechat/serve/'.$site_id, [],'',true),
             'business_domain'   => $wap_domain,

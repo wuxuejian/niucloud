@@ -71,7 +71,7 @@ class RegisterService extends BaseApiService
             $data[ 'register_channel' ] = $this->channel;
             $data[ 'register_type' ] = $type;
             $data[ 'site_id' ] = $this->site_id;
-            $pid = $this->request->get('pid');
+            $pid = $this->request->get('pid', $this->request->post('pid', 0));
             if ($pid > 0) {
                 $p_member_info = $member_service->findMemberInfo([ 'member_id' => $pid, 'site_id' => $this->site_id ]);
                 if (!$p_member_info->isEmpty()) $data[ 'pid' ] = $pid;//设置上级推荐人

@@ -26,6 +26,7 @@ use think\facade\Cache;
 class CoreMemberLabelService extends BaseCoreService
 {
     protected static $cache_tag_name = 'member_label_cache';
+
     public function __construct()
     {
         parent::__construct();
@@ -41,15 +42,16 @@ class CoreMemberLabelService extends BaseCoreService
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getMemberLabelListByLabelIds(int $site_id, array $label_ids){
+    public function getMemberLabelListByLabelIds(int $site_id, array $label_ids)
+    {
         sort($label_ids);
         $cache_name = __METHOD__ . md5(implode("_", $label_ids));
         return cache_remember(
             $cache_name,
-            function () use ($site_id, $label_ids) {
+            function() use ($site_id, $label_ids) {
                 return array_keys_search($this->getAll($site_id), $label_ids, 'label_id');
             },
-            self::$cache_tag_name.$site_id
+            self::$cache_tag_name . $site_id
         );
     }
 
@@ -61,16 +63,16 @@ class CoreMemberLabelService extends BaseCoreService
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getAll(int $site_id){
+    public function getAll(int $site_id)
+    {
         $cache_name = __METHOD__ . $site_id;
         return cache_remember(
             $cache_name,
-            function () use ($site_id) {
+            function() use ($site_id) {
                 $field = 'label_id, label_name';
-                return $this->model->where([['site_id', '=', $site_id]])->field($field)->select()->toArray();
-
+                return $this->model->where([ [ 'site_id', '=', $site_id ] ])->field($field)->order('sort desc,create_time desc')->select()->toArray();
             },
-            self::$cache_tag_name.$site_id
+            self::$cache_tag_name . $site_id
         );
     }
 
@@ -79,8 +81,9 @@ class CoreMemberLabelService extends BaseCoreService
      * @param int $site_id
      * @return true
      */
-    public function clearCache(int $site_id){
-        Cache::tag(self::$cache_tag_name.$site_id)->clear();
+    public function clearCache(int $site_id)
+    {
+        Cache::tag(self::$cache_tag_name . $site_id)->clear();
         return true;
     }
 }

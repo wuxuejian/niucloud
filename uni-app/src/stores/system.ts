@@ -3,25 +3,31 @@ import { getSiteInfo } from '@/app/api/system'
 import { redirect } from '@/utils/common'
 
 interface System {
-	site : AnyObject | null
+	site : AnyObject | null,
+	siteApps: string[],
+	siteAddons: string[]
 }
 
 const useSystemStore = defineStore('system', {
 	state: () : System => {
 		return {
-			site: null
+			site: null,
+			siteApps: [],
+			siteAddons: []
 		}
 	},
 	actions: {
-		async getSitenfo() {
-			await getSiteInfo()
-				.then((res : any) => {
-					this.site = res.data
-					if (this.site.status == 3) redirect({ url: '/pages/index/close', mode: 'reLaunch' })
+		async getSiteInfoFn() {
+			await getSiteInfo().then((res: any) => {
+				this.site = res.data
+				this.siteApps = res.data.app
+				this.siteAddons = res.data.site_addons.map((item: AnyObject) => {
+					return item.key
 				})
-				.catch((err) => {
-					redirect({ url: '/pages/index/nosite', mode: 'reLaunch' })
-				})
+				if (!this.site || this.site.status == 3) redirect({url: '/app/pages/index/close', mode: 'reLaunch'})
+			}).catch((err) => {
+				redirect({url: '/app/pages/index/nosite', mode: 'reLaunch'})
+			})
 		}
 	}
 })

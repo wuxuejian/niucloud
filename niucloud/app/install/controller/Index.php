@@ -55,6 +55,9 @@ class Index extends BaseInstall
             //fileinfo
             $fileinfo = extension_loaded('fileinfo');
             $system_variables[] = [ "name" => "fileinfo", "need" => "开启", "status" => $fileinfo ];
+            //sodium
+            $sodium = extension_loaded('sodium');
+            $system_variables[] = [ "name" => "sodium", "need" => "开启", "status" => $sodium ];
 
             $root_path = str_replace("\\", DIRECTORY_SEPARATOR, dirname(__FILE__, 4));
             $root_path = str_replace("../", DIRECTORY_SEPARATOR, $root_path);

@@ -57,6 +57,13 @@ class Site extends BaseModel
         return SiteDict::getStatus()[$data['status']] ?? '';
     }
 
+    public function getSiteStatusNameAttr($value, $data)
+    {
+        if (empty($data['status']))
+            return '';
+        return SiteDict::getStatus()[$data['status']] ?? '';
+    }
+
     /**
      * 关键字搜索
      * @param $query

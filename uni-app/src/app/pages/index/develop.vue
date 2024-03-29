@@ -1,5 +1,5 @@
 <template>
-	<view class="mt-[80rpx] px-[60rpx]">
+	<view class="mt-[80rpx] px-[60rpx]" :style="themeColor()">
 		<view class="font-bold text-xl mb-[80rpx]">{{t('developTitle')}}</view>
 		<view class="mb-[40rpx] flex flex-col">
 			<text class="mb-[10rpx]">{{ t('baseUrl') }}</text>
@@ -20,8 +20,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, reactive, computed } from 'vue'
-	import { img, redirect, getSiteId } from '@/utils/common'
+	import { ref, reactive } from 'vue'
 	import { t } from '@/locale'
 	import manifestJson from '@/manifest.json'
 

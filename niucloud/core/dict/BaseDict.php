@@ -79,6 +79,17 @@ abstract class BaseDict extends Storage
     }
 
     /**
+     * 获取所有本地插件（包括未安装，用于系统指令执行）
+     * @return array|false
+     */
+    public function getAllLocalAddons()
+    {
+        $addon_dir = root_path() . 'addon';
+        $addons = array_diff(scandir($addon_dir), ['.', '..']);
+        return $addons;
+    }
+
+    /**
      * 获取插件目录
      * @param string $addon
      * @return string

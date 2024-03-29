@@ -8,6 +8,7 @@
                         <icon name="element-Refresh" />
                     </div>
                     <!-- 预览 只有站点时展示-->
+	                <i class="iconfont iconicon_huojian1 cursor-pointer px-[8px]" :title="t('visitWap')" @click="toPreview"></i>
                     <i class="iconfont iconlingdang-xianxing cursor-pointer px-[8px]" :title="t('newInfo')" v-if="appType == 'site'"></i>
 					<!-- 切换首页 -->
 					<div class="navbar-item flex items-center h-full cursor-pointer"  v-if="appType == 'site'" @click="checkIndexList">
@@ -158,6 +159,17 @@ const breadcrumb = computed(() => {
     if (matched[0] && matched[0].path == '/') matched.splice(0, 1)
     return matched
 })
+
+// 跳转去预览
+const toPreview = () => {
+    const url = router.resolve({
+        path: '/preview/wap',
+        query: {
+            page:'/'
+        }
+    })
+    window.open(url.href)
+}
 
 // 返回上一页
 const backFn = () => {

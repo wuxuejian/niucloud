@@ -66,7 +66,6 @@ const props = defineProps({
         type: String
     }
 })
-console.log("props",props.routePath)
 
 const meta = computed(() => props.routes.meta)
 

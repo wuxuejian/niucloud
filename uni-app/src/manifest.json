@@ -1,6 +1,6 @@
 {
     "name" : "",
-    "appid" : "__UNI__ED923AB",
+    "appid" : "__UNI__FB0C409",
     "description" : "",
     "versionName" : "1.0.0",
     "versionCode" : "100",
@@ -50,7 +50,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wx59e6ba6050bbe7bc",
+        "appid" : "",
         "setting" : {
             "urlCheck" : false
         },
@@ -74,6 +74,13 @@
         "router" : {
             "mode" : "history",
             "base" : "/wap/"
+        },
+        "sdkConfigs": {
+            "maps": {
+                "qqmap": {
+                    "key": "IZQBZ-3UHEU-WTCVD-2464U-I5N4V-ZFFU3"
+                }
+            }
         }
     },
     "fallbackLocale" : "zh-Hans"

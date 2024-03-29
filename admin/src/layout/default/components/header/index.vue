@@ -23,6 +23,7 @@
             <el-col :span="12">
                 <div class="right-panel h-full flex items-center justify-end">
                     <!-- 预览 只有站点时展示-->
+                    <i class="iconfont iconicon_huojian1 cursor-pointer px-[8px]" :title="t('visitWap')" @click="toPreview"></i>
                     <i class="iconfont iconlingdang-xianxing cursor-pointer px-[8px]" :title="t('newInfo')" v-if="appType == 'site'"></i>
                     <!-- 切换语言 -->
                     <!-- <div class="navbar-item flex items-center h-full cursor-pointer">
@@ -65,7 +66,7 @@ import userInfo from './user-info.vue'
 import { useFullscreen } from '@vueuse/core'
 import useSystemStore from '@/stores/modules/system'
 import useAppStore from '@/stores/modules/app'
-import { useRoute } from 'vue-router'
+import { useRoute,useRouter } from 'vue-router'
 import { t } from '@/lang'
 import storage from '@/utils/storage'
 
@@ -74,6 +75,7 @@ const { toggle: toggleFullscreen } = useFullscreen()
 const systemStore = useSystemStore()
 const appStore = useAppStore()
 const route = useRoute()
+const router = useRouter()
 const screenWidth = ref(window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth)
 
 const dark = computed(() => {
@@ -146,6 +148,17 @@ const breadcrumb = computed(() => {
     if (matched[0] && matched[0].path == '/') matched.splice(0, 1)
     return matched
 })
+
+// 跳转去预览
+const toPreview = () => {
+    const url = router.resolve({
+        path: '/preview/wap',
+        query: {
+            page:'/'
+        }
+    })
+    window.open(url.href)
+}
 
 // 返回上一页
 // const backFn = () => {

@@ -1,13 +1,14 @@
 <template>
     <view class="diy-group" id="componentList">
-        <view v-for="(component, index) in data.value" :key="component.id"
-        @click="diyStore.changeCurrentIndex(index, component)" class="draggable-element relative"
-        :class="{ selected: diyStore.currentIndex == index,decorate : diyStore.mode == 'decorate' }" :style="component.pageStyle">
+        <view v-for="(component, index) in data.value" :key="component.id" @click="diyStore.changeCurrentIndex(index, component)" :class="getComponentClass(index,component)" :style="component.pageStyle">
             <template v-if="component.componentName == 'GraphicNav'">
                 <diy-graphic-nav :component="component" :index="index" :pullDownRefreshCount="props.pullDownRefreshCount"></diy-graphic-nav>
             </template>
             <template v-if="component.componentName == 'HorzBlank'">
                 <diy-horz-blank :component="component" :index="index" :pullDownRefreshCount="props.pullDownRefreshCount"></diy-horz-blank>
+            </template>
+            <template v-if="component.componentName == 'HorzLine'">
+                <diy-horz-line :component="component" :index="index" :pullDownRefreshCount="props.pullDownRefreshCount"></diy-horz-line>
             </template>
             <template v-if="component.componentName == 'HotArea'">
                 <diy-hot-area :component="component" :index="index" :pullDownRefreshCount="props.pullDownRefreshCount"></diy-hot-area>
@@ -27,6 +28,15 @@
             <template v-if="component.componentName == 'Text'">
                 <diy-text :component="component" :index="index" :pullDownRefreshCount="props.pullDownRefreshCount"></diy-text>
             </template>
+            <template v-if="component.componentName == 'RichText'">
+                <diy-rich-text :component="component" :index="index" :pullDownRefreshCount="props.pullDownRefreshCount"/>
+            </template>
+            <template v-if="component.componentName == 'ActiveCube'">
+                <diy-active-cube :component="component" :index="index" :pullDownRefreshCount="props.pullDownRefreshCount"/>
+            </template>
+			<template v-if="component.componentName == 'FloatBtn'">
+			    <diy-float-btn :component="component" :index="index" :pullDownRefreshCount="props.pullDownRefreshCount"/>
+			</template>
         </view>
         <template v-if="diyStore.mode == '' && data.global.bottomTabBarSwitch">
             <view class="pt-[20rpx]"></view>
@@ -36,7 +46,7 @@
 </template>
 <script lang="ts" setup>
    import useDiyStore from '@/app/stores/diy';
-   import { onMounted, nextTick, computed } from 'vue';
+   import { ref, onMounted, nextTick, computed } from 'vue';
    import Sortable from 'sortablejs';
    import { range } from 'lodash-es';
    import useConfigStore from '@/stores/config'
@@ -55,12 +65,31 @@
        return useConfigStore().addon;
    })
 
+   const positionFixed = ref(['fixed', 'top_fixed','right_fixed','bottom_fixed','left_fixed'])
+
+   const getComponentClass = (index:any,component:any) => {
+       let obj: any = {
+           relative: true,
+           selected: diyStore.currentIndex == index,
+           decorate: diyStore.mode == 'decorate'
+       }
+       obj['top-fixed-' + diyStore.topFixedStatus] = true;
+
+       if (component.position && positionFixed.value.indexOf(component.position) != -1) {
+           //  找出置顶组件，设置禁止拖动
+           obj['ignore-draggable-element'] = true;
+       } else {
+           obj['draggable-element'] = true;
+       }
+       return obj;
+   }
+
    onMounted(() => {
        // #ifdef H5
        if (diyStore.mode == 'decorate') {
            var el = document.getElementById('componentList');
            const sortable = Sortable.create(el, {
-               group: 'draggable-element',
+               draggable: '.draggable-element',
                animation: 200,
                // 结束拖拽
                onEnd: event => {

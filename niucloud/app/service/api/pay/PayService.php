@@ -67,7 +67,7 @@ class PayService extends BaseApiService
      * @return null
      */
     public function close(string $type, string $out_trade_no){
-        return $this->core_pay_service->close($this->site_id, $type);
+        return $this->core_pay_service->close($this->site_id, $out_trade_no);
     }
 
     /**
