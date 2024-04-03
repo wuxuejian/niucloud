@@ -1,17 +1,19 @@
 
-### NIUCLOUD-ADMIN-SAAS 是什么？
-niucloud-admin-saas是一款快速开发通用管理后台框架，整体功能架构全部精心设计！代码干净整洁！低耦合，高质量！！！前端采用最新技术 **Vite+TypeScript+Vue3+ElementPlus** ，后台采用PHP8、MYSQL8、THINKPHP8 全部最新技术栈。 采用多租户多站点多应用多插件任意组合使用的SAAS架构设计，内置代码生成器，插件生成器，一键云编译、一键云部署，集成用户权限、表单设计、云存储、短信发送、素材中心、微信及公众号、Api模块一系列开箱即用功能，是一款快速搭建开发企业级应用的软件系统。源码100%开源无加密！框架采用MIT协议，终身免费，商用免费！
+### NIUCLOUD-ADMIN 是什么？
+niucloud-admin-saas是一款快速开发通用管理后台框架，整体功能架构全部精心设计！代码干净整洁！低耦合，高质量！！！前后端API接口完全分离 :raised_hands: ！！！前端采用最新技术 **Vite+TypeScript+Vue3+ElementPlus** ，后台采用PHP8、MYSQL8、THINKPHP8 全部最新技术栈，内置Workman高性能消息队列，计划任务处理，完全兼容容器路由运行技术。 采用多租户多站点多应用多插件任意组合使用的SAAS架构设计，内置代码生成器，插件生成器，一键云编译、一键云部署，集成用户权限、表单设计、云存储、短信发送、素材中心、微信及公众号、Api模块一系列开箱即用功能，是一款快速搭建开发企业级应用的软件系统。源码100%开源无加密！框架采用MIT协议，终身免费，商用免费！
 
-目前已经有 NIUCLOUD SHOP商城+分销+VIPCard+上门服务插件。 更多应用插件正在陆续上线中... :clap:  :clap:  :clap: 
+目前已经有 NIUCLOUD  **SHOP商城** + **分销** + **VIPCard** + **上门服务** 插件。 更多应用插件正在陆续上线中... :clap:  :clap:  :clap: 
 
+请到官方网站了解更多 http://www.niucloud.com
 
-### NIUCLOUD-ADMIN-SAAS 采用的技术亮点
+### NIUCLOUD-ADMIN 技术特点 
+
+  :fa-quote-left: 前端（**Vite+TypeScript+Vue3+ElementPlus**）+ **API**接口完全分离 + 后端（**PHP8+THINKPHP8**) + 数据库（**MYSQL8.0+**） :fa-quote-right: 
 ```
-- 后台php采用thinkphp8+php8+mysql,支持composer快速安装扩展，支持redis缓存以及消息队列，支持多语言设计开发，同时开发采用严格的restful的api设计开发。
+- 支持composer快速安装扩展，支持redis缓存以及消息队列，支持多语言设计开发，采用严格的restful的api设计开发。
 - 后台前后端分离采用element-plus、vue3.0、typescript、vite、pina等前端技术,同时使用i18n支持国际化多语言开发。
-- 手机端采用uniapp前后端分离，同时使用uview、vue3.0、typescript、vite、pina等前端技术，同时使用i18n支持国际化多语言开发，可以灵活编译成h5,微信小程序，支付宝小程序，抖音小程序等使用场景。
-- niucloud-admin采用多租户的saas系统设计，能够提供企业级软件服务运营 ，同时满足用户多站点，多商户，多门店等系统开发需求。
-- niucloud-admin结合当前市面上很多框架结构不规范，导致基础结构不稳定等情况，严格定义了分层设计的开发规范，同时api接口严格采用restful的开发规范，能够满足大型业务系统或者微服务的开发需求。
+- 手机端采用uniapp前后端分离，使用uview、vue3.0、typescript、vite、pina前端技术，支持h5,微信小程序，支付宝小程序，抖音小程序等使用场景。
+- niucloud-admin采用多租户的saas系统设计，支持多站点多商户多门店多应用多插件组合使用。
 - niucloud-admin前端以及后端采用严格的多语言开发规范，包括前端展示，api接口返回，数据验证，错误返回等全部使用多语言设计规范，使开发者能够真生意义上实现多语言的开发需求。
 - niucloud-admin已经搭建好常规系统的开发底层，具体的底层功能包括：管理员管理，权限管理，网站设置，计划任务管理，素材管理，会员管理，会员账户管理，微信公众号以及小程序管理，支付管理，第三方登录管理，消息管理，短信管理，文章管理，前端装修等全面的基础功能，这样开发者不需要开发基础的结构而专心开发业务。
 - niucloud-admin系统内置支持微信/支付宝支付，微信公众号/小程序/短信消息管理，阿里云/腾讯云短信，七牛云/阿里云存储等基础的功能扩展，后续会根据实际业务不断扩展基础组件。
@@ -26,23 +28,24 @@ niucloud-admin-saas是一款快速开发通用管理后台框架，整体功能�
 ![输入图片说明](https://media.niucloud.com/170406669739221755c392e165470c486d0025ad17_aliyun.png)
 ![输入图片说明](https://media.niucloud.com/1704067302721c5360c622b4934fae659ee1eb0987_aliyun.png)
 
-### 商城插件
+### 商城插件  :point_right:   SHOP
 ![输入图片说明](https://media.niucloud.com/1704067355ecae8e7b09c482e8c3a5ebc1a4cd0fcc_aliyun.png)
+![输入图片说明](https://media.niucloud.com/1711597084402f1f74c47080b20c7feb4166b2ab2a_aliyun.png)
 
-### 分销插件
+### 分销插件  :point_right:   FENXIAO
 ![输入图片说明](https://media.niucloud.com/1705744442d046875f3a6356e20b4201683c2f08fe_aliyun.png)
 ![输入图片说明](https://media.niucloud.com/17057444230b1a32898072457faa8888b77d9621ff_aliyun.png)
 ![输入图片说明](https://media.niucloud.com/17057444220f55b9430e07e635968a843bcc3e2845_aliyun.png)
 
-### 上门服务插件
+### 上门服务插件  :point_right: O2O
 ![输入图片说明](https://media.niucloud.com/1705739434bf20bb824783fcee9eea6361f3cfb7aa_aliyun.png)
 ![输入图片说明](https://media.niucloud.com/1705739434483707b8617e0e1489d7d2f51cda111c_aliyun.png)
 ![输入图片说明](https://media.niucloud.com/17057394343bdd84db9c1fa966c7cb0c03c5618ad9_aliyun.png)
 
-### VIPCard会员卡插件
+### 会员卡插件 :point_right: VIPCard
 ![输入图片说明](https://media.niucloud.com/1704067355ecae8e7b09c482e8c3a5ebc1a4cd0fcc_aliyun.png)
 
-### 旅游系统插件
+### 旅游管理插件 :point_right:  TOURS
 ![输入图片说明](https://media.niucloud.com/17057440675004b59c88adaebcb492a31d3a909944_aliyun.png)
 ![输入图片说明](https://media.niucloud.com/1705744067bad60e348b4dd479d223aa5de963a1bf_aliyun.png)
 
@@ -70,6 +73,12 @@ niucloud-admin-saas是一款快速开发通用管理后台框架，整体功能�
 加入企业微信群技术交流，请扫描下面二维码 :point_down: 
 
 ![输入图片说明](https://media.niucloud.com/170312377249fc5bc70c5f914fda3d7c5cf3413ddc_aliyun.jpg)
+
+
+### 产品LOGO
+![输入图片说明](https://foruda.gitee.com/avatar/1682227978769691031/1342405_niushop_1682227978.png)
+
+![输入图片说明](https://www.niucloud.com/_nuxt/login_logo.650a27e2.png)
 
 
 ### 开源使用须知
