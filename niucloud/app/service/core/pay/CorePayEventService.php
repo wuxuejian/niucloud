@@ -79,7 +79,7 @@ class CorePayEventService extends BaseCoreService
      * 去支付
      * @param string $out_trade_no
      * @param float $money
-     * @param string $boby
+     * @param string $body
      * @param string $refund_url
      * @param string $quit_url
      * @param string $buyer_id
@@ -87,14 +87,14 @@ class CorePayEventService extends BaseCoreService
      * @return mixed
      * @throws Exception
      */
-    public function pay(string $out_trade_no, float $money, string $boby, string $refund_url = '', string $quit_url = '', string $buyer_id = '', string $openid = '', string $voucher = '')
+    public function pay(string $out_trade_no, float $money, string $body, string $refund_url = '', string $quit_url = '', string $buyer_id = '', string $openid = '', string $voucher = '')
     {
         $pay_fun = '';
 
         $params = array(
             'out_trade_no' => $out_trade_no,
             'money' => $money,
-            'boby' => mb_substr($boby,0,15,"utf-8").'...',
+            'body' => mb_substr($body,0,15,'utf-8').'...',
             'channel' => $this->channel,
             'refund_url' => $refund_url,
             'quit_url' => $quit_url,
@@ -105,8 +105,7 @@ class CorePayEventService extends BaseCoreService
         );
         switch ($this->type) {
             case PayDict::WECHATPAY:
-                $params['money'] *= 100;
-
+                $params['money'] = (int)bcmul($params['money'], 100);
                 switch ($this->channel) {
                     case ChannelDict::H5://h5
                         $pay_fun = 'wap';

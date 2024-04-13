@@ -13,6 +13,7 @@ namespace app\service\core\notice;
 
 
 use app\dict\notice\NoticeDict;
+use app\model\addon\Addon;
 use app\model\sys\SysNotice;
 use core\base\BaseCoreService;
 use core\exception\NoticeException;
@@ -35,16 +36,6 @@ class CoreNoticeService extends BaseCoreService
         $this->model = new SysNotice();
     }
 
-
-    /**
-     * 获取当前站点消息
-     * @param int $site_id
-     * @param array $keys
-     * @return array
-     * @throws DataNotFoundException
-     * @throws DbException
-     * @throws ModelNotFoundException
-     */
     public function getList(int $site_id, array $keys = [])
     {
         $list = $this->model->where([ [ 'site_id', '=', $site_id ] ])->select()->toArray();
@@ -77,6 +68,63 @@ class CoreNoticeService extends BaseCoreService
             }
         }
         return $notice;
+    }
+
+    /**
+     * 获取当前站点消息
+     * @param int $site_id
+     * @param array $keys
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function getAddonList(int $site_id, array $keys = [])
+    {
+        $list = $this->model->where([ [ 'site_id', '=', $site_id ] ])->select()->toArray();
+        if (!empty($list)) {
+            $list_key = array_column($list, 'key');
+            $list = array_combine($list_key, $list);
+        }
+
+        $notice = NoticeDict::getNotice();
+        $addon_list = (new Addon())->where([ ['key', 'in', get_site_addons($site_id) ]])->column('key,title', 'key');
+        $addon_list['app'] = ['key' => 'system', 'title' => '系统'];
+        foreach ($addon_list as $addon => &$item) {
+            if ($addon =='app') {
+                $template_path = str_replace('/', DIRECTORY_SEPARATOR, root_path()."app/dict/notice/notice.php");
+            } else {
+                $template_path = str_replace('/', DIRECTORY_SEPARATOR, root_path()."addon/{$addon}/app/dict/notice/notice.php");
+            }
+            if (is_file($template_path)) {
+                $notice_list = include $template_path;
+                $item['notice'] = [];
+                foreach ($notice_list as &$notice_item) {
+                    if (!isset($notice[ $notice_item['key'] ])) continue;
+                    if (array_key_exists($notice_item['key'], $list)) {
+                        $notice_item = array_merge($notice_item, $notice[$notice_item['key']], $list[ $notice_item['key'] ]);
+                    } else {
+                        $notice_item = array_merge($notice_item, $notice[$notice_item['key']], [
+                            'site_id' => $site_id,
+                            'sms_content' => '',
+                            'is_wechat' => 0,
+                            'is_weapp' => 0,
+                            'is_sms' => 0,
+                            'wechat_template_id' => '',
+                            'weapp_template_id' => '',
+                            'sms_id' => '',
+                            'wechat_first' => '',
+                            'wechat_remark' => ''
+                        ]);
+                    }
+                    $item['notice'][] = $notice_item;
+                }
+            } else {
+                $item['notice'] = [];
+            }
+        }
+        ksort($addon_list);
+        return array_values($addon_list);
     }
 
     /**

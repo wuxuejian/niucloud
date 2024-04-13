@@ -1,5 +1,5 @@
 <template>
-    <div class="main-container">
+    <div class="main-container bg-[#fff] rounded-[4px]">
         <el-alert class="warm-prompt" type="info">
             <template #default>
                 <div class="flex items-center">

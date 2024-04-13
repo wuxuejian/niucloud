@@ -11,6 +11,7 @@
 
 namespace app\service\admin\sys;
 
+use app\model\site\Site;
 use app\service\admin\site\SiteService;
 use app\service\core\channel\CoreH5Service;
 use app\service\core\sys\CoreConfigService;

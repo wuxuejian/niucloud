@@ -122,7 +122,7 @@
                         </template>
                     </el-table-column>
 
-                    <el-table-column :label="t('operation')" min-width="250" align="right" fixed="right">
+                    <el-table-column :label="t('operation')" min-width="210" align="right" fixed="right">
                         <template #default="{ row }">
                             <el-button type="primary" link @click="openClose(row.status, row.site_id)"
                                 v-if="row.status == 1 || row.status == 3">{{ row.status == 1 ? t('closeTxt') : t('openTxt')

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import storage from '@/utils/storage'
 import { useCssVar } from '@vueuse/core'
+import { getWebConfig } from '@/app/api/sys'
 
 interface System {
     menuIsCollapse: boolean,
@@ -9,7 +10,9 @@ interface System {
     theme: string,
     lang: string,
     sidebar: string,
-    sidebarStyle: string
+    sidebarStyle: string,
+    currHeadMenuName: any,
+    website: Object
 }
 
 const theme = storage.get('theme') ?? {}
@@ -25,7 +28,8 @@ const useSystemStore = defineStore('system', {
             sidebar: theme.sidebar ?? 'oneType',
             lang: storage.get('lang') ?? 'zh-cn',
             sidebarStyle: theme.sidebarStyle ?? 'threeType',
-            currHeadMenuName: ''
+            currHeadMenuName: '',
+            website: {}
         }
     },
     actions: {
@@ -41,6 +45,11 @@ const useSystemStore = defineStore('system', {
             this.menuIsCollapse = value
             storage.set({ key: 'menuiscollapse', data: value })
             useCssVar('--aside-width').value = value ? 'calc(var(--el-menu-icon-width) + var(--el-menu-base-level-padding) * 2)' : '210px'
+        },
+        async getWebsiteInfo() {
+            await getWebConfig().then(({ data }) => {
+                this.website = data
+            }).catch()
         }
     }
 })

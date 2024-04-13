@@ -109,6 +109,14 @@ export function getAreaByCode(code: number | string) {
 }
 
 /**
+ * 通过经纬度查询地址
+ * @param params
+ */
+export function getAddressByLatlng(params : Record<string, any>) {
+    return request.get(`area/address_by_latlng`,params)
+}
+
+/**
  * 获取手机端首页列表
  */
 export function getWapIndexList(data : AnyObject) {

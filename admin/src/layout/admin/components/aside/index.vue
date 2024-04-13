@@ -1,101 +1,183 @@
 <template>
-    <el-aside :class="['layout-aside w-full ease-in duration-200', { 'bright': !dark }]">
-
-        <div class="flex flex-wrap items-center pt-[20px] pb-[10px] pl-[80px] pr-[70px]"
-             v-if="twoMenuData.length">
-            <template v-for="(item,index) in twoMenuData" :key="index">
-                <div
-                    v-if="item.meta.show"
-                    @click="redirect(item)"
-                    :class="['flex items-center h-[32px] border-[1px] border-solid my-[3px] border-[#E0E0E0] rounded-full px-[10px] mr-[24px] cursor-pointer bg-[#f8f8f8] hover:bg-[#fff]',{'text-[#fff] !bg-[#000] border-[#000]': menuActive == item.name || menuTwoActive && menuTwoActive == item.name}]">
-                    <icon v-if="item.meta.icon" :name="item.meta.icon" class="!w-auto mr-[4px] !leading-[14px]" size="14px"
-                          :title="item.meta.title" />
-                    <span class="text-[14px]">{{ item.meta.short_title || item.meta.title }}</span>
+    <div :class="['layout-aside ease-in duration-200 flex h-full', { 'bright': !dark }]">
+        <div class="flex flex-col h-full border-0 border-r-[1px] border-solid border-[#eee] box-border bg-[#f5f6f8]">
+            <div class="w-full h-[64px] flex justify-center items-center w-[65px]flex-shrink-0">
+                <el-image style="width: 40px; height: 40px" :src="img(logoUrl)" fit="contain">
+                    <template #error>
+                        <div class="flex justify-center items-center w-full h-[40px]"><img class="max-w-[40px]" src="@/app/assets/images/site_login_logo.png" alt=""  object-fit="contain"></div>
+                    </template>
+                </el-image>
+            </div>
+            <el-scrollbar class="flex-1 w-[65px] one-menu">
+                <div class="flex flex-col items-center">
+                    <template v-for="(item, index) in oneMenuData">
+                        <div v-if="item.meta.show" class="menu-item py-[10px] w-full box-border cursor-pointer" :class="{'is-active':oneMenuActive===item.original_name}" @click="router.push({ name: item.name })">
+                            <div class="w-[50px] h-full flex items-center justify-center mx-auto">
+                                <template v-if="item.meta.icon">
+                                    <el-image class="w-[25px] h-[25px] overflow-hidden" :src="item.meta.icon" fit="fill" v-if="isUrl(item.meta.icon)"/>
+                                    <icon  :name="item.meta.icon" size="25px" v-else />
+                                </template>
+                                <icon v-else :name="'iconfont iconshezhi1'" />
+                            </div>
+                            <div class="text-center text-[13px] mt-[5px]">{{ item.meta.short_title || item.meta.title }}</div>
+                        </div>
+                    </template>
                 </div>
-            </template>
+            </el-scrollbar>
+
         </div>
-        <!-- 三级菜单 -->
-        <div class="pt-[20px] pl-[80px] pr-[70px]" v-if="threeMenuData.length">
-            <el-tabs v-model="menuTwoActive" @tab-click="toolsHandleClick">
-                <template v-for="(item,index) in threeMenuData" :key="index">
-                    <el-tab-pane :label="item.meta.title" :name="item.name" :path="item.path" v-if="item.meta.show"
-                                 @click="settingMenuFn(item)"></el-tab-pane>
-                </template>
-            </el-tabs>
+        <div class="flex flex-col two-menu w-[140px] h-[100vh]" v-if="twoMenuData.length">
+            <div class="w-[140px] h-[64px] bg-[#fff] flex items-center justify-center text-[16px]">{{ route.matched[1].meta.title }}</div>
+            <el-scrollbar class="flex-1">
+                <el-menu :default-active="route.name" :router="true" class="aside-menu " :collapse="systemStore.menuIsCollapse">
+                    <menu-item v-for="(route, index) in twoMenuData" :routes="route" :key="index" />
+                </el-menu>
+                <div class="h-[48px]"></div>
+            </el-scrollbar>
         </div>
-    </el-aside>
+
+    </div>
 </template>
 
 <script lang="ts" setup>
 import { watch, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useSystemStore from '@/stores/modules/system'
-
+import useUserStore from '@/stores/modules/user'
+import { ADMIN_ROUTE,findFirstValidRoute } from "@/router/routers"
+import { img, isUrl } from '@/utils/common'
+import { getWebsite } from '@/app/api/sys'
+import menuItem from './menu-item.vue'
 const route = useRoute()
+const userStore = useUserStore()
+const routers = userStore.routers
 const systemStore = useSystemStore()
 const router = useRouter()
 const dark = computed(() => {
     return systemStore.dark
 })
-
+const logoUrl = computed(() => {
+    return userStore.siteInfo.icon ? userStore.siteInfo.icon : systemStore.website.icon
+})
 const twoMenuData = ref<Record<string, any>[]>([])
-const threeMenuData = ref<Record<string, any>[]>([])
-const menuActive = ref('')
-const menuTwoActive = ref('')
 
+const oneMenuData = ref<Record<string, any>[]>([])
+routers.forEach(item => {
+    item.original_name = item.name
+    if (item.children && item.children.length) {
+        item.name = findFirstValidRoute(item.children)
+    }
+    oneMenuData.value.push(item)
+})
+
+const oneMenuActive = ref(oneMenuData.value[0].name)
 watch(route, () => {
     twoMenuData.value = route.matched[1].children ?? []
-    threeMenuData.value = route.matched[2].children ?? []
-    menuActive.value = route.matched[2] ? route.matched[2].name : ''
-    menuTwoActive.value = route.matched[3] ? route.matched[3].name : ''
+    oneMenuActive.value = route.matched[1].name == ADMIN_ROUTE.children[0].name ? route.matched[2].name : route.matched[1].name
 }, { immediate: true })
 
-/**
- * 跳转
- * @param data
- */
-const redirect = (data: any) => {
-    if (data.children) {
-        router.push(data.children[0].path)
-    } else {
-        router.push(data.path)
-    }
-}
-
-const toolsHandleClick = (tab, event: Event) => {
-    router.push({name: tab.props.name})
-}
+// const logoShow = ref<boolean>(false)
+// const getWebsiteFn = ()=>{
+//     getWebsite().then((res:any)=>{
+//         logoUrl.value = res.data.icon
+//         console.log(res)
+//         logoShow.value = true
+//     }).catch(()=>{
+//         logoShow.value = true
+//     })
+// }
+// getWebsiteFn()
 </script>
 
 <style lang="scss">
-.layout-aside {
-    &.bright {
-        li {
-            background-color: #F5F7F9;
-
-            &.is-active:not(.is-opened) {
-                position: relative;
-                color: #333;
-                background-color: #fff;
-
-                &::after {
-                    content: "";
-                    position: absolute;
-                    top: 0;
-                    bottom: 0;
-                    left: 0;
-                    width: 2px;
-                    background-color: var(--el-menu-active-color);
+.one-menu{
+        .menu-item{
+            &:hover{
+                color:var(--el-color-primary);
+            }
+            &.is-active{
+                background-color: var(--el-color-primary) !important;
+                color: #fff !important;
+            }
+            span{
+                font-size: 14px;
+                margin-left: 8px;
+            }
+    }
+    .el-menu{
+        border: 0;
+    }
+    .el-scrollbar{
+        height: calc(100vh - 65px);
+    }
+}
+.two-menu{
+    .aside-menu:not(.el-menu--collapse) {
+        width: 140px;
+        border: 0;
+        padding-top: 10px;
+        .el-menu-item{
+            height: 36px;
+            margin: 0 8px 4px;
+            padding: 0 8px !important;
+            border-radius: 2px;
+            span{
+                margin-left: 8px;
+                font-size: 14px;
+            }
+            &.is-active{
+                background-color: var(--el-color-primary-light-9) !important;
+            }
+            &:hover{
+                background-color: #f7f7f7;
+                color: var(--el-color-primary);
+            }
+        }
+        .el-sub-menu{
+            margin-bottom: 8px;
+            .el-sub-menu__title{
+                margin: 0 8px 4px;
+                height: 36px;
+                padding-left: 8px;
+                border-radius: 2px;
+                span{
+                    height: 36px;
+                    display: flex;
+                    align-items: center;
+                    font-size: 14px;
                 }
+                &:hover{
+                    background-color: #f7f7f7;
+                    color: var(--el-color-primary);
+                }
+                .el-icon.el-sub-menu__icon-arrow{
+                    right: 5px;
+                }
+            }
+            .el-menu-item{
+                padding-left: 20px !important;
             }
         }
     }
-
-    .menu-item:hover{
-        color: var(--el-color-primary);
-    }
 }
-.text-color{
-    color: var(--el-color-primary);
+
+.logo-wrap {
+    padding: 0;
+    display: flex;
+    white-space: nowrap;
+    align-items: center;
+
+    .logo {
+        height: 100%;
+        box-sizing: border-box;
+    }
+
+    .logo-title {
+        flex: 1;
+        width: 0;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-size: var(--el-font-size-base);
+    }
 }
 </style>

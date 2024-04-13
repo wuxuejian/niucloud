@@ -1,5 +1,5 @@
 <template>
-    <div class="main-container min-h-[300px] p-5">
+    <div class="main-container min-h-[300px] p-5 bg-[#fff] rounded-[4px]">
         <div class="flex justify-between items-center mb-[20px]">
             <span class="text-page-title">{{ pageName }}</span>
         </div>
@@ -85,7 +85,6 @@ import { AnyObject } from '@/types/global'
 const route = useRoute()
 const router = useRouter()
 const pageName = route.meta.title
-// const activeNames = ref('1')
 const dialogVisible = ref(false)
 const weappTableData:{
     page: number,

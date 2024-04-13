@@ -55,9 +55,6 @@ class CoreCloudBuildService extends BaseCoreService
             if (!is_dir($web_dir)) throw new CommonException('WEB_DIR_NOT_EXIST');
             if (!is_dir($wap_dir)) throw new CommonException('UNIAPP_DIR_NOT_EXIST');
         } catch (\Exception $e) {
-            if (strpos($e->getMessage(), 'open basedir') !== false) {
-                throw new CommonException('OPEN_BASEDIR_ERROR');
-            }
             throw new CommonException($e->getMessage());
         }
 

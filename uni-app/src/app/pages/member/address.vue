@@ -37,7 +37,7 @@
                             <text class="iconfont iconbianji shrink-0 text-[40rpx] p-[20rpx] pr-0" @click="editAddress(item.id)"></text>
                         </view>
                     </u-swipe-action-item>
-                    <view v-if="!locationAddressList.length" class="pt-[15vh]">
+                    <view v-if="!locationAddressList.length" class="pt-[20vh]">
                         <u-empty text="暂无收货地址" :icon="img('static/resource/images/system/empty.png')"/>
                     </view>
                 </view>
@@ -93,12 +93,12 @@
 
     const addAddress = ()=> {
         const url = `/app/pages/member/${tabs.value[ current.value ].key}_edit`
-        redirect({ url, param: { type: tabs.value[ current.value ].key } })
+        redirect({ url, param: { type: tabs.value[ current.value ].key, source : source.value } })
     }
 
     const editAddress = (id: number)=> {
         const url = `/app/pages/member/${tabs.value[ current.value ].key}_edit`
-        redirect({ url, param: { id, type: tabs.value[ current.value ].key} })
+        redirect({ url, param: { id, type: tabs.value[ current.value ].key, source : source.value} })
     }
 
     const addressOptions = ref([
@@ -138,6 +138,7 @@
 <style lang="scss" scoped>
     :deep(.u-tabs__wrapper__nav__line) {
         bottom: 0;
+        background: var(--primary-color) !important;
     }
     .line-feed{
         word-wrap:break-word;

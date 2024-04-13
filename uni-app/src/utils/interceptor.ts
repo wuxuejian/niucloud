@@ -13,9 +13,6 @@ export const redirectInterceptor = (route: { path: string, query: object }) => {
 	// 检测当前访问的是系统（app）还是插件
 	setAddonName(route.path)
 
-	// 加载语言包
-	language.loadLocaleMessages(route.path, uni.getLocale())
-
 	// 开发模式下，如果未配置站点ID，则跳转到开发环境配置页面
 	// #ifdef H5
 	if (process.env.NODE_ENV == 'development') {
@@ -23,6 +20,10 @@ export const redirectInterceptor = (route: { path: string, query: object }) => {
 			redirect({ url: '/app/pages/index/develop', mode: 'reLaunch' })
 		}
 	}
+	// #endif
+
+	// #ifdef MP
+	route.path.indexOf('addon') != -1 && language.loadAllLocaleMessages('addon', uni.getLocale())
 	// #endif
 
 	// 校验是否需要登录
@@ -60,7 +61,10 @@ export const launchInterceptor = () => {
 	setAddonName(launch.path);
 
 	// 加载语言包
-	language.loadLocaleMessages(launch.path, uni.getLocale())
+	language.loadAllLocaleMessages('app', uni.getLocale())
+	// #ifdef H5
+	language.loadAllLocaleMessages('addon', uni.getLocale())
+	// #endif
 
 	// 校验是否需要登录
 	checkNeedLogin(launch)

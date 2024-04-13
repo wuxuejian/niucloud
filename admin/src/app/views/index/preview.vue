@@ -245,7 +245,11 @@ watch(copied, () => {
 body {
     background: #edf0f3;
 }
-
+.main-container{
+    overflow: inherit !important;
+    border-radius: inherit;
+    background: inherit;
+}
 .copy {
     background: var(--el-color-primary) !important;
     color: var(--el-color-white) !important;

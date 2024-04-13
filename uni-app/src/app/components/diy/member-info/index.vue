@@ -1,6 +1,10 @@
 <template>
 	<view :style="warpCss">
 		<view class="pt-[34rpx] member-info">
+			<!-- #ifdef MP-WEIXIN --><view :style="navbarInnerStyle" class="flex items-center justify-center fixed left-0 right-0 z-10 top-0"></view>
+			<!-- 解决fixed定位后导航栏塌陷的问题 -->
+			<view :style="navbarInnerStyle"></view>
+			<!-- #endif -->
 			<view v-if="info" class="flex ml-[32rpx] mr-[52rpx]  items-center relative">
 				<!-- 唤起获取微信 -->
 				<u-avatar :src="img(info.headimg)" size="55" leftIcon="none" @click="clickAvatar"></u-avatar>
@@ -155,6 +159,39 @@
 		}
 		// #endif
 	}
+	
+	
+		// 获取系统状态栏的高度
+		let systemInfo = uni.getSystemInfoSync();
+		let platform = systemInfo.platform;
+		let menuButtonInfo = {};
+		// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
+		// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
+		menuButtonInfo = uni.getMenuButtonBoundingClientRect();
+		// #endif
+	
+	// 导航栏内部盒子的样式
+	const navbarInnerStyle = computed(() => {
+		let style = '';
+		// 导航栏宽度，如果在小程序下，导航栏宽度为胶囊的左边到屏幕左边的距离
+		// #ifdef MP
+		let rightButtonWidth = menuButtonInfo.width ? menuButtonInfo.width * 2 + 'rpx' : '70rpx';
+		style += 'height:' + menuButtonInfo.height + 'px;';
+		style += 'padding-right:calc(' + rightButtonWidth + ' + 30rpx);';
+		style += 'padding-left:calc(' + rightButtonWidth + ' + 30rpx);';
+		style += 'padding-top:' + (menuButtonInfo.top-15) + 'px;';
+		style += 'padding-bottom: 8px;';
+		style += 'font-size: 32rpx;';
+		if (platform === 'ios') {
+			// 苹果(iOS)设备
+			style += 'font-weight: 500;';
+		} else if (platform === 'android') {
+		  // 安卓(Android)设备
+			style += 'font-size: 36rpx;';
+		}
+		// #endif
+		return style;
+	})
 </script>
 
 <style lang="scss" scoped>

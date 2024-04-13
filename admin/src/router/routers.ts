@@ -36,34 +36,6 @@ export const ADMIN_ROUTE: RouteRecordRaw = {
         {
             path: 'login',
             component: () => import('@/app/views/login/index.vue')
-        },
-        {
-            path: 'user',
-            component: Default,
-            children: [
-                {
-                    path: 'center',
-                    meta: {
-                        type: 1,
-                        title: '个人中心'
-                    },
-                    component: () => import('@/app/views/index/personal.vue')
-                }
-            ]
-        },
-        {
-            path: 'user',
-            component: Default,
-            children: [
-                {
-                    path: 'edit_center',
-                    meta: {
-                        type: 1,
-                        title: '编辑个人中心'
-                    },
-                    component: () => import('@/app/views/index/edit_personal.vue')
-                }
-            ]
         }
     ]
 }
@@ -103,34 +75,6 @@ export const SITE_ROUTE: RouteRecordRaw = {
         {
             path: 'login',
             component: () => import('@/app/views/login/index.vue')
-        },
-        {
-            path: 'user',
-            component: Default,
-            children: [
-                {
-                    path: 'center',
-                    meta: {
-                        type: 1,
-                        title: '个人中心'
-                    },
-                    component: () => import('@/app/views/site/personal.vue')
-                }
-            ]
-        },
-        {
-            path: 'user',
-            component: Default,
-            children: [
-                {
-                    path: 'edit_center',
-                    meta: {
-                        type: 1,
-                        title: '编辑个人中心'
-                    },
-                    component: () => import('@/app/views/site/edit_personal.vue')
-                }
-            ]
         }
     ]
 }

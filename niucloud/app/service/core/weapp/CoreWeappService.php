@@ -12,6 +12,7 @@
 namespace app\service\core\weapp;
 
 use core\base\BaseCoreService;
+use core\exception\CommonException;
 use core\exception\WechatException;
 use EasyWeChat\Kernel\Exceptions\InvalidArgumentException;
 use EasyWeChat\MiniApp\Application;
@@ -76,6 +77,30 @@ class CoreWeappService extends BaseCoreService
     public static function appApiClient(int $site_id)
     {
         return self::app($site_id)->getClient();
+    }
+
+    /**
+     * 生成小程序码
+     * @param int $site_id
+     * @return void
+     */
+    public function qrcode(int $site_id, $page, $data, $filepath, $width = 430){
+        $scene = [];
+        foreach($data as $v){
+            $scene[] = $v['key'].'='.$v['value'];
+        }
+        $response = self::appApiClient($site_id)->postJson('/wxa/getwxacodeunlimit', [
+            'scene' => implode('&', $scene),
+            'page' => $page,
+            'width' => $width,
+            'check_path' => false,
+        ]);
+        if ($response->isFailed()) {
+            // 出错了，处理异常
+            throw new CommonException('WECHAT_MINI_PROGRAM_CODE_GENERATION_FAILED');
+        }
+        $response->saveAs($filepath);
+        return $filepath;
     }
 
 }

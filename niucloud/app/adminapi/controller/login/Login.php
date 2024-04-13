@@ -25,6 +25,7 @@ use think\Response;
 
 class Login extends BaseAdminController
 {
+    use WapTrait;
 
     /**
      * 登录
@@ -69,6 +70,12 @@ class Login extends BaseAdminController
     }
 
     public function test(){
-       
+        $this->addon = 'shop';
+        $this->uninstallPageCode(project_path(). 'uni-app/src/');
+    }
+
+    public function geAddonPackagePath(string $addon)
+    {
+        return root_path() . 'addon' .DIRECTORY_SEPARATOR . $addon . DIRECTORY_SEPARATOR . 'package' . DIRECTORY_SEPARATOR;
     }
 }

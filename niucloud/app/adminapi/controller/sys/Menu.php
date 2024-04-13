@@ -128,7 +128,7 @@ class Menu extends BaseAdminController
     public function refreshMenu()
     {
         (new InstallSystemService())->install();
-        return success('REFRESH_SUCCESS');
+        return success('SUCCESS');
     }
 
     /**

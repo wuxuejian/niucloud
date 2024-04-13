@@ -158,5 +158,12 @@
 				display: none;
 			}
 		}
+		.child-diy-template-wrap{
+			::v-deep .diy-group {
+				> .draggable-element.top-fixed-diy {
+					display: block !important;
+				}
+			}
+		}
 	}
 </style>

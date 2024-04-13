@@ -113,9 +113,6 @@ class CoreAddonInstallService extends CoreAddonBaseService
             if (!is_dir($this->root_path . 'web' . DIRECTORY_SEPARATOR)) throw new CommonException('WEB_DIR_NOT_EXIST');
             if (!is_dir($this->root_path . 'uni-app' . DIRECTORY_SEPARATOR)) throw new CommonException('UNIAPP_DIR_NOT_EXIST');
         } catch (\Exception $e) {
-            if (strpos($e->getMessage(), 'open basedir') !== false) {
-                throw new CommonException('OPEN_BASEDIR_ERROR');
-            }
             throw new CommonException($e->getMessage());
         }
 
@@ -224,9 +221,6 @@ class CoreAddonInstallService extends CoreAddonBaseService
         } catch (\Exception $e) {
             Cache::set('install_task', $this->install_task);
             $this->installExceptionHandle();
-            if (strpos($e->getMessage(), 'open basedir') !== false) {
-                throw new CommonException('OPEN_BASEDIR_ERROR');
-            }
             throw new CommonException($e->getMessage());
         }
     }
@@ -531,8 +525,10 @@ class CoreAddonInstallService extends CoreAddonBaseService
      */
     public function uninstall()
     {
-        $site_num = (new Site())->where([ ['app', '=', $this->addon] ])->count('site_id');
+        $site_num = (new Site())->where([ ['app', 'like', "%$this->addon%"] ])->count('site_id');
         if ($site_num) throw new CommonException('APP_NOT_ALLOW_UNINSTALL');
+
+        (new CoreAddonDevelopBuildService())->build($this->addon);
 
         //执行插件卸载方法
         $class = "addon\\" . $this->addon . "\\" . 'Addon';
@@ -543,7 +539,6 @@ class CoreAddonInstallService extends CoreAddonBaseService
         $addon_info = $core_addon_service->getInfoByKey($this->addon);
         if (empty($addon_info)) throw new AddonException('NOT_UNINSTALL');
         if (!$this->uninstallSql()) throw new AddonException('ADDON_SQL_FAIL');
-        if (!$this->uninstallDir()) throw new AddonException('ADDON_DIR_FAIL');
 
         // 卸载菜单
         $this->uninstallMenu();

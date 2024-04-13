@@ -1,4 +1,5 @@
 import { nextTick } from 'vue'
+import { getAppPages, getSubPackagesPages} from "@/utils/pages"
 
 class Language {
     private i18n: any
@@ -22,6 +23,13 @@ class Language {
         }
         path && (this.path = path)
         uni.setLocale(locale)
+    }
+
+    public loadAllLocaleMessages(app: string, locale: string) {
+        const pages = app == 'app' ? getAppPages() : getSubPackagesPages()
+        pages.forEach((path: string) => {
+            this.loadLocaleMessages(path, locale)
+        })
     }
 
     /**

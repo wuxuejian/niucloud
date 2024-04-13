@@ -23,6 +23,7 @@ use app\service\core\site\CoreSiteService;
 use core\base\BaseAdminService;
 use core\exception\AuthException;
 use Exception;
+use think\facade\Cache;
 
 /**
  * 用户服务层
@@ -186,11 +187,17 @@ class AuthService extends BaseAdminService
      * @return bool
      */
     public static function isSuperAdmin() {
-        return !(new SysUserRole())->where([
-            ['uid', '=', (new self())->uid ],
-            ['site_id', '=', request()->defaultSiteId()],
-            ['is_admin', '=', 1]
-        ])->field('id')->findOrEmpty()->isEmpty();
+        $super_admin_uid = Cache::get('super_admin_uid');
+
+        if (!$super_admin_uid) {
+            $super_admin_uid = (new SysUserRole())->where([
+                ['site_id', '=', request()->defaultSiteId()],
+                ['is_admin', '=', 1]
+            ])->value('uid');
+            Cache::set('super_admin_uid', $super_admin_uid);
+        }
+
+        return $super_admin_uid == (new self())->uid;
     }
 
 }

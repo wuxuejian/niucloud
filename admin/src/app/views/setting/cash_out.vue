@@ -1,6 +1,6 @@
 <template>
-    <div class="main-container">
-        <div class="flex ml-[18px] justify-between items-center mt-[20px]">
+    <div class="main-container bg-[#fff] rounded-[4px]">
+        <div class="flex ml-[18px] justify-between items-center pt-[20px]">
 			<span class="text-page-title">{{pageName}}</span>
 		</div>
         <el-form :model="formData" label-width="150px" ref="ruleFormRef" :rules="rules" class="page-form" v-loading="loading">

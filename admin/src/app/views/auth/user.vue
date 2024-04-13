@@ -2,10 +2,12 @@
     <div class="main-container">
         <el-card class="box-card !border-none" shadow="never">
             <div class="flex justify-between items-center">
+                <span class="text-page-title">{{pageName}}</span>
+            </div>
+            <div class="flex justify-between items-center mt-[16px]">
                 <el-form :inline="true" :model="userTableData.searchParam" ref="searchFormRef">
                     <el-form-item :label="t('accountNumber')" prop="seach">
-                        <el-input v-model="userTableData.searchParam.seach" class="input-width"
-                            :placeholder="t('accountNumberPlaceholder')" />
+                        <el-input v-model="userTableData.searchParam.seach" class="input-width" :placeholder="t('accountNumberPlaceholder')" />
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="loadUserList()">{{ t('search') }}</el-button>
@@ -56,10 +58,8 @@
                         <template #default="{ row }">
                             <div v-if="row.is_admin != 1">
                                 <el-button type="primary" link @click="editEvent(row)">{{ t('edit') }}</el-button>
-                                <el-button type="primary" link @click="lockEvent(row.uid)" v-if="row.status">{{
-                                    t('lock') }}</el-button>
-                                <el-button type="primary" link @click="unlockEvent(row.uid)" v-else>{{ t('unlock')
-                                }}</el-button>
+                                <el-button type="primary" link @click="lockEvent(row.uid)" v-if="row.status">{{ t('lock') }}</el-button>
+                                <el-button type="primary" link @click="unlockEvent(row.uid)" v-else>{{ t('unlock') }}</el-button>
                             </div>
                             <div v-else>
                                 <el-button link disabled>{{ t('adminDisabled') }}</el-button>
@@ -89,7 +89,10 @@ import EditUser from '@/app/views/auth/components/edit-user.vue'
 import { img } from '@/utils/common'
 import { ElMessageBox } from 'element-plus'
 import type { FormInstance } from 'element-plus'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
+const pageName = route.meta.title
 const userTableData = reactive({
     page: 1,
     limit: 10,

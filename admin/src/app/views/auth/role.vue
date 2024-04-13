@@ -2,9 +2,12 @@
     <div class="main-container">
         <el-card class="box-card !border-none" shadow="never">
             <div class="flex justify-between items-center">
+                <span class="text-page-title">{{pageName}}</span>
+            </div>
+            <div class="flex justify-between items-center mt-[16px]">
                 <el-form :inline="true" :model="roleTableData.searchParam" ref="searchFormRef">
-                    <el-form-item :label="t('roleName')" prop="seach">
-                        <el-input v-model="roleTableData.searchParam.seach" class="w-[240px]" :placeholder="t('roleNamePlaceholder')" />
+                    <el-form-item :label="t('roleName')" prop="search">
+                        <el-input v-model="roleTableData.searchParam.search" class="w-[240px]" :placeholder="t('roleNamePlaceholder')" />
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="loadRoleList()">{{ t('search') }}</el-button>
@@ -51,7 +54,10 @@ import { t } from '@/lang'
 import { getRoleList, deleteRole } from '@/app/api/sys'
 import { ElMessageBox, FormInstance } from 'element-plus'
 import EditRole from '@/app/views/auth/components/edit-role.vue'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
+const pageName = route.meta.title
 const roleTableData = reactive({
     page: 1,
     limit: 10,
@@ -59,7 +65,7 @@ const roleTableData = reactive({
     loading: true,
     data: [],
     searchParam: {
-        seach: ''
+        search: ''
     }
 })
 
@@ -80,7 +86,7 @@ const loadRoleList = (page: number = 1) => {
     getRoleList({
         page: roleTableData.page,
         limit: roleTableData.limit,
-        role_name: roleTableData.searchParam.seach
+        role_name: roleTableData.searchParam.search
     }).then(res => {
         roleTableData.loading = false
         roleTableData.data = res.data.data

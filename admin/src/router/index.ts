@@ -47,27 +47,19 @@ router.beforeEach(async (to, from, next) => {
     to.redirectedFrom && (to.query = to.redirectedFrom.query)
 
     const userStore = useUserStore()
-    const siteInfo = userStore.siteInfo
+    const systemStore = useSystemStore()
     const appType = getAppType()
 
     let title: string = to.meta.title ?? ''
 
-    if (!siteInfo && appType != 'home') {
+    if (!userStore.siteInfo && appType != 'home') {
         await userStore.getSiteInfo()
     }
 
-    if (siteInfo) {
-        title += '-' + siteInfo.site_name
-    }
-
-    // 设置网站标题
-    setWindowTitle(title)
-
     // 加载语言包
-    await language.loadLocaleMessages(to.meta.addon || '', (to.meta.view || to.path), useSystemStore().lang);
+    await language.loadLocaleMessages(to.meta.addon || '', (to.meta.view || to.path), systemStore.lang);
 
     let matched: any = to.matched;
-
     if (matched && matched.length && matched[0].path != '/:pathMatch(.*)*') {
         matched = matched[0].path;
     } else {
@@ -75,6 +67,15 @@ router.beforeEach(async (to, from, next) => {
     }
 
     const loginPath = to.path == '/' ? '/admin/login' : `/${matched == '/admin' ? 'admin' : 'site'}/login`
+
+    if (appType != 'site' || to.path === loginPath) {
+        title += systemStore.website.site_name ? ('-' + systemStore.website.site_name) : ''
+    } else {
+        title += userStore.siteInfo && userStore.siteInfo.site_name ? ('-' + userStore.siteInfo.site_name) : ''
+    }
+
+    // 设置网站标题
+    setWindowTitle(title)
 
     // 判断是否需登录
     if (NO_LOGIN_ROUTES.includes(to.path)) {

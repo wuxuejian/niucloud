@@ -6,7 +6,7 @@
                     <view>{{t('cashOutMoneyTip')}}</view>
                     <view class="flex py-[20rpx] items-baseline border-0 border-b-[2rpx] border-solid border-gray-200">
                         <text class="text-[60rpx] ">{{ t('currency') }}</text>
-                        <input type="digit" class="h-[70rpx] leading-[70rpx] pl-[10rpx] flex-1 font-bold text-[60rpx]" v-model="applyData.apply_money" />
+                        <input type="digit" class="h-[70rpx] leading-[70rpx] pl-[10rpx] flex-1 font-bold text-[60rpx]" v-model="applyData.apply_money" maxlength="7" />
                         <image @click="clearMoney" v-if="applyData.apply_money"
                             :src="img('static/resource/images/member/apply_withdrawal/close.png')" class="w-[40rpx] h-[40rpx]"
                             mode="widthFix" />

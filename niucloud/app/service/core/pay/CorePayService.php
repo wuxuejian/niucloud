@@ -254,10 +254,12 @@ class CorePayService extends BaseCoreService
             $pay = $this->createByTrade($site_id, $trade_type, $trade_id);
         }
         if ($pay['status'] == PayDict::STATUS_FINISH) throw new PayException('PAY_SUCCESS');
-        if ($pay['status'] == PayDict::STATUS_CANCLE) throw new PayException('PAY_IS_REMOVE');
-        if ($pay['status'] == PayDict::STATUS_ING) {
-            //尝试关闭原有的支付单据
-            $this->close($site_id, $pay->out_trade_no);
+//        if ($pay['status'] == PayDict::STATUS_CANCLE) throw new PayException('PAY_IS_REMOVE');
+        if ($pay['status'] == PayDict::STATUS_ING || $pay['status'] == PayDict::STATUS_CANCLE) {
+            if($pay['status'] == PayDict::STATUS_ING ){
+                //尝试关闭原有的支付单据
+                $this->close($site_id, $pay->out_trade_no);
+            }
             //创建新的支付单据
             $pay = $this->createByTrade($site_id, $trade_type, $trade_id);
         }

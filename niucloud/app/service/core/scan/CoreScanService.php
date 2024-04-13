@@ -40,7 +40,7 @@ class CoreScanService extends BaseCoreService
      * @return array|string|string[]
      */
     public function scan(int $site_id, string $action, array $data, int $expire = null){
-        $key = str_replace('==','', md5(uniqid(null, true)));
+        $key = str_replace('==','', md5(uniqid('', true)));
         $cache_name = self::$cache_name.$key;
         $data['status'] = ScanDict::WAIT;
         $data['is_scan'] =  false;//是否被扫描

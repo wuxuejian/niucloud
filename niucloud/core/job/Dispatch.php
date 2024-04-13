@@ -43,14 +43,15 @@ class Dispatch
             }
             return $queue->push();
         } else {
-            $class_name = '\\' . $class;
-            $res = new $class_name();
-            if (is_array($action)) {
-                return $res->doJob(...$action);
-            } else {
-                return $res->$action(...$data);
+            if($secs == 0){
+                $class_name = '\\' . $class;
+                $res = new $class_name();
+                if (is_array($action)) {
+                    return $res->doJob(...$action);
+                } else {
+                    return $res->$action(...$data);
+                }
             }
-
         }
     }
 }

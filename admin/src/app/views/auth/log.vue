@@ -2,6 +2,9 @@
     <div class="main-container">
         <el-card class="box-card !border-none" shadow="never">
             <div class="flex justify-between items-center">
+                <span class="text-page-title">{{pageName}}</span>
+            </div>
+            <div class="flex justify-between items-center mt-[16px]">
                 <el-form :inline="true" :model="sysUserLogTableData.searchParam" ref="searchFormRef">
                     <el-form-item :label="t('ip')" prop="ip">
                         <el-input v-model="sysUserLogTableData.searchParam.ip" :placeholder="t('ipPlaceholder')" />
@@ -57,7 +60,10 @@ import { t } from '@/lang'
 import { getLogList } from '@/app/api/site'
 import UserLogDetail from '@/app/views/auth/components/user-log-detail.vue'
 import { FormInstance } from 'element-plus'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
+const pageName = route.meta.title
 const sysUserLogTableData = reactive({
     page: 1,
     limit: 10,

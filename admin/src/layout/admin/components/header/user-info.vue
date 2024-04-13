@@ -8,13 +8,13 @@
             </div>
             <template #dropdown>
                 <el-dropdown-menu>
-                    <el-dropdown-item>
-                        <router-link to="/user/center">
+                    <el-dropdown-item @click="getUserInfoFn">
+                        <!-- <router-link to="/user/center"> -->
                             <div class="flex items-center leading-[1] py-[5px]">
                                 <span class="iconfont iconshezhi1 ml-[4px] !text-[14px] mr-[10px]"></span>
                                 <span class="text-[14px]">账号设置</span>
                             </div>
-                        </router-link>
+                        <!-- </router-link> -->
                     </el-dropdown-item>
                     <el-dropdown-item>
                         <router-link to="/tools/authorize">
@@ -61,6 +61,7 @@
                 </span>
             </template>
         </el-dialog>
+        <user-info-edit ref="userInfoEditRef" />
     </div>
 </template>
 
@@ -72,7 +73,7 @@ import type { FormInstance, FormRules, ElNotification } from 'element-plus'
 import useUserStore from '@/stores/modules/user'
 import { setUserInfo } from '@/app/api/personal'
 import { t } from '@/lang'
-
+import userInfoEdit from '@/app/components/user-info-edit/index.vue'
 const userStore = useUserStore()
 
 const clickEvent = (command: string) => {
@@ -86,7 +87,10 @@ const clickEvent = (command: string) => {
 const logout = () => {
     userStore.logout();
 }
-
+const userInfoEditRef = ref(null)
+const getUserInfoFn = ()=>{
+    userInfoEditRef.value?.open()
+}
 // 修改密码 --- start
 let changePasswordDialog = ref(false)
 const formRef = ref<FormInstance>();

@@ -88,7 +88,6 @@ class CoreWechatServeService extends BaseCoreService
         $server->with(function($message, \Closure $next)  use ($site_id){
             // 你的自定义逻辑
             return (new CoreWechatMessageService)->message($site_id, $message);
-//            return $next($message);
         });
         $response = $server->serve();
         return $response;

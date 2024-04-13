@@ -38,13 +38,27 @@
 		return useConfigStore().tabbar
 	})
 
-
 	const value = computed(() => {
 		return '/' + currRoute()
 	})
 
-	const tabbarChange = (name : string) => {
-		redirect({ url: `${name}`,mode: 'reLaunch' })
+	const tabbarChange = (url : string) => {
+        // 外部链接
+        if (url.indexOf('http') != -1 || url.indexOf('http') != -1) {
+
+            // #ifdef H5
+            window.location.href = url;
+            // #endif
+
+            // #ifdef MP
+            redirect({
+                url: '/app/pages/webview/index',
+                param: { src: encodeURIComponent(url) }
+            });
+            // #endif
+        } else {
+            redirect({ url,mode: 'reLaunch' })
+        }
 	}
 </script>
 

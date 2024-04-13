@@ -121,7 +121,7 @@ class CoreWechatMessageService extends BaseCoreService
         }
         //如果配置了关注回复,返回关注消息
         $core_wechat_reply_service = new CoreWechatReplyService();
-        return $core_wechat_reply_service->reply($site_id, WechatDict::REPLY_SUBSCRIBE) ?? false;
+        return $core_wechat_reply_service->reply($site_id, WechatDict::REPLY_SUBSCRIBE, openid: $message['FromUserName']) ?? false;
     }
 
 
@@ -149,6 +149,6 @@ class CoreWechatMessageService extends BaseCoreService
     function text(int $site_id, $message)
     {
         $core_wechat_reply_service = new CoreWechatReplyService();
-        return $core_wechat_reply_service->reply($site_id, WechatDict::REPLY_KEYWORD, $message['Content']) ?? false;
+        return $core_wechat_reply_service->reply($site_id, WechatDict::REPLY_KEYWORD, $message['Content'], openid: $message['FromUserName']) ?? false;
     }
 }

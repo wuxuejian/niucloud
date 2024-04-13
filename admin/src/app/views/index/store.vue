@@ -1,6 +1,6 @@
 <template>
-    <div class="pt-[59px] px-[20px] app-store" v-loading="authLoading">
-        <div>
+    <div class="box-border main-container">
+        <el-card class="box-card !border-none" shadow="never">
             <div class="flex justify-between items-center h-[32px] mb-4">
                 <span class="text-page-title text-[#222]">{{ t('localAppText') }}</span>
                 <el-input class="!w-[250px]" :placeholder="t('search')" v-model="search_name" @keyup.enter="query">
@@ -11,28 +11,28 @@
                     </template>
                 </el-input>
             </div>
-            <div class="flex mt-[24px] justify-between">
+            <div class="flex my-[10px] justify-between">
                 <div class="flex">
-                    <div :class="['flex items-center text-[14px] h-[32px] border-[1px] border-solid my-[3px] border-[#E0E0E0] rounded-full px-[15px] mr-[24px] cursor-pointer bg-[#f8f8f8] hover:bg-[#fff]', { 'text-[#fff] !bg-[#000] border-[#000]': activeName === 'installed' }]"
+                    <div :class="['flex items-center text-[14px] h-[32px] border-[1px] border-solid my-[3px] border-[#E0E0E0] rounded-full px-[20px] mr-[24px] cursor-pointer bg-[#f8f8f8] hover:bg-[#fff]', { 'text-[#fff] !bg-[#000] border-[#000]': activeName === 'installed' }]"
                         @click="activeNameTabFn('installed')">
                         {{ t('installLabel') }}
                     </div>
-                    <div :class="['flex items-center text-[14px] h-[32px] border-[1px] border-solid my-[3px] border-[#E0E0E0] rounded-full px-[15px] mr-[24px] cursor-pointer bg-[#f8f8f8] hover:bg-[#fff]', { 'text-[#fff] !bg-[#000] border-[#000]': activeName === 'uninstalled' }]"
+                    <div :class="['flex items-center text-[14px] h-[32px] border-[1px] border-solid my-[3px] border-[#E0E0E0] rounded-full px-[20px] mr-[24px] cursor-pointer bg-[#f8f8f8] hover:bg-[#fff]', { 'text-[#fff] !bg-[#000] border-[#000]': activeName === 'uninstalled' }]"
                         @click="activeNameTabFn('uninstalled')">
                         {{ t('uninstalledLabel') }}
                     </div>
-                    <div :class="['flex items-center text-[14px] h-[32px] border-[1px] border-solid my-[3px] border-[#E0E0E0] rounded-full px-[15px] mr-[24px] cursor-pointer bg-[#f8f8f8] hover:bg-[#fff]', { 'text-[#fff] !bg-[#000] border-[#000]': activeName === 'all' }]"
+                    <div :class="['flex items-center text-[14px] h-[32px] border-[1px] border-solid my-[3px] border-[#E0E0E0] rounded-full px-[20px] mr-[24px] cursor-pointer bg-[#f8f8f8] hover:bg-[#fff]', { 'text-[#fff] !bg-[#000] border-[#000]': activeName === 'all' }]"
                         @click="activeNameTabFn('all')">
                         {{ t('buyLabel') }}
                     </div>
                 </div>
-                <div :class="['flex items-center text-white text-[14px] h-[32px] border-[1px] border-solid my-[3px] border-primary rounded-full px-[15px] cursor-pointer bg-primary hover:bg-primary']"
+                <div :class="['flex items-center text-white text-[14px] h-[32px] border-[1px] border-solid my-[3px] border-primary rounded-full px-[20px] cursor-pointer bg-primary hover:bg-primary']"
                      @click="handleCloudBuild">
                     {{ t('cloudBuild') }}
                 </div>
             </div>
-            <div class="mt-[25px]">
-                <el-table v-if="localList[activeName].length" :data="info[activeName]" size="large" class="pt-[5px]">
+            <div class="min-h-[300px]" v-loading="authLoading">
+                <el-table v-if="localList[activeName].length&&!authLoading" :data="info[activeName]" size="large" class="pt-[5px]">
                     <el-table-column :label="t('appName')" align="left" width="320">
                         <template #default="{ row }">
                             <div class="flex items-center cursor-pointer" @click = "handleTips">
@@ -110,7 +110,7 @@
                     </el-table-column>
                 </el-table>
                 <el-empty class="mx-auto overview-empty"
-                    v-if="!localList.installed.length && !loading && activeName == 'installed'">
+                    v-if="!localList.installed.length && !loading && activeName == 'installed'&&!authLoading">
                     <template #image>
                         <div class="w-[230px] mx-auto">
                             <img src="@/app/assets/images/index/apply_empty.png" class="max-w-full" alt="">
@@ -121,7 +121,7 @@
                     </template>
                 </el-empty>
                 <el-empty class="mx-auto overview-empty"
-                    v-if="!localList.uninstalled.length && !loading && activeName == 'uninstalled'">
+                    v-if="!localList.uninstalled.length && !loading && activeName == 'uninstalled'&&!authLoading">
                     <template #image>
                         <div class="w-[230px] mx-auto">
                             <img src="@/app/assets/images/index/apply_empty.png" class="max-w-full" alt="">
@@ -135,7 +135,7 @@
                         </p>
                     </template>
                 </el-empty>
-                <div v-if="!localList.all.length && !loading && !authinfo && activeName == 'all'"
+                <div v-if="!localList.all.length && !loading && !authinfo && activeName == 'all'&&!authLoading"
                     class="mx-auto overview-empty flex flex-col items-center pt-14 pb-6">
                     <div class="mb-[20px] text-sm text-[#888]">检测到当前账号尚未绑定授权，请先绑定授权！</div>
                     <div class="flex flex-1  flex-wrap justify-center relative">
@@ -161,7 +161,7 @@
                     </div>
                 </div>
                 <el-empty class="mx-auto overview-empty"
-                     v-if="!localList.all.length && !loading && authinfo && activeName == 'all'">
+                     v-if="!localList.all.length && !loading && authinfo && activeName == 'all'&&!authLoading">
                     <template #image>
                         <div class="w-[230px] mx-auto">
                             <img src="@/app/assets/images/index/apply_empty.png" class="max-w-full" alt="">
@@ -384,7 +384,7 @@
                     </span>
                 </template>
             </el-dialog>
-        </div>
+        </el-card>
     </div>
 
     <upgrade ref="upgradeRef" @complete="localListFn"/>
@@ -855,10 +855,11 @@ const checkAppMange = () => {
     authLoading.value = true
     getAuthinfo()
         .then((res) => {
+            authLoading.value = false
             if (res.data.data && res.data.data.length != 0) {
                 authinfo.value = res.data.data
             }
-            authLoading.value = false
+            
         })
         .catch(() => {
             authLoading.value = false

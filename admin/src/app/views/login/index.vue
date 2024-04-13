@@ -127,7 +127,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import { t } from '@/lang'
@@ -135,7 +135,9 @@ import storage from '@/utils/storage'
 import { getLoginConfig } from '@/app/api/auth'
 import useUserStore from '@/stores/modules/user'
 import { setWindowTitle, img, getAppType } from '@/utils/common'
-import { getWebConfig, getWebCopyright } from '@/app/api/sys'
+import { getWebCopyright } from '@/app/api/sys'
+import useSystemStore from '@/stores/modules/system'
+import Test from '@/utils/test'
 
 const loading = ref(false)
 const imgLoading = ref(false)
@@ -150,20 +152,17 @@ getWebCopyright().then(({ data }) => {
 
 route.redirectedFrom && (route.query.redirect = route.redirectedFrom.path)
 
-const webSite = ref({})
-const setFormData = async (id: number = 0) => {
-    webSite.value = await (await getWebConfig()).data
-}
-setFormData()
-
+const webSite = computed(() => useSystemStore().website)
 // 判断登录页面[平台或者站点]
 const loginType = ref(getAppType())
 
-if (loginType.value == 'site') {
-    setWindowTitle(t('siteLogin'))
-} else {
-    setWindowTitle(t('adminLogin'))
-}
+watch(() => webSite.value, () => {
+    if (loginType.value == 'site') {
+        setWindowTitle(webSite.value.site_name+'-'+t('siteLogin'))
+    } else {
+        setWindowTitle(webSite.value.site_name+'-'+t('adminLogin'))
+    }
+})
 
 // 验证码 - start
 const verifyRef = ref(null)
@@ -215,7 +214,11 @@ const loginFn = (data = {}) => {
         storage.set({ key: 'app_type', data: loginType.value })
         const { query: { redirect } } = route
         const path = typeof redirect === 'string' ? redirect : '/'
-        router.push(path)
+        if (loginType.value == 'admin' && Test.empty(res.data.userrole)) {
+            router.push('/home/index')
+        } else {
+            router.push(path)
+        }
     }).catch(() => {
         loading.value = false
     })

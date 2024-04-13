@@ -20,6 +20,7 @@ use EasyWeChat\Kernel\Messages\Text;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
+use think\facade\Log;
 use think\Model;
 
 
@@ -53,7 +54,7 @@ class CoreWechatReplyService extends BaseCoreService
         if (!empty($data['name'])) {
             $where[] = ['name', 'like', '%' . $data['name'] . '%'];
         }
-        return $this->getPageList($this->model, $where, 'name,keyword,matching_type,content_type,status,sort,create_time', 'uid desc');
+        return $this->getPageList($this->model, $where, '*', 'id desc');
     }
 
     /**
@@ -65,9 +66,9 @@ class CoreWechatReplyService extends BaseCoreService
     public function getKeywordInfo(int $site_id, int $id)
     {
         return $this->model->where([
-                ['site_id', '=', $site_id],
-                ['id', '=', $id],
-                ['reply_type', '=', WechatDict::REPLY_KEYWORD]]
+            ['site_id', '=', $site_id],
+            ['id', '=', $id],
+            ['reply_type', '=', WechatDict::REPLY_KEYWORD]]
         )->findOrEmpty()->toArray();
     }
 
@@ -83,10 +84,9 @@ class CoreWechatReplyService extends BaseCoreService
     public function getKeywordInfoByKeyword(int $site_id, string $keyword)
     {
         $list = $this->model->where([
-                ['site_id', '=', $site_id],
-                ['keyword', 'like', '%' . $keyword . '%'],
-                ['reply_type', '=', WechatDict::REPLY_KEYWORD]],
-                ['status', '=', ReplyDict::STATUS_ON]
+            ['site_id', '=', $site_id],
+            ['keyword', 'like', '%' . $keyword . '%'],
+            ['reply_type', '=', WechatDict::REPLY_KEYWORD]],
         )->order('sort asc')->select()->toArray();
         if (!empty($list)) {
             foreach ($list as $v) {
@@ -96,7 +96,7 @@ class CoreWechatReplyService extends BaseCoreService
                         $item_keyword === $keyword && $reply_content = $item_keyword;
                         break;
                     case ReplyDict::MATCHING_TYPE_LIKE://模糊匹配
-                        stripos($keyword, $item_keyword) !== false && $reply_content = $item_keyword;
+                        stripos($item_keyword, $keyword) !== false && $reply_content = $item_keyword;
                         break;
                 }
                 if (!empty($reply_content)) {
@@ -115,7 +115,7 @@ class CoreWechatReplyService extends BaseCoreService
      * @param string $data
      * @return true
      */
-    public function addKeyword(int $site_id,string  $data)
+    public function addKeyword(int $site_id,array $data)
     {
         $data['site_id'] = $site_id;
         $data['reply_type'] = WechatDict::REPLY_KEYWORD;
@@ -137,7 +137,7 @@ class CoreWechatReplyService extends BaseCoreService
             ['id', '=', $id],
             ['reply_type', '=', WechatDict::REPLY_KEYWORD]
         ];
-        return $this->model->where($where)->update($data);
+        return $this->model->update($data, $where);
     }
 
     /**
@@ -201,7 +201,7 @@ class CoreWechatReplyService extends BaseCoreService
             $data['site_id'] = $site_id;
             return $this->model->create($data);
         } else {
-            return $reply->edit($data);
+            return $reply->save($data);
         }
     }
 
@@ -215,7 +215,7 @@ class CoreWechatReplyService extends BaseCoreService
     {
         return $this->model->where([
                 ['site_id', '=', $site_id],
-                ['reply_type', '=', WechatDict::REPLY_DEFAULT]
+                ['reply_type', '=', WechatDict::REPLY_SUBSCRIBE]
             ]
         )->findOrEmpty()->toArray();
     }
@@ -239,7 +239,7 @@ class CoreWechatReplyService extends BaseCoreService
             $data['site_id'] = $site_id;
             return $this->model->create($data);
         } else {
-            return $reply->edit($data);
+            return $reply->save($data);
         }
 
 
@@ -255,7 +255,7 @@ class CoreWechatReplyService extends BaseCoreService
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function reply(int $site_id, string $event = '', string $content = '')
+    public function reply(int $site_id, string $event = '', string $content = '', string $openid = '')
     {
         switch ($event) {
             case WechatDict::REPLY_SUBSCRIBE://关注回复
@@ -270,20 +270,38 @@ class CoreWechatReplyService extends BaseCoreService
             $info = $this->getDefault($site_id);
         }
         if(!empty($info)){
-            //查询状态
-            if ($info['status'] == ReplyDict::STATUS_ON) {
-                switch($info['content_type']) {
-                    case ReplyDict::CONTENT_TYPE_TEXT://文本
-                        return CoreWechatService::text($info['content']);
-                    case ReplyDict::CONTENT_TYPE_NEW://图文
-                        //todo  转化为临时素材或永久素材
-                        return CoreWechatService::news($info['content']);
+            // 关键字回复
+            if ($info['reply_type'] == WechatDict::REPLY_KEYWORD) {
+                if ($info['reply_method'] == 'all') {
+                    foreach ($info['content'] as $item) {
+                        $this->sendCustomMessage($site_id, array_merge(['touser' => $openid ], $item));
+                    }
+                } else {
+                    $content = count($info['content']) > 1 ? $info['content'][mt_rand(0, count($info['content']) - 1)] : $info['content'][0];
+                    $this->sendCustomMessage($site_id, array_merge(['touser' => $openid ], $content));
                 }
+            } else {
+                 $this->sendCustomMessage($site_id, array_merge(['touser' => $openid ], $info['content']));
             }
         }
     }
 
 
+    /**
+     * 发送客服消息
+     * @param array $options
+     * @return true
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     */
+    public function sendCustomMessage($site_id, array $options) {
+        $send_res = CoreWechatService::appApiClient($site_id)->post('/cgi-bin/message/custom/send', [
+            'json' => $options
+        ]);
+        if (isset($send_res['errcode']) && $send_res['errcode'] != 0) {
+            Log::write($send_res['errmsg']);
+        }
+    }
 
 
 }

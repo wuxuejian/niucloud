@@ -24,16 +24,16 @@
             </view>
             <view class="mt-[10rpx]">
                 <u-form-item :label="t('defaultAddress')" prop="name" :border-bottom="true">
-                    <u-switch v-model="formData.is_default" size="20" :activeValue="1" :inactiveValue="0"></u-switch>
+                    <u-switch v-model="formData.is_default" size="20" :activeValue="1" :inactiveValue="0" activeColor="var(--primary-color)"/>
                 </u-form-item>
             </view>
             <view class="mt-[40rpx]">
                 <u-button type="primary" shape="circle" :text="t('save')" @click="save" :loading="operateLoading"></u-button>
             </view>
         </u-form>
+        <area-select ref="areaRef" @complete="areaSelectComplete" :area-id="formData.district_id"/>
     </view>
-    
-    <area-select ref="areaRef" @complete="areaSelectComplete" :area-id="formData.district_id"/>
+
 </template>
 
 <script setup lang="ts">
@@ -60,6 +60,7 @@
     const areaRef = ref()
     const formRef = ref(null)
     const type = ref('')
+    const source = ref('')
     
     onLoad((data) => {
         if (data.id) {
@@ -70,6 +71,7 @@
                 .catch()
         }
         type.value = data.type || ''
+        source.value = data.source || ''
     })
     
     const rules = computed(() => {
@@ -137,7 +139,7 @@
             save(formData.value).then((res) => {
                 operateLoading.value = false
                 setTimeout(()=> {
-                    redirect({ url: '/app/pages/member/address', param: { type: type.value } })
+                    redirect({ url: '/app/pages/member/address', param: { type: type.value, source : source.value } })
                 }, 1000)
             }).catch(() => {
                 operateLoading.value = false

@@ -4,8 +4,11 @@
             <div class="w-[124px] px-[8px] bg-[#282c34] h-screen one-menu">
                 <el-header class="logo-wrap">
                     <div class="logo flex items-center m-auto h-[64px]" v-if="!systemStore.menuIsCollapse">
-                        <img class="max-h-[40px] max-w-[40px] rounded-full" v-if="siteInfo.logo" :src="img(siteInfo.logo)" alt="">
-                        <img class="max-h-[40px] max-w-[40px] rounded-full" v-else src="@/app/assets/images/icon-addon.png" alt="">
+                        <el-image style="width: 40px; height: 40px" :src="img(logoUrl)" fit="contain">
+                            <template #error>
+                                <div class="flex justify-center items-center w-full h-[40px]"><img class="max-w-[40px]" src="@/app/assets/images/icon-addon.png" alt=""  object-fit="contain"></div>
+                            </template>
+                        </el-image>
                     </div>
                     <div class="logo flex items-center justify-center h-[64px]" v-else>
                         <i class="text-3xl iconfont iconyunkongjian"></i>
@@ -43,7 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { ref, watch,computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useSystemStore from '@/stores/modules/system'
 import useUserStore from '@/stores/modules/user'
@@ -62,6 +65,9 @@ const addonIndexRoute = userStore.addonIndexRoute
 const oneMenuData = ref<Record<string, any>[]>([])
 const twoMenuData = ref<Record<string, any>[]>([])
 const addonRouters: Record<string, any> = {}
+const logoUrl = computed(() => {
+    return userStore.siteInfo.icon ? userStore.siteInfo.icon : systemStore.website.icon
+})
 
 routers.forEach(item => {
     item.original_name = item.name
@@ -142,12 +148,12 @@ watch(route, () => {
             font-size: 14px;
             border-radius: 2px;
             &:hover{
-                background-color: var(--el-color-primary);
-                color: #fff;
+                background-color: transparent;
+                color: var(--el-color-primary);
             }
             &.is-active{
                 background-color: var(--el-color-primary) !important;
-                color: #fff;
+                color: #fff !important;
             }
             span{
                 font-size: 14px;

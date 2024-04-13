@@ -1,8 +1,8 @@
 <template>
-	<div class="box-border pt-[64px]">
-		<div class="text-page-title text-[#222] mb-[32px] pl-[14px]">工具管理</div>
-		<div class="flex flex-wrap mt-[28px]">
-			<div class="w-[256px] tools-item-shadow mb-[24px] mx-[14px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/addon')">
+	<div class="box-border main-container pt-[20px]">
+		<div class="text-page-title text-[#222] mb-[16px] pl-[20px]">工具管理</div>
+		<div class="flex flex-wrap">
+			<div class="w-[256px] tools-item-shadow m-[20px] !mr-[0px] !mt-[0px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/addon')">
 				<div class="flex-1 pt-[18px] pb-[14px] px-[24px] flex flex-col">
 					<span class="text-[16px] text-[#222] font-bold">插件开发</span>
 					<div class="text-[13px] text-[#6D7278] leading-[18px] mt-[8px] truncate">
@@ -11,7 +11,7 @@
 				</div>
 				<img src="@/app/assets/images/tools/addon_develop.png" class="w-[256px] h-[128px]" />
 			</div>
-			<div class="w-[256px] tools-item-shadow mb-[24px] mx-[14px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/code')">
+			<div class="w-[256px] tools-item-shadow m-[20px] !mr-[0px] !mt-[0px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/code')">
 				<div class="flex-1 pt-[18px] pb-[14px] px-[24px] flex flex-col">
 					<span class="text-[16px] text-[#222] font-bold">代码生成</span>
 					<div class="text-[13px] text-[#6D7278] leading-[18px] mt-[8px] truncate">
@@ -20,7 +20,7 @@
 				</div>
 				<img src="@/app/assets/images/tools/code.png" class="w-[256px] h-[128px]" />
 			</div>
-			<div class="w-[256px] tools-item-shadow mb-[24px] mx-[14px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/list')">
+			<div class="w-[256px] tools-item-shadow m-[20px] !mr-[0px] !mt-[0px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/list')">
 				<div class="flex-1 pt-[18px] pb-[14px] px-[24px] flex flex-col">
 					<span class="text-[16px] text-[#222] font-bold">数据字典</span>
 					<div class="text-[13px] text-[#6D7278] leading-[18px] mt-[8px] truncate">
@@ -29,16 +29,7 @@
 				</div>
 				<img src="@/app/assets/images/tools/sys_dict_list.png" class="w-[256px] h-[128px]" />
 			</div>
-			<div class="w-[256px] tools-item-shadow mb-[24px] mx-[14px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/update')">
-				<div class="flex-1 pt-[18px] pb-[14px] px-[24px] flex flex-col">
-					<span class="text-[16px] text-[#222] font-bold">更新缓存</span>
-					<div class="text-[13px] text-[#6D7278] leading-[18px] mt-[8px] truncate">
-						更新缓存
-					</div>
-				</div>
-				<img src="@/app/assets/images/tools/tools_Update_cache.png" class="w-[256px] h-[128px]" />
-			</div>
-			<div class="w-[256px] tools-item-shadow mb-[24px] mx-[14px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/detection')">
+			<div class="w-[256px] tools-item-shadow m-[20px] !mr-[0px] !mt-[0px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/detection')">
 				<div class="flex-1 pt-[18px] pb-[14px] px-[24px] flex flex-col">
 					<span class="text-[16px] text-[#222] font-bold">环境监测</span>
 					<div class="text-[13px] text-[#6D7278] leading-[18px] mt-[8px] truncate">
@@ -47,7 +38,7 @@
 				</div>
 				<img src="@/app/assets/images/tools/tools_check_environment.png" class="w-[256px] h-[128px] cursor-pointer" />
 			</div>
-			<div class="w-[256px] tools-item-shadow mb-[24px] mx-[14px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/schedule')">
+			<div class="w-[256px] tools-item-shadow m-[20px] !mr-[0px] !mt-[0px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/schedule')">
 				<div class="flex-1 pt-[18px] pb-[14px] px-[24px] flex flex-col">
 					<span class="text-[16px] text-[#222] font-bold">计划任务</span>
 					<div class="text-[13px] text-[#6D7278] leading-[18px] mt-[8px] truncate">
@@ -56,7 +47,7 @@
 				</div>
 				<img src="@/app/assets/images/tools/tools_schedule.png" class="w-[256px] h-[128px]" />
 			</div>
-			<div class="w-[256px] tools-item-shadow mb-[24px] mx-[14px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/authorize')">
+			<div class="w-[256px] tools-item-shadow m-[20px] !mr-[0px] !mt-[0px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/authorize')">
 				<div class="flex-1 pt-[18px] pb-[14px] px-[24px] flex flex-col">
 					<span class="text-[16px] text-[#222] font-bold">授权信息</span>
 					<div class="text-[13px] text-[#6D7278] leading-[18px] mt-[8px] truncate">
@@ -65,7 +56,7 @@
 				</div>
 				<img src="@/app/assets/images/tools/app_auth.png" class="w-[256px] h-[128px]" />
 			</div>
-			<div class="w-[256px] tools-item-shadow mb-[24px] mx-[14px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/admin_menu')">
+			<div class="w-[256px] tools-item-shadow m-[20px] !mr-[0px] !mt-[0px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/admin_menu')">
 				<div class="flex-1 pt-[18px] pb-[14px] px-[24px] flex flex-col">
 					<span class="text-[16px] text-[#222] font-bold">平台菜单</span>
 					<div class="text-[13px] text-[#6D7278] leading-[18px] mt-[8px] truncate">
@@ -74,7 +65,7 @@
 				</div>
 				<img src="@/app/assets/images/tools/official_market.png" class="w-[256px] h-[128px]" />
 			</div>
-			<div class="w-[256px] tools-item-shadow mb-[24px] mx-[14px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/site_menu')">
+			<div class="w-[256px] tools-item-shadow m-[20px] !mr-[0px] !mt-[0px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="toLink('/admin/tools/site_menu')">
 				<div class="flex-1 pt-[18px] pb-[14px] px-[24px] flex flex-col">
 					<span class="text-[16px] text-[#222] font-bold">站点菜单</span>
 					<div class="text-[13px] text-[#6D7278] leading-[18px] mt-[8px] truncate">
@@ -83,7 +74,7 @@
 				</div>
 				<img src="@/app/assets/images/tools/official_market.png" class="w-[256px] h-[128px]" />
 			</div>
-			<div class="w-[256px] tools-item-shadow mb-[24px] mx-[14px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="developerDialogVisible = true">
+			<div class="w-[256px] tools-item-shadow m-[20px] !mr-[0px] !mt-[0px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="developerDialogVisible = true">
 				<div class="flex-1 pt-[18px] pb-[14px] px-[24px] flex flex-col">
 					<span class="text-[16px] text-[#222] font-bold">开发模式</span>
 					<div class="text-[13px] text-[#6D7278] leading-[18px] mt-[8px] truncate">
@@ -92,7 +83,7 @@
 				</div>
 				<img src="@/app/assets/images/tools/developer.png" class="w-[256px] h-[128px]" />
 			</div>
-			<div class="w-[256px] tools-item-shadow mb-[24px] mx-[14px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="goRouter">
+			<div class="w-[256px] tools-item-shadow m-[20px] !mr-[0px] !mt-[0px] rounded-[8px] flex flex-col cursor-pointer leading-[1]" @click="goRouter">
 				<div class="flex-1 pt-[18px] pb-[14px] px-[24px] flex flex-col">
 					<span class="text-[16px] text-[#222] font-bold">官方市场</span>
 					<div class="text-[13px] text-[#6D7278] leading-[18px] mt-[8px] truncate">

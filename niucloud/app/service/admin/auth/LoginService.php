@@ -71,8 +71,11 @@ class LoginService extends BaseAdminService
         if($app_type == AppTypeDict::ADMIN){
             $default_site_id = $this->request->defaultSiteId();
             $userrole = (new UserRoleService())->getUserRole($default_site_id, $userinfo->uid);
-            if (empty($userrole)) throw new AuthException('SITE_USER_CAN_NOT_LOGIN_IN_ADMIN');
-            if (!$userrole['status']) throw new AuthException('USER_LOCK');
+            if (!empty($userrole)) {
+                if (!$userrole['status']) throw new AuthException('USER_LOCK');
+            } else {
+                $app_type = AppTypeDict::SITE;
+            }
         } else if($app_type == AppTypeDict::SITE){
             $default_site_id = $this->site_id;
         } else {
@@ -95,7 +98,8 @@ class LoginService extends BaseAdminService
                 'username' => $userinfo->username,
             ],
             'site_id' => $default_site_id,
-            'site_info' => null
+            'site_info' => null,
+            'userrole' => $app_type == AppTypeDict::ADMIN ? $userrole : []
         ];
         if ($app_type == AppTypeDict::ADMIN || ($app_type == AppTypeDict::SITE && $data['site_id']) ) {
             $data['site_info'] = (new SiteService())->getInfo($data['site_id']);

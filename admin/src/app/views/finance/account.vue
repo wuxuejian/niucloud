@@ -165,7 +165,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { t } from '@/lang'
 import { getAccountList, getAccountStat, getAccountType } from '@/app/api/site'
 import type { FormInstance } from 'element-plus'
@@ -190,6 +190,11 @@ const siteAccountLogTable = reactive({
 })
 
 const searchFormRef = ref<FormInstance>()
+
+// 去空操作
+watch(() => siteAccountLogTable.searchParam.trade_no, (nval) => {
+    siteAccountLogTable.searchParam.trade_no = nval.trim();
+})
 
 /**
  * 获取站点账单记录列表

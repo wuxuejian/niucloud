@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-wrap mt-[20px] min-w-[1200px]" v-if="page.use_template">
+    <div class="flex flex-wrap pt-[20px] min-w-[1200px] bg-[#fff] rounded-[4px]" v-if="page.use_template">
         <div class="page-item relative bg-no-repeat ml-[20px] mr-[40px] bg-[#f7f7f7] w-[340px] pt-[90px] pb-[20px]">
             <p class="absolute top-[54px] left-[50%] translate-x-[-50%] text-[14px] truncate w-[130px] text-center">{{ page.use_template.title }}</p>
 

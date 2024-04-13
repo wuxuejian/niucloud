@@ -99,8 +99,8 @@ class Upgrade
                         // 公告 组件
                         if (isset($cv[ 'iconType' ])) {
                             $cv[ 'noticeType' ] = 'img';
-                            $cv[ 'imgType' ] = $cv[ 'iconType' ];
-                            $cv[ 'systemUrl' ] = $cv[ 'systemIcon' ];
+                            $cv[ 'imgType' ] = isset($cv[ 'iconType' ]) ? $cv[ 'iconType' ] : '';
+                            $cv[ 'systemUrl' ] = isset($cv[ 'systemIcon' ]) ? $cv[ 'systemIcon' ] : '';
                             $cv[ 'imageUrl' ] = ''; // 上传自定义图片
                             $cv[ 'scrollWay' ] = 'upDown'; // 滚动方式 upDown：上下滚动，horizontal：横向滚动
                             $cv[ 'fontSize' ] = 14;

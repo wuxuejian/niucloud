@@ -22,6 +22,11 @@
 			</view>
 
 		</view>
+
+		<!-- #ifdef MP-WEIXIN -->
+		<!-- 小程序隐私协议 -->
+		<wx-privacy-popup ref="wxPrivacyPopup"></wx-privacy-popup>
+		<!-- #endif -->
 	</view>
 </template>
 
@@ -162,6 +167,13 @@
 		::v-deep .diy-group {
 			> .draggable-element.top-fixed-diy {
 				display: none;
+			}
+		}
+		.child-diy-template-wrap{
+			::v-deep .diy-group {
+				> .draggable-element.top-fixed-diy {
+					display: block !important;
+				}
 			}
 		}
 	}

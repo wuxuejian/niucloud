@@ -5,10 +5,10 @@
                 <el-input v-model.trim="formData.label_name" clearable :placeholder="t('labelNamePlaceholder')" class="input-width" />
             </el-form-item>
             <el-form-item :label="t('memo')">
-                <el-input v-model.trim="formData.memo" type="textarea" rows="4" clearable :placeholder="t('memoPlaceholder')" class="input-width" maxlength="200" />
+                <el-input v-model.trim="formData.memo" type="textarea" rows="4" clearable :placeholder="t('memoPlaceholder')" class="input-width" maxlength="200" show-word-limit />
             </el-form-item>
             <el-form-item :label="t('sort')" prop="sort">
-                <el-input v-model.trim="formData.sort" clearable :placeholder="t('sortPlaceholder')" class="input-width" @keyup="filterNumber($event)" />
+                <el-input v-model.trim="formData.sort" clearable maxlength="6" show-word-limit :placeholder="t('sortPlaceholder')" class="input-width" @keyup="filterNumber($event)" />
             </el-form-item>
 
         </el-form>

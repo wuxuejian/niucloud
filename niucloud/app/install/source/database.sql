@@ -852,7 +852,7 @@ CREATE TABLE `weapp_version`  (
   `create_time` int(11) NOT NULL DEFAULT 0,
   `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '状态',
   `update_time` int(11) NOT NULL DEFAULT 0,
-  `fail_reason` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `fail_reason` text DEFAULT NULL,
   `task_key` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '上传任务key',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -896,19 +896,18 @@ CREATE TABLE `wechat_media`  (
 
 DROP TABLE IF EXISTS `wechat_reply`;
 CREATE TABLE `wechat_reply`  (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '规则名称',
-  `site_id` int(11) NOT NULL DEFAULT 0 COMMENT '站点id',
-  `keyword` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '关键词',
-  `reply_type` tinyint(4) NOT NULL COMMENT '回复类型 subscribe-关注回复 keyword-关键字回复 default-默认回复',
-  `matching_type` tinyint(3) UNSIGNED NOT NULL DEFAULT 1 COMMENT '匹配方式：1-全匹配；2-模糊匹配',
-  `content_type` tinyint(3) UNSIGNED NOT NULL DEFAULT 1 COMMENT '内容类型：1-文本',
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '回复内容',
-  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT 0 COMMENT '启动状态：1-启动；0-关闭',
-  `sort` int(10) UNSIGNED NOT NULL DEFAULT 50 COMMENT '排序',
-  `create_time` int(11) NOT NULL DEFAULT 0 COMMENT '创建时间',
-  `update_time` int(11) NOT NULL DEFAULT 0 COMMENT '更新时间',
-  `delete_time` int(11) NOT NULL DEFAULT 0 COMMENT '删除时间',
+ `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+ `name` varchar(64) NOT NULL DEFAULT '' COMMENT '规则名称',
+ `site_id` int NOT NULL DEFAULT 0 COMMENT '站点id',
+ `keyword` varchar(64) NOT NULL DEFAULT '' COMMENT '关键词',
+ `reply_type` varchar(30) NOT NULL DEFAULT '' COMMENT '回复类型 subscribe-关注回复 keyword-关键字回复 default-默认回复',
+ `matching_type` varchar(30) NOT NULL DEFAULT '1' COMMENT '匹配方式：full 全匹配；like-模糊匹配',
+ `content` text NOT NULL COMMENT '回复内容',
+ `sort` int UNSIGNED NOT NULL DEFAULT 50 COMMENT '排序',
+ `create_time` int NOT NULL DEFAULT 0 COMMENT '创建时间',
+ `update_time` int NOT NULL DEFAULT 0 COMMENT '更新时间',
+ `delete_time` int NOT NULL DEFAULT 0 COMMENT '删除时间',
+ `reply_method` varchar(50) NOT NULL DEFAULT '' COMMENT '回复方式 all 全部 rand随机',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '公众号消息回调表' ROW_FORMAT = Dynamic;
 

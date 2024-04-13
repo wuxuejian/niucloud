@@ -37,8 +37,10 @@ class Serve extends BaseController
      * @throws Throwable
      */
     public function serve($site_id){
-
-        return (new WechatServeService())->serve();
+        $result = (new WechatServeService())->serve();
+        return response($result->getBody())->header([
+            'Content-Type' => 'text/plain;charset=utf-8'
+        ]);
     }
 
 

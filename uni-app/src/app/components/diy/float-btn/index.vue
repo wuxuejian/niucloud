@@ -1,6 +1,6 @@
 <template>
 	<view :style="warpCss">
-		<view :class="['float-btn flex flex-col z-1000 items-center px-[24rpx]', diyComponent.bottomPosition, diyStore.mode != 'decorate' ? 'fixed' : 'decorate-position']" :style="floatBtnWrapCss">
+		<view :class="['float-btn flex flex-col z-1000 items-center px-[24rpx] fixed', diyComponent.bottomPosition, diyStore.mode == 'decorate' ? 'float-btn-border' : '']" :style="floatBtnWrapCss">
 			<view v-for="(item,index) in diyComponent.list" :key="index" @click="toRedirect(item.link)" :class="{'flex items-center justify-center' : true, 'mb-[20rpx]': diyComponent.list.length != index+1 }" :style="floatBtnItemCss">
 				<image v-if="item && item.imageUrl" :style="floatBtnItemCss" :src="img(item.imageUrl)" mode="aspectFit"></image>
 				<image v-else :src="img('static/resource/images/diy/figure.png')" mode="aspectFit" :style="floatBtnItemCss"/>
@@ -120,5 +120,8 @@
 	}
 	.z-1000{
 		z-index: 1000;
+	}
+	.float-btn-border{
+		border: 4rpx dashed var(--primary-color);
 	}
 </style>

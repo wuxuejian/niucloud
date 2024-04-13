@@ -1,7 +1,7 @@
 <template>
 	<u-popup :show="show" :round="10" @close="handleClose" :closeable="true" bgColor="#fff" zIndex="10081"
 		:closeOnClickOverlay="false">
-		<view class="flex flex-col h-[75vh]" v-if="payInfo">
+		<view class="flex flex-col h-[75vh]" v-if="payInfo" @touchmove.prevent.stop>
 			<view class="head">
 				<view class="text-center py-[26rpx]">{{ t('pay.payTitle') }}</view>
 				<view class="flex items-end justify-center w-full text-xl font-bold py-[20rpx]">

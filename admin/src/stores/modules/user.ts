@@ -5,6 +5,7 @@ import storage from '@/utils/storage'
 import router from '@/router'
 import { formatRouters, findFirstValidRoute } from '@/router/routers'
 import useTabbarStore from './tabbar'
+import Test from '@/utils/test'
 
 interface User {
     token: string,
@@ -41,6 +42,9 @@ const userStore = defineStore('user', {
             return new Promise((resolve, reject) => {
                 login(form, app_type)
                     .then((res) => {
+                        if (app_type == 'admin' && Test.empty(res.data.userrole)) {
+                            storage.setPrefix('site')
+                        }
                         this.token = res.data.token
                         this.userInfo = res.data.userinfo
                         this.siteInfo = res.data.site_info || {}

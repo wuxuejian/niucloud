@@ -36,9 +36,11 @@ const useMemberStore = defineStore('member', {
             this.token = ''
             this.info = null
             await logout().then(() => {
+				uni.removeStorageSync('pid');
                 removeToken()
                 isRedirect && redirect({ url: '/app/pages/index/index', mode: 'switchTab' })
             }).catch(() => {
+				uni.removeStorageSync('pid');
                 removeToken()
                 isRedirect && redirect({ url: '/app/pages/index/index', mode: 'switchTab' })
             })

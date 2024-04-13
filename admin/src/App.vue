@@ -19,6 +19,8 @@ const route = useRoute()
 // 初始化设置语言
 const systemStore = useSystemStore()
 const locale = computed(() => (systemStore.lang === 'zh-cn' ? zhCn : en))
+// 查询website信息
+systemStore.getWebsiteInfo()
 
 const toggleDark = useToggle(useDark())
 

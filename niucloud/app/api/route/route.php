@@ -94,6 +94,9 @@ Route::group(function() {
     // 获取省市县数据根据地址id
     Route::get('area/code/:code', 'sys.Area/areaByAreaCode');
 
+    // 通过经纬度查询地址
+    Route::get('area/address_by_latlng', 'sys.Area/getAddressByLatlng');
+
     /***************************************************** 海报管理 ****************************************************/
     //获取海报
     Route::get('poster', 'poster.Poster/poster');

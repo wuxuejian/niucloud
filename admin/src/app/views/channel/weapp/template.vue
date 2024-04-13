@@ -1,5 +1,5 @@
 <template>
-    <div class="main-container p-5">
+    <div class="main-container p-5 bg-[#fff] rounded-[4px]">
         <div class="flex justify-between items-center mb-[20px]">
             <span class="text-page-title">{{ pageName }}</span>
         </div>
@@ -49,8 +49,7 @@
 
                     <el-table-column :label="t('operation')" fixed="right" align="right" width="200">
                         <template #default="{ row }">
-                            <el-button type="primary" link @click="infoSwitch(row)">{{ row.is_weapp == 1 ? t('close') :
-                                t('open') }}</el-button>
+                            <el-button type="primary" link @click="infoSwitch(row)">{{ row.is_weapp == 1 ? t('close') : t('open') }}</el-button>
                             <el-button type="primary" link @click="batchAcquisitionFn(row)">{{ t('regain') }}</el-button>
                         </template>
                     </el-table-column>

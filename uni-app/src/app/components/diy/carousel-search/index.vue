@@ -515,6 +515,7 @@
 			}
 		}
 		.tab-btn{
+			font-size: 32rpx;
 			/* #ifdef H5 */ 
 			top: 22rpx;
 			right: 20rpx;
@@ -610,15 +611,6 @@
 				&.active {
 					width: 36rpx;
 				}
-			}
-		}
-	}
-</style>
-<style lang="scss">
-	.child-diy-template-wrap{
-		::v-deep .diy-group {
-			>.draggable-element {
-				display: block !important;
 			}
 		}
 	}

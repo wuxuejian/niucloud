@@ -159,7 +159,7 @@ export function getWebsite() {
 }
 
 /**
- * 获取网站设置
+ * 获取网站设置 （未登录状态调用）
  * @returns
  */
 export function getWebConfig() {

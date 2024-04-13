@@ -23,7 +23,7 @@
                     </view>
                     <view class="flex items-start mt-[30rpx]" v-if="!info && config.agreement_show">
                         <u-checkbox-group>
-                            <u-checkbox :checked="isAgree" shape="shape" size="14" @change="agreeChange" :customStyle="{'marginTop': '4rpx'}" />
+                            <u-checkbox activeColor="var(--primary-color)" :checked="isAgree" shape="shape" size="14" @change="agreeChange" :customStyle="{'marginTop': '4rpx'}" />
                         </u-checkbox-group>
                         <view class="text-xs text-gray-400 flex flex-wrap">
                             {{ t('agreeTips') }}

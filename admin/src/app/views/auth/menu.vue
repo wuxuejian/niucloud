@@ -3,9 +3,15 @@
         <el-card class="box-card !border-none" shadow="never">
             <div class="flex justify-between items-center mb-[20px]">
                 <span class="text-page-title">{{ pageName }}</span>
-                <el-button type="primary" class="w-[100px]" @click="addEvent">
-                    {{ t('addMenu') }}
-                </el-button>
+                <div class="flex items-center">
+                    <el-button type="primary" class="w-[100px]" @click="addEvent">
+                        {{ t('addMenu') }}
+                    </el-button>
+                    <el-button class="w-[100px]" @click="refreshMenu">
+                        {{ t('initializeMenu') }}
+                    </el-button>
+                </div>
+                
             </div>
 
             <el-table :data="menusTableData.data" row-key="menu_key" size="large" v-loading="menusTableData.loading">
@@ -47,8 +53,8 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
-import { getMenus, deleteMenu } from '@/app/api/sys'
+import { reactive, ref,h } from 'vue'
+import { getMenus, deleteMenu,menuRefresh } from '@/app/api/sys'
 import { t } from '@/lang'
 import { ElMessageBox } from 'element-plus'
 import EditMenu from '@/app/views/auth/components/edit-menu.vue'
@@ -74,6 +80,27 @@ const getMenuList = () => {
     })
 }
 getMenuList()
+// 重置菜单
+const refreshMenu = () => {
+    ElMessageBox.confirm(h('div', null, [
+        h('p', null, t('initializeMenuTipsOne')),
+        h('p', null, t('initializeMenuTipsTwo')),
+        ]), t('warning'),
+        {
+            confirmButtonText: t('confirm'),
+            cancelButtonText: t('cancel'),
+            // type: 'warning'
+        }
+    ).then(() => {
+        menusTableData.loading = true
+        menuRefresh({}).then(res => {
+            menusTableData.loading = false
+        }).catch(() => {
+            menusTableData.loading = false
+        })
+    }).catch(()=>{})
+    
+}
 
 /**
  * 添加菜单

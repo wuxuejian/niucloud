@@ -6,15 +6,13 @@
             </div>
             <div class="flex flex-wrap plug-list pb-10 plug-large" v-if="appList.length">
                 <div v-for="(item, index) in appList" :key="index + 'b'">
-                    <div
-                        class="relative app-item cursor-pointer px-4 mr-4 mt-[20px] bg-[#f7f7f7] border-[1px] hover:border-primary">
+                    <div class="relative app-item cursor-pointer px-4 mr-4 mt-[20px] bg-[#f7f7f7] border-[1px] hover:border-primary">
                         <div @click="toLink(item.key)" class="flex py-5 items-center">
                             <div class="flex justify-center items-center">
                                 <el-image class="w-[40px] h-[40px]" :src="img(item.icon)" fit="contain">
                                     <template #error>
                                         <div class="image-slot">
-                                            <img class="w-[50px] h-[50px]"
-                                                src="@/app/assets/images/index/app_default.png" />
+                                            <img class="w-[50px] h-[50px]" src="@/app/assets/images/index/app_default.png" />
                                         </div>
                                     </template>
                                 </el-image>

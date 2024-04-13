@@ -7,6 +7,7 @@ use think\facade\Queue;
 use think\facade\Cache;
 use core\util\Snowflake;
 use app\service\core\upload\CoreImageService;
+use app\service\core\sys\CoreSysConfigService;
 // 应用公共文件
 
 /**
@@ -858,16 +859,46 @@ function file_copy(string $source_file, string $to_file) {
  * @param $size
  * @return string
  */
-function qrcode($url, $site_id, $dir, $file_path, $channel = '', $size = 4){
-    $dir = $dir ?: 'upload' . '/'.$site_id. '/'.'qrcode'.'/';//二维码默认存储位置
+function qrcode($url, $page, $data, $site_id, $dir, $channel = 'h5', $style = ['is_transparent' => true]){
+    $dir = $dir ?: 'upload' . '/'.'qrcode'.'/'.$site_id;//二维码默认存储位置
     if (! is_dir($dir) && ! mkdir($dir, 0777, true) && ! is_dir($dir)) {
         throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
     }
+    $file_path = md5($url.$page.serialize($data).serialize($style).$channel);
     $path = $dir . '/' . $file_path . '.png';
     if (file_exists($path)) {
-        unlink($path);
+        return $path;
     }
-    \core\util\QRcode::png($url, $path, QR_ECLEVEL_L, $size, 1);
+    $result = array_values(array_filter(event('GetQrcodeOfChannel', [
+        'filepath' => $path,
+        'url' => $url,
+        'page' => $page,
+        'data' => $data,
+        'site_id' => $site_id,
+        'channel' => $channel,
+    ])));
+    if(!empty($result[0])){
+        $path = $result[0];
+    }
+//    if(!empty($style)){
+//        $is_transparent = $style['is_transparent'] ?? false;//是否透明
+//        $color = $style['color'] ?? '#000';//颜色
+//        $bg_color = $style['bg_color'] ?? '#FFF';
+//        //将二维码背景变透明
+//        $resource = imagecreatefrompng($path);
+//        @unlink($path);
+//        if($is_transparent){
+//            $bgcolor = imagecolorallocate($resource, 255, 255, 255);
+//            imagefill($resource, 0, 0, $bgcolor);
+//            imagecolortransparent($resource, $bgcolor);
+//        }
+//        // 设置彩色二维码的颜色
+//        $color = imagecolorallocate($resource, 229, 39, 21); // 红色
+//        // 修改二维码的像素颜色
+//        imagesetpixel($resource, 10, 10, $color);
+//        imagepng($resource,$path);
+//    }
+
     return $path;
 }
 
@@ -881,4 +912,18 @@ function qrcode($url, $site_id, $dir, $file_path, $channel = '', $size = 4){
  */
 function poster(int $site_id, string|int $type, array $param = [], string $channel = '',bool $is_throw_exception = true){
     return (new \app\service\core\poster\CorePosterService())->get($site_id, $type, $param, $channel, $is_throw_exception);
+}
+
+/**
+ * 获取站点插件
+ * @return array
+ */
+function get_site_addons($site_id = 0) : array {
+    $addons = $site_id ? Cache::get("local_install_addons_{$site_id}") : Cache::get("local_install_addons");
+    return is_null($addons) ? [] : $addons;
+}
+
+function get_wap_domain($site_id) {
+    $wap_url = (new CoreSysConfigService())->getSceneDomain($site_id)['wap_url'];
+    return $wap_url;
 }

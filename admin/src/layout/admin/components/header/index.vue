@@ -1,23 +1,20 @@
 <template>
-    <el-container class="h-[60px] bg-[#2B303B] layout-admin flex items-center justify-between px-[15px] text-white" >
+    <el-container class="h-[64px] layout-admin flex items-center justify-between px-[15px]" >
         <!-- :class="['h-full px-[10px]',{'layout-header border-b border-color': !dark}]"  -->
-        <div class="flex items-center text-[14px]  leading-[1]">
-            <span class="iconfont icontuodong !text-[25px] mr-[6px]"></span>
-
-            <template v-for="(item, index) in oneMenuData">
-                <template v-if="item.meta.show">
-                    <span class="mx-2 text-[#4F5563] mx-[15px]" v-if="index">|</span>
-                    <span class="cursor-pointer" @click="router.push({ name: item.name })" >
-                        {{ item.meta.short_title || item.meta.title }}
-                    </span>
-                </template>
-            </template>
-        </div>
-        <div class="right-panel h-full flex items-center justify-end">
+        <div class="left-panel flex items-center text-[14px] leading-[1]">
             <!-- 刷新当前页 -->
             <div class="navbar-item flex items-center h-full cursor-pointer" @click="refreshRouter">
                 <icon name="element-Refresh" />
             </div>
+            <!-- 面包屑导航 -->
+            <div class="flex items-center h-full pl-[10px] hidden-xs-only">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item v-for="(route, index) in breadcrumb" :key="index">{{route.meta.title }}</el-breadcrumb-item>
+                    </el-breadcrumb>
+            </div>
+        </div>
+        <div class="right-panel h-full flex items-center justify-end">
+           
             <!-- 用户信息 -->
             <div class="navbar-item flex items-center h-full cursor-pointer">
                 <user-info />
@@ -58,29 +55,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref,computed } from 'vue'
 import useUserStore from '@/stores/modules/user'
 import useAppStore from '@/stores/modules/app'
-import { useRouter } from 'vue-router'
+import { useRoute,useRouter } from 'vue-router'
 import { t } from '@/lang'
 import storage from '@/utils/storage'
 import userInfo from './user-info.vue'
 import { findFirstValidRoute } from "@/router/routers"
-
+const route = useRoute()
 const router = useRouter()
 const appStore = useAppStore()
 const userStore = useUserStore()
 const routers = userStore.routers
-
-const oneMenuData = ref<Record<string, any>[]>([])
-routers.forEach(item => {
-    item.original_name = item.name
-    if (item.children && item.children.length) {
-        item.name = findFirstValidRoute(item.children)
-    }
-    oneMenuData.value.push(item)
-})
-
 // 检测登录 start
 const detectionLoginDialog = ref(false)
 const comparisonToken = ref('')
@@ -110,6 +97,12 @@ const refreshRouter = () => {
     appStore.refreshRouterView()
 }
 
+// 面包屑导航
+const breadcrumb = computed(() => {
+    const matched = route.matched.filter(item => { return item.meta.title })
+    if (matched[0] && matched[0].path == '/') matched.splice(0, 1)
+    return matched
+})
 storage.set({ key: 'currHeadMenuName', data: "" })
 </script>
 
@@ -121,7 +114,6 @@ storage.set({ key: 'currHeadMenuName', data: "" })
 }
 .navbar-item {
     padding: 0 8px;
-    color: #fff;
 }
 .index-item {
 	border: 1px solid;
@@ -133,7 +125,7 @@ storage.set({ key: 'currHeadMenuName', data: "" })
 }
 </style>
 <style>
-.layout-admin .el-dropdown{
+/* .layout-admin .el-dropdown{
     color: #fff;
-}
+} */
 </style>

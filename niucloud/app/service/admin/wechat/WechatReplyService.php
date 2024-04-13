@@ -80,7 +80,7 @@ class WechatReplyService extends BaseAdminService
      * @return void|null
      */
     public function getDefault(){
-        return $this->core_wechat_reply_service->delKeyword($this->site_id);
+        return $this->core_wechat_reply_service->getDefault($this->site_id);
     }
 
     /**

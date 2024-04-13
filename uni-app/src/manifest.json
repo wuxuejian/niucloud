@@ -55,7 +55,16 @@
             "urlCheck" : false
         },
         "usingComponents" : true,
-        "requiredPrivateInfos" : [ "chooseLocation", "getLocation", "chooseAddress" ]
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "为了更好地为您提供服务"
+            },
+            "scope.writePhotosAlbum" : {
+                "desc" : "为了更好地为您提供服务"
+            }
+        },
+        "requiredPrivateInfos" : [ "chooseLocation", "getLocation", "chooseAddress" ],
+        "__usePrivacyCheck__" : true
     },
     "mp-alipay" : {
         "usingComponents" : true

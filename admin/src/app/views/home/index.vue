@@ -2,7 +2,7 @@
 <template>
     <div>
         <div class="flex justify-between items-center py-[24px] pl-[62px] pr-[64px] home-head">
-            <div class="flex items-center">
+            <div class="flex items-center" v-if="webConfig">
                 <img class="w-[32x] h-[32px] rounded-full" v-if="webConfig.icon" :src="img(webConfig.icon)" alt="">
                 <img class="w-[32x] h-[32px] rounded-full" v-else src="@/app/assets/images/icon-addon.png" alt="">
                 <span class="ml-[10px] text-[16px] font-bold">{{webConfig.site_name}}</span>
@@ -71,12 +71,12 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, toRefs } from 'vue'
+import { reactive, ref, toRefs, computed } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import { getHomeSite } from '@/app/api/home'
-import { getWebConfig } from '@/app/api/sys'
 import { img } from '@/utils/common'
 import useUserStore from '@/stores/modules/user'
+import useSystemStore from '@/stores/modules/system'
 import storage from '@/utils/storage'
 import { getInstalledAddonList } from '@/app/api/addon'
 import { ElMessage } from 'element-plus'
@@ -138,24 +138,12 @@ const cutAppFn = (app:any) => {
 }
 
 // 网络设置
-const webConfig = ref({
-    icon: '',
-    site_name: ''
-})
-const getWebConfigFn = () => {
-    getWebConfig().then(res => {
-        webConfig.value = res.data
-    })
-}
-getWebConfigFn()
+const webConfig = computed(() => useSystemStore().website)
 
 const selectSite = (site: any) => {
     storage.set({ key: 'siteId', data: site.site_id })
     storage.set({ key: 'siteInfo', data: site })
     storage.set({ key: 'comparisonSiteIdStorage', data: site.site_id })
-    useUserStore().$patch((site) => {
-        site.siteInfo = site
-    })
     location.href = `${location.origin}/site/`
 }
 const logoutFn = () => {

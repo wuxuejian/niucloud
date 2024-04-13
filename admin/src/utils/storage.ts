@@ -14,6 +14,10 @@ class Storage {
         this.prefix = getAppType() == 'admin' ? 'admin' : 'site'
     }
 
+    public setPrefix(prefix: string) {
+        this.prefix = prefix
+    }
+
     /**
      * 设置缓存
      * @param param

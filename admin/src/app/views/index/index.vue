@@ -1,8 +1,8 @@
 <!-- eslint-disable no-undef -->
 <template>
-    <div class="bg-[#FAFAFA] box-border pb-[77px]">
-        <div class="main-container" v-loading="loading">
-            <div class="pt-[60px]">
+    <div v-loading="loading">
+        <el-card class="box-card !border-none" shadow="never">
+            <div class="">
                 <div class="flex items-center">
                     <span class="text-[24px] font-600 text-[#242424] leading-[33px]">欢迎使用niucloud-admin</span>
                     <div class="ml-[12px] bg-[#333] flex items-center py-[3px] px-[6px] rounded">
@@ -36,7 +36,6 @@
                             <span class="text-[12px] text-[#666] leading-[16px]">{{ time }}</span>
                         </div>
                     </template>
-
                     <el-row :gutter="20">
                         <el-col :span="6">
                             <div @click="toHref('site/list','1')" class="cursor-pointer">
@@ -138,7 +137,6 @@
                         <div ref="siteStat" :style="{ width: '100%', height: '300px' }"></div>
                     </el-card>
                 </div>
-
                 <el-card class="box-card !border-none mt-[15px] site" shadow="never" :body-style="{ marginTop: '13px' }">
                     <template #header>
                         <div class="card-header">
@@ -156,11 +154,11 @@
                         }}</el-descriptions-item>
                         <el-descriptions-item :label="t('productionEnvironment')">{{
                             statInfo.system.environment
-                        }}</el-descriptions-item>
+                            }}</el-descriptions-item>
                     </el-descriptions>
                 </el-card>
             </div>
-        </div>
+        </el-card>
     </div>
 </template>
 
@@ -334,9 +332,6 @@ const toUpgrade = () => {
 </script>
 
 <style lang="scss" scoped>
-.main-container {
-    margin: 0 84px;
-}
 
 :deep(.profile-data .el-card__header) {
     padding: 0 !important;

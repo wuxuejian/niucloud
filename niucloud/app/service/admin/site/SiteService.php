@@ -272,7 +272,7 @@ class SiteService extends BaseAdminService
             if($addon != 'all'){
                 $addons = [$addon];
             }
-            return ( new MenuService() )->getMenuListBySystem($this->app_type, $addons, $is_tree, $is_button);
+            return ( new MenuService() )->getMenuListBySystem($this->app_type, $addons, $is_tree, $is_button, $status);
         }
 
 

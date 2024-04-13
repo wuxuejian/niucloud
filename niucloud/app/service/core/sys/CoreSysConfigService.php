@@ -38,8 +38,8 @@ class CoreSysConfigService extends BaseCoreService
         $site_domain = (new CoreSiteService())->getSiteCache($site_id)['site_domain'] ?? '';
 
         return  [
-            'wap_url' => $site_domain ? (request()->isSsl() ? "https://" : "http://") . $site_domain . "/wap" : $wap_domain . "/wap/" . $site_id . "/",
-            'web_url' => $site_domain ? (request()->isSsl() ? "https://" : "http://") . $site_domain . "/web" : $web_domain . "/web/" . $site_id . "/"
+            'wap_url' => $site_domain ? (request()->isSsl() ? "https://" : "http://") . $site_domain . "/wap" : $wap_domain . "/wap/" . $site_id,
+            'web_url' => $site_domain ? (request()->isSsl() ? "https://" : "http://") . $site_domain . "/web" : $web_domain . "/web/" . $site_id
         ];
     }
 

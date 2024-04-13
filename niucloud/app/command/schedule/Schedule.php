@@ -106,6 +106,6 @@ class Schedule extends Command
                 $crontab = '0 ' .$min . ' ' . $hour . ' ' . $day . ' * *';
                 break;
         }
-        return $crontab ?? '* */1 * * * *';
+        return $crontab ?? '0 */1 * * * *';
     }
 }

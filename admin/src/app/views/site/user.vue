@@ -56,7 +56,7 @@
                             {{ row.last_ip || '' }}
                         </template>
                     </el-table-column>
-                    <el-table-column :label="t('operation')" align="right" fixed="right" width="160">
+                    <el-table-column :label="t('operation')" align="right" fixed="right" width="100">
                         <template #default="{ row }">
                             <el-button type="primary" link @click="detailEvent(row.uid)">{{ t('detail') }}</el-button>
                         </template>

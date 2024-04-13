@@ -36,7 +36,7 @@ class NoticeService extends BaseAdminService
      */
     public function getList()
     {
-        return (new CoreNoticeService())->getList($this->site_id);
+        return (new CoreNoticeService())->getAddonList($this->site_id);
     }
 
     /**

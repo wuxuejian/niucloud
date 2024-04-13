@@ -502,19 +502,20 @@ class MenuService extends BaseAdminService
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getMenuListBySystem(string $app_type, array $addons, int $is_tree = 0, int $is_button = 1)
+    public function getMenuListBySystem(string $app_type, array $addons, int $is_tree = 0, int $is_button = 1, $status = 'all')
     {
         sort($addons);
-        $cache_name = 'menu' . md5(implode("_", $addons)) . $is_tree;
+        $cache_name = 'menu' . md5(implode("_", $addons)) . $is_tree . $status;
         $menu_list = cache_remember(
             $cache_name,
-            function () use ($addons, $app_type, $is_tree) {
+            function () use ($addons, $app_type, $is_tree, $status) {
                 $where = [
                     ['addon', 'in', $addons]
                 ];
                 if(!empty($app_type)){
                     $where[] = ['app_type', '=', $app_type];
                 }
+                if ($status != 'all') $where[] = ['status', '=', $status];
                 // 排除插件中delete的菜单
                 $delete_menu_addon = [];
                 $addon_loader = new DictLoader("Menu");

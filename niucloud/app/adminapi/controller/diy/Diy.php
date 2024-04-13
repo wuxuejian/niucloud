@@ -44,6 +44,17 @@ class Diy extends BaseAdminController
     }
 
     /**
+     * @notes 获取自定义页面分页列表，轮播搜索组件用
+     * @return Response
+     */
+    public function getPageByCarouselSearch()
+    {
+        $data = $this->request->params([
+        ]);
+        return success(( new DiyService() )->getPageByCarouselSearch($data));
+    }
+
+    /**
      * @notes 获取自定义页面列表
      * @return Response
      * @throws DataNotFoundException

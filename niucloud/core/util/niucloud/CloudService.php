@@ -13,7 +13,7 @@ class CloudService
 {
     use HasHttpRequests;
 
-    private $baseUri = 'http://8.140.96.55:8000/';
+    private $baseUri = 'https://oss.niucloud.com/';
 
     public function httpPost(string $url, array $options = []) {
         return $this->toRequest($url, 'POST', $options);

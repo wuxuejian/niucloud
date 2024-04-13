@@ -7,9 +7,9 @@
                 </div>
                 <span :class="['ml-[10px]', {'text-[15px]': routes.meta.class == 1}, {'text-[14px]': routes.meta.class != 1}]">{{ meta.title }}</span>
             </template>
-            <menu-item v-for="(route, index) in routes.children" :routes="route" :route-path="resolvePath(route.path)" :key="index" />
+            <menu-item v-for="(route, index) in routes.children" :routes="route"  :key="index" />
         </el-sub-menu>
-        <el-menu-item v-else-if="routes.meta.class == 1" :index="String(routes.name)" :route="'/'+routePath">
+        <el-menu-item v-else-if="routes.meta.class == 1" :index="String(routes.name)" :route="routes.path">
             <div v-if="meta.icon" class="w-[16px] h-[16px] relative flex justify-center">
                 <icon :name="meta.icon" class="absolute top-[50%] -translate-y-[50%]" />
             </div>
@@ -22,7 +22,7 @@
 				</div>
             </template>
         </el-menu-item>
-        <el-menu-item v-else :index="String(routes.name)" :route="'/'+routePath">
+        <el-menu-item v-else :index="String(routes.name)" :route="routes.path">
             <template #title>
                 <span :class="[{'text-[15px]': routes.meta.class == 1}, {'text-[14px]': routes.meta.class != 1}, {'ml-[10px]': routes.meta.class == 2, 'ml-[15px]': routes.meta.class == 3}]">{{ meta.title }}</span>
             </template>
@@ -62,16 +62,16 @@ const props = defineProps({
         type: Object,
         required: true
     },
-    routePath: {
-        type: String
-    }
+    // routePath: {
+    //     type: String
+    // }
 })
 
 const meta = computed(() => props.routes.meta)
 
-const resolvePath = (path: string) => {
-    return `${props.routePath}/${path}`
-}
+// const resolvePath = (path: string) => {
+//     return `/${path}`
+// }
 
 const indexList = ref();
 const showDialog = ref(false)

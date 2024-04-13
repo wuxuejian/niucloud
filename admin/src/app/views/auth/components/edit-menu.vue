@@ -74,8 +74,7 @@
             </el-form-item>
 
             <el-form-item :label="t('menuShortName')">
-                <el-input v-model="formData.menu_short_name" :placeholder="t('menuShortNamePlaceholder')"
-                    class="input-width" />
+                <el-input v-model="formData.menu_short_name" :placeholder="t('menuShortNamePlaceholder')" class="input-width" />
             </el-form-item>
 
             <el-form-item :label="t('sort')">
