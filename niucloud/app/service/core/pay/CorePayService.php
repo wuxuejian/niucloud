@@ -21,6 +21,7 @@ use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
 use think\facade\Db;
+use think\facade\Log;
 use think\Model;
 use Throwable;
 
@@ -516,14 +517,16 @@ class CorePayService extends BaseCoreService
         );
         //允许修改的值
         $allow_field = array('trade_no', 'voucher', 'status', 'pay_time', 'type', 'mch_id');
+
         // 启动事务
         Db::startTrans();
         try {
             $pay->allowField($allow_field)->save($data);
             $result = event('PaySuccess', ['out_trade_no' => $out_trade_no, 'trade_type' => $trade_type, 'site_id' => $site_id, 'trade_id' => $trade_id]);
-            if (!check_event_result($result)) {
-                return false;
-            }
+//            if (!check_event_result($result)) {
+//                Db::rollback();
+//                return false;
+//            }
             // 提交事务
             Db::commit();
             return true;

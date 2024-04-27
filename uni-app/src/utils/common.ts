@@ -314,3 +314,28 @@ export function copy(value, callback) {
 	});
 	// #endif
 }
+
+/**
+ * 处理onLoad传递的参数
+ * @param option
+ */
+export function handleOnloadParams(option:any) {
+	let params: any = {};
+
+	// 处理小程序扫码进入的场景值参数
+	if (option.scene) {
+		var sceneParams = decodeURIComponent(option.scene).split('&');
+		if (sceneParams.length) {
+			sceneParams.forEach(item => {
+				let arr = item.split('-');
+				params[arr[0]] = arr[1];
+				if(arr[0] == 'mid'){
+					uni.setStorageSync('pid', arr[1])
+				}
+			});
+		}
+	} else {
+		params = option;
+	}
+	return params;
+}

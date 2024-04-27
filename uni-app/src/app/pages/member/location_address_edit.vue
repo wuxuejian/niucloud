@@ -59,6 +59,8 @@
     import { getAddressByLatlng } from '@/app/api/system'
 
     const type = ref('')
+    const source = ref('')
+
     const formData = ref({
         id: 0,
         name: '',
@@ -75,7 +77,7 @@
         area: '',
         type: 'location_address'
     })
-    
+
     onLoad((option) => {
         if (option.id) {
             getAddressInfo(option.id).then(({data}) => {
@@ -96,10 +98,11 @@
         }
 
         type.value = option.type || ''
+        source.value = option.source || ''
     })
-    
+
     const formRef = ref(null)
-    
+
     const rules = computed(() => {
         return {
             'address': {
@@ -121,7 +124,7 @@
                     message: t('mobilePlaceholder'),
                     trigger: ['blur', 'change'],
                 },
-                {   
+                {
                     validator(rule, value, callback) {
                         let mobile = /^1[3-9]\d{9}$/;
                         if (!mobile.test(value)){
@@ -150,7 +153,7 @@
     //获取详细地址
     const getAddress = (latlng:any)=> {
         getAddressByLatlng({latlng}).then((res: any) => {
-            if (res.data && res.data.length) {
+            if (res.data) {
                 formData.value.full_address = '';
                 formData.value.full_address += res.data.province != undefined ? res.data.province : '';
                 formData.value.full_address += res.data.city != undefined ? '' + res.data.city : '';
@@ -169,22 +172,22 @@
         })
 
     }
-    
+
     const operateLoading = ref(false)
     const save = ()=> {
         if (uni.$u.test.isEmpty(formData.value.area)) {
             uni.showToast({ title: t('selectAddressPlaceholder'), icon: 'none' })
             return
         }
-        
+
         const save = formData.value.id ? editAddress : addAddress
-        
+
         formRef.value.validate().then(() => {
             if (operateLoading.value) return
             operateLoading.value = true
-            
+
             formData.value.full_address = `${formData.value.area}${formData.value.address_name}${formData.value.address}`
-        
+
             save(formData.value).then((res) => {
                 operateLoading.value = false
                 uni.removeStorageSync('addressInfo');
@@ -196,7 +199,7 @@
             })
         })
     }
-    
+
     const chooseLocation = ()=> {
         // #ifdef MP
         uni.chooseLocation({
@@ -205,14 +208,26 @@
                 res.longitude && (formData.value.lng = res.longitude)
                 res.address && (formData.value.area = res.address)
                 res.name && (formData.value.address_name = res.name)
-        	}
+        	},
+            fail: (res)=>{
+                // 在隐私协议中没有声明chooseLocation:fail api作用域
+                if(res.errMsg && res.errno) {
+                    if(res.errno == 112){
+                        let msg = '隐私协议中未声明，打开地图选择位置失败';
+                        uni.showToast({title: msg, icon: 'none'})
+                    }else {
+                        uni.showToast({title: res.errMsg, icon: 'none'})
+                    }
+                }
+            }
         });
         // #endif
 
         // #ifdef H5
         var urlencode = formData.value;
         uni.setStorageSync('addressInfo', urlencode);
-        let backurl = location.href;
+        let backurl = location.origin +  location.pathname + '?type=' + type.value + '&source=' + source.value;
+        console.log('backurl',backurl)
         window.location.href = 'https://apis.map.qq.com/tools/locpicker?search=1&type=0&backurl=' + encodeURIComponent(backurl) + '&key=' + manifestJson.h5.sdkConfigs.maps.qqmap.key + '&referer=myapp';
         // #endif
     }

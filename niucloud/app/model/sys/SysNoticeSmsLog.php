@@ -148,5 +148,41 @@ class SysNoticeSmsLog extends BaseModel
         }
     }
 
+    /**
+     * 发送时间搜索器
+     * @param $query
+     * @param $value
+     * @param $data
+     */
+    public function searchSendTimeAttr($query, $value, $data)
+    {
+        $start_time = empty($value[0]) ? 0 : strtotime($value[0]);
+        $end_time = empty($value[1]) ? 0 : strtotime($value[1]);
+        if ($start_time > 0 && $end_time > 0) {
+            $query->whereBetweenTime('send_time', $start_time, $end_time);
+        } else if ($start_time > 0 && $end_time == 0) {
+            $query->where([['send_time', '>=', $start_time]]);
+        } else if ($start_time == 0 && $end_time > 0) {
+            $query->where([['send_time', '<=', $end_time]]);
+        }
+    }
 
+    /**
+     * 创建时间搜索器
+     * @param $query
+     * @param $value
+     * @param $data
+     */
+    public function searchCreateTimeAttr($query, $value, $data)
+    {
+        $start_time = empty($value[0]) ? 0 : strtotime($value[0]);
+        $end_time = empty($value[1]) ? 0 : strtotime($value[1]);
+        if ($start_time > 0 && $end_time > 0) {
+            $query->whereBetweenTime('create_time', $start_time, $end_time);
+        } else if ($start_time > 0 && $end_time == 0) {
+            $query->where([['create_time', '>=', $start_time]]);
+        } else if ($start_time == 0 && $end_time > 0) {
+            $query->where([['create_time', '<=', $end_time]]);
+        }
+    }
 }

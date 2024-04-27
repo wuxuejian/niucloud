@@ -28,6 +28,7 @@ class SmsLog extends BaseAdminController
             ['mobile', ''],
             ['sms_type', ''],
             ['key', ''],
+            ['create_time', []],
         ]);
 
         $res = (new NoticeSmsLogService())->getPage($data);

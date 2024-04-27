@@ -16,11 +16,8 @@ class Language {
      * @param locale 设置语言
      */
     public setI18nLanguage(locale: string, path: string = '') {
-        if (this.i18n.mode === 'legacy') {
-            this.i18n.global.locale = locale
-        } else {
-            this.i18n.global.locale = locale
-        }
+        if (this.i18n.global.locale == locale) return
+        this.i18n.global.locale = locale
         path && (this.path = path)
         uni.setLocale(locale)
     }

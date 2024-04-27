@@ -1,9 +1,9 @@
 {
   "id": "3883393",
-  "name": "niushop-vite-admin",
+  "name": "系统",
   "font_family": "iconfont",
   "css_prefix_text": "icon",
-  "description": "niushop-vite admin端",
+  "description": "系统图标",
   "glyphs": [
     {
       "icon_id": "4354254",

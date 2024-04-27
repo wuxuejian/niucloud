@@ -92,19 +92,21 @@
                             <el-button class="!text-[13px]" type="primary" link @click="getAddonDetialFn(row)">{{
                                 t('detail') }}</el-button>
                             <el-button class="!text-[13px]" v-if="row.install_info && Object.keys(row.install_info)?.length && row.install_info.version != row.version"
-                                       type="primary" link @click="upgradeAddonFn(row.key)">{{ t('upgrade') }}</el-button>
+                                type="primary" link @click="upgradeAddonFn(row.key)">{{ t('upgrade') }}</el-button>
                             <el-button class="!text-[13px]"
-                                v-if="row.install_info && Object.keys(row.install_info)?.length && activeName != 'all'"
+                                v-if="row.install_info && Object.keys(row.install_info)?.length"
                                 type="primary" link @click="uninstallAddonFn(row.key)">{{ t('unload') }}</el-button>
-                            <el-button class="!text-[13px]"
-                                v-else-if="row.is_download && row.install_info <= 0 && activeName != 'all'" type="primary"
-                                link @click="installAddonFn(row.key)">{{ t('install') }}</el-button>
-                            <el-button class="!text-[13px]" v-else :loading="downloading == row.key"
+                            <template v-if="row.is_download && Object.keys(row.install_info) <= 0">
+                                <el-button class="!text-[13px]"
+                                   type="primary"
+                                   link @click="installAddonFn(row.key)">{{ t('install') }}</el-button>
+                                <el-button class="!text-[13px]"
+                                   type="primary"
+                                   link @click="deleteAddonFn(row.key)">{{ t('delete') }}</el-button>
+                            </template>
+                            <el-button class="!text-[13px]" v-if="!row.is_download" :loading="downloading == row.key"
                                 :disabled="downloading != ''" type="primary" link @click.stop="downEvent(row)">
-                                <span v-if="row.install_info && Object.keys(row.install_info)?.length">{{ t('unloadDown')
-                                }}</span>
-                                <span v-else-if="row.is_download && row.install_info <= 0">{{ t('installDown') }}</span>
-                                <span v-else>{{ t('down') }}</span>
+                                <span>{{ t('down') }}</span>
                             </el-button>
                         </template>
                     </el-table-column>
@@ -395,6 +397,7 @@
 import { ref, reactive, watch, h } from 'vue'
 import { t } from '@/lang'
 import { getAddonLocal, uninstallAddon, installAddon, preInstallCheck, cloudInstallAddon, getAddonInstalltask, getAddonCloudInstallLog, preUninstallCheck, cancelInstall } from '@/app/api/addon'
+import { deleteAddonDevelop } from '@/app/api/tools'
 import { downloadVersion, getAuthinfo, setAuthinfo } from '@/app/api/module'
 import { ElMessage, ElMessageBox, ElNotification, FormInstance, FormRules } from 'element-plus'
 import 'vue-web-terminal/lib/theme/dark.css'
@@ -859,7 +862,6 @@ const checkAppMange = () => {
             if (res.data.data && res.data.data.length != 0) {
                 authinfo.value = res.data.data
             }
-            
         })
         .catch(() => {
             authLoading.value = false
@@ -910,6 +912,22 @@ const save = async (formEl: FormInstance | undefined) => {
 
 const goRouter = () => {
     window.open('https://www.niucloud.com/app')
+}
+
+const deleteAddonFn = (key: string) => {
+    ElMessageBox.confirm(
+        t('deleteAddonTips'),
+        t('warning'),
+        {
+            confirmButtonText: t('confirm'),
+            cancelButtonText: t('cancel'),
+            type: 'warning'
+        }
+    ).then(() => {
+        deleteAddonDevelop(key).then(() => {
+            localListFn()
+        })
+    }).catch(() => { })
 }
 </script>
 

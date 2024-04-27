@@ -42,13 +42,18 @@
                     </view>
                     <!-- #ifdef MP-WEIXIN -->
                     <view class="mt-[30rpx]">
-                        <u-button type="primary" :plain="true" :text="t('weixinUserAuth')" open-type="getPhoneNumber" @getphonenumber="mobileAuth" v-if="info || (!info || !config.agreement_show || isAgree)"></u-button>
-                        <u-button type="primary" :plain="true" :text="t('weixinUserAuth')" v-else @click="agreeTips"></u-button>
+                        <u-button type="primary" :plain="true" :text="t('weixinUserAuth')"  @click="agreeTips" v-if="!info && config.agreement_show && !isAgree"></u-button>
+                        <u-button type="primary" :plain="true" :text="t('weixinUserAuth')" open-type="getPhoneNumber" @getphonenumber="mobileAuth" v-else></u-button>
                     </view>
                     <!-- #endif -->
                 </u-form>
             </view>
         </view>
+
+        <!-- #ifdef MP-WEIXIN -->
+        <!-- 小程序隐私协议 -->
+        <wx-privacy-popup ref="wxPrivacyPopup"></wx-privacy-popup>
+        <!-- #endif -->
     </view>
 </template>
 

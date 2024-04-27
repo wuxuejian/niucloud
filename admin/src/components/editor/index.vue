@@ -89,7 +89,8 @@ const handleCreated = (editor: IDomEditor) => {
 //编辑器 blur 时的回调函数。
 const handleBlur = (editor: IDomEditor)=>{
     emit('handleBlur',editor)
-}   
+}
+
 /**
  * 组件销毁时，也及时销毁编辑器
  */

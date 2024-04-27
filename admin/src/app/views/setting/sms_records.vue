@@ -7,14 +7,14 @@
             <el-card class="box-card !border-none my-[10px] table-search-wrap" shadow="never">
                 <el-form :inline="true" :model="recordsTableData.searchParam" ref="searchFormRef">
                     <el-form-item :label="t('searchReceiver')" prop="receiver">
-                        <el-input v-model="recordsTableData.searchParam.receiver" :placeholder="t('receiverPlaceholder')" />
+                        <el-input v-model="recordsTableData.searchParam.mobile" :placeholder="t('receiverPlaceholder')" />
                     </el-form-item>
 
                     <el-form-item :label="t('noticeKey')" prop="key">
                         <el-select v-model="recordsTableData.searchParam.key" clearable :placeholder="t('groupIdPlaceholder')" class="input-width">
                             <el-option :label="t('selectPlaceholder')" value="" />
                             <el-option-group v-for="(group, gindex) in templateList" :key="gindex" :label="group.label">
-                                <el-option :label="item.name" :value="item.value" v-for="(item, index) in group.list" :key="index" />
+                                <el-option :label="item.name" :value="item.value" :disabled="item.disabled ?? false" v-for="(item, index) in group.list" :key="index" />
                             </el-option-group>
                         </el-select>
                     </el-form-item>
@@ -81,7 +81,7 @@ const recordsTableData = reactive({
     data: [],
     searchParam: {
         key: '',
-        receiver: '',
+        mobile: '',
         create_time: []
     }
 })
@@ -98,14 +98,28 @@ const templateList = reactive<Record<string, any>>({
 })
 
 const setTemplateList = async () => {
-    await getNoticeList().then(res => {
-        Object.keys(res.data).forEach(key => {
-            const item = res.data[key]
-            const value = { value: key, name: item.name }
-            item.receiver_type == 0 ? templateList.buyer.list.push(value) : templateList.seller.list.push(value)
+    getNoticeList({}).then(res => {
+        templateList.buyer.list = []
+        templateList.seller.list = []
+        res.data.forEach(item => {
+            if (item.notice.length) {
+                const buyer = [], seller = []
+                Object.keys(item.notice).forEach((key, index) => {
+                    const notice = item.notice[key]
+                    notice.addon_name = item.title
+                    notice.receiver_type == 1 ? buyer.push({ name: notice.name, value: notice.key }) : seller.push({ name: notice.name, value: notice.key })
+                })
+                if (buyer.length) {
+                    buyer.unshift({ name: item.title, value: item.key, disabled: true })
+                    templateList.buyer.list = templateList.buyer.list.concat(buyer)
+                }
+                if (seller.length) {
+                    seller.unshift({ name: item.title, value: item.key, disabled: true })
+                    templateList.seller.list = templateList.seller.list.concat(seller)
+                }
+            }
         })
-    }).catch(() => {
-
+    }).catch((e) => {
     })
 }
 

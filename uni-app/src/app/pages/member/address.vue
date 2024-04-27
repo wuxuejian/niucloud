@@ -20,7 +20,7 @@
                         </view>
                     </u-swipe-action-item>
                     <view v-if="!addressList.length" class="pt-[20vh]">
-                        <u-empty text="暂无收货地址" :icon="img('static/resource/images/system/empty.png')"/>
+                        <mescroll-empty :option="{tip : '暂无收货地址'}"></mescroll-empty>
                     </view>
                 </view>
                 <view class="p-[30rpx]" v-show="current == 1">
@@ -38,7 +38,7 @@
                         </view>
                     </u-swipe-action-item>
                     <view v-if="!locationAddressList.length" class="pt-[20vh]">
-                        <u-empty text="暂无收货地址" :icon="img('static/resource/images/system/empty.png')"/>
+                        <mescroll-empty :option="{tip : '暂无收货地址'}"></mescroll-empty>
                     </view>
                 </view>
             </u-swipe-action>
@@ -57,6 +57,7 @@
     import { redirect, img, mobileHide } from '@/utils/common'
     import { getAddressList, deleteAddress } from '@/app/api/member'
     import { t } from '@/locale'
+    import MescrollEmpty from '@/components/mescroll/mescroll-empty/mescroll-empty.vue';
 
     const loading = ref(true)
     const current = ref(0)

@@ -18,7 +18,7 @@ export function getWechatAuthCode(data : AnyObject) {
  * 同步微信信息
  */
 export function wechatSync(data : AnyObject) {
-    return request.post('wechat/sync', data)
+    return request.post('wechat/sync', data, { showErrorMessage: false })
 }
 
 /**
@@ -125,7 +125,7 @@ export function getWapIndexList(data : AnyObject) {
 
 /**
  * 获取海报
- * @returns 
+ * @returns
  */
 export function getPoster(params : Record<string, any>) {
     return request.get("poster", params)

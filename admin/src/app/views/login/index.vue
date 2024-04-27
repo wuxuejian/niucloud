@@ -5,13 +5,14 @@
         <el-main class="login-main items-center justify-center flex-1 h-0" v-if="loginType == 'admin'">
             <div class="flex rounded-2xl overflow-hidden">
                 <div class="login-main-left w-[450px] flex flex-wrap justify-center">
-                    <el-image v-if="loginConfig.bg" class="w-[450px] h-[400px]" :src="img(loginConfig.bg)" fit="cover" />
-                    <img v-else src="@/app/assets/images/login/login_index_left.png" alt="">
+                    <template v-if="loginConfig">
+                        <el-image v-if="loginConfig.bg&&!imgLoading" class="w-[450px] h-[400px]" :src="img(loginConfig.bg)" fit="cover" />
+                        <img v-else src="@/app/assets/images/login/login_index_left.png" alt="">
+                    </template>
                 </div>
                 <div class="login flex flex-col w-[400px] h-[400px] p-[40px]">
                     <h3 class="text-center text-lg font-bold mb-[10px]">{{ webSite.site_name || t('siteTitle') }}</h3>
                     <h3 class="text-center text-2xl font-bold mb-[26px]">{{ t('platform') }}</h3>
-
                     <el-form :model="form" ref="formRef" :rules="formRules">
                         <el-form-item prop="username">
                             <el-input v-model="form.username" :placeholder="t('userPlaceholder')"
@@ -48,8 +49,10 @@
         <el-main class="login-main w-full login-site-main items-center h-screen justify-evenly bg-[#F8FAFF]"
             v-else-if="!imgLoading && loginType == 'site'">
             <div class="flex rounded-2xl overflow-hidden h-screen w-full relative">
-                <img v-if="loginConfig.site_bg" class="hidden h-[100%] lg:block" :src="img(loginConfig.site_bg)" />
-                <img v-else class="hidden h-[100%] lg:block" src="@/app/assets/images/site_login_bg.png" />
+                <template v-if="loginConfig">
+                    <img v-if="loginConfig.site_bg&&!imgLoading" class="hidden h-[100%] lg:block" :src="img(loginConfig.site_bg)" />
+                    <img v-else class="hidden h-[100%] lg:block" src="@/app/assets/images/site_login_bg.png" />
+                </template>
                 <div
                     class="w-[100%] bg-[#F8FAFF] flex flex-col absolute right-0 top-0 h-screen lg:w-[60%]">
                     <div class="flex justify-center items-center flex-1 h-0">
@@ -177,7 +180,7 @@ const form = reactive({
 })
 
 // 获取登录配置信息
-const loginConfig = ref({})
+const loginConfig = ref(null)
 const getLoginConfigFn = async (id: number = 0) => {
     imgLoading.value = true
     const data = await (await getLoginConfig()).data

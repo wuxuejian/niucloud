@@ -87,13 +87,14 @@ class CoreWeappService extends BaseCoreService
     public function qrcode(int $site_id, $page, $data, $filepath, $width = 430){
         $scene = [];
         foreach($data as $v){
-            $scene[] = $v['key'].'='.$v['value'];
+            $scene[] = $v['key'].'-'.$v['value'];
         }
         $response = self::appApiClient($site_id)->postJson('/wxa/getwxacodeunlimit', [
             'scene' => implode('&', $scene),
             'page' => $page,
             'width' => $width,
             'check_path' => false,
+//            'env_version' => 'trial' // 要打开的小程序版本。正式版为"release"，体验版为"trial"，开发版为"develop"
         ]);
         if ($response->isFailed()) {
             // 出错了，处理异常

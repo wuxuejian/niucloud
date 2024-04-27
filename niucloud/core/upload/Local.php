@@ -73,7 +73,7 @@ class Local extends BaseUpload
                 }
                 // 创建图片资源
                 // 检查图片是否创建成功
-                if ($image) {
+                if (!empty($image)){
 
                     // 图片类型常量定义：IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF
                     if ($image_type == IMAGETYPE_WEBP) {

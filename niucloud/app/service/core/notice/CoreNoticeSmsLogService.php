@@ -37,7 +37,7 @@ class CoreNoticeSmsLogService extends BaseCoreService
     {
         $field = 'id,mobile,sms_type,key,template_id,content,params,status,result,create_time,send_time,update_time';
         $order = 'create_time desc';
-        $search_model = $this->model->where([['site_id', '=', $site_id]])->withSearch(['name', 'key', 'mobile', 'sms_type'], $where)->field($field)->order($order)->append(['name', 'sms_type_name', 'status_name']);
+        $search_model = $this->model->where([['site_id', '=', $site_id]])->withSearch(['name', 'key', 'mobile', 'sms_type', 'create_time'], $where)->field($field)->order($order)->append(['name', 'sms_type_name', 'status_name']);
         return $this->pageQuery($search_model);
     }
 

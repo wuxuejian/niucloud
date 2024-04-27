@@ -118,7 +118,7 @@ const noticeTableData = reactive({
 const loadNoticeList = () => {
     noticeTableData.loading = true
 
-    getNoticeList().then(res => {
+    getNoticeList({}).then(res => {
         noticeTableData.buyer = []
         noticeTableData.seller = []
         res.data.forEach(item => {

@@ -156,7 +156,8 @@
     })
 
     onPageScroll((e)=>{
-        diyStore.scrollTop = e.scrollTop;
+		if(e.scrollTop > 0)
+			diyStore.scrollTop = e.scrollTop;
     })
 </script>
 <style lang="scss" scoped>
@@ -169,12 +170,21 @@
 				display: none;
 			}
 		}
-		.child-diy-template-wrap{
+		/* #ifdef MP */
+		.child-diy-template-wrap {
 			::v-deep .diy-group {
 				> .draggable-element.top-fixed-diy {
 					display: block !important;
 				}
 			}
 		}
+		/* #endif */
+		/* #ifdef H5 */ 
+		:deep(.child-diy-template-wrap) {
+			.diy-group .draggable-element.top-fixed-diy{
+				display: block;
+			}
+		}
+		/* #endif */
 	}
 </style>
