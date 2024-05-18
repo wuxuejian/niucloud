@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -56,5 +56,14 @@ class Config extends BaseApiController
             [ 'key', '' ] // 多个查询，逗号隔开
         ]);
         return success(( new ConfigService() )->getWapIndexList($data));
+    }
+
+    /**
+     * 获取地图配置
+     * @return Response
+     */
+    public function getMap()
+    {
+        return success(( new ConfigService() )->getMap());
     }
 }

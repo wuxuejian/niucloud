@@ -109,11 +109,13 @@ class AreaService extends BaseApiService
         $url = 'https://apis.map.qq.com/ws/geocoder/v1/';
         $map = ( new ConfigService() )->getMap();
 
-        $post_data = array (
+        $get_data = array (
             'location' => $params[ 'latlng' ],
             'key' => $map[ 'key' ],
             'get_poi' => 0,//是否返回周边POI列表：1.返回；0不返回(默认)
         );
+
+        $url = $url . '?' . http_build_query($get_data);
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HEADER, 0);
@@ -121,8 +123,6 @@ class AreaService extends BaseApiService
         curl_setopt($curl, CURLOPT_TIMEOUT, 1);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($post_data));
 
         $res = curl_exec($curl);
         $res = json_decode($res, true);
@@ -136,7 +136,8 @@ class AreaService extends BaseApiService
                     'city' => $return_array[ 'city' ] ?? '',
                     'district' => $return_array[ 'district' ] ?? '',
                     'address' => $return_array[ 'street_number' ] ?? '',
-                    'full_address' => $res[ 'result' ][ 'address' ] ?? ''
+                    'full_address' => $res[ 'result' ][ 'address' ] ?? '',
+                    'formatted_addresses' => $res[ 'result' ][ 'formatted_addresses' ] ?? []
                 );
 
                 $province = '';
@@ -191,7 +192,9 @@ class AreaService extends BaseApiService
                     'district_id' => $district_id,
                     'district' => $district_name,
 
-                    'full_address' => $address_data[ 'full_address' ]
+                    'full_address' => $address_data[ 'full_address' ],
+                    'formatted_addresses' => $address_data[ 'formatted_addresses' ]
+
                 ];
             } else {
                 return $res[ 'message' ];

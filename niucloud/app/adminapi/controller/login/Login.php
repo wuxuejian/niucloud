@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -12,8 +12,10 @@
 namespace app\adminapi\controller\login;
 
 use addon\vipcard\app\service\core\CoreOrderRefundService;
+use app\dict\member\MemberAccountTypeDict;
 use app\service\admin\auth\ConfigService;
 use app\service\admin\auth\LoginService;
+use app\service\admin\member\MemberService;
 use app\service\admin\upgrade\UpgradeService;
 use app\service\core\addon\CoreAddonDevelopBuildService;
 use app\service\core\addon\WapTrait;
@@ -70,8 +72,9 @@ class Login extends BaseAdminController
     }
 
     public function test(){
-        $this->addon = 'shop';
-        $this->uninstallPageCode(project_path(). 'uni-app/src/');
+        $res = event("MemberAccount", ['account_type' => MemberAccountTypeDict::GROWTH, 'site_id' => 166,
+            'member_id' => 10143]);
+        dd($res);
     }
 
     public function geAddonPackagePath(string $addon)

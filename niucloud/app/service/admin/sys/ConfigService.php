@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -41,7 +41,7 @@ class ConfigService extends BaseAdminService
      */
     public function getCopyright()
     {
-        return (new CoreSysConfigService())->getCopyright($this->site_id);
+        return ( new CoreSysConfigService() )->getCopyright($this->site_id);
     }
 
     /**
@@ -52,16 +52,16 @@ class ConfigService extends BaseAdminService
     public function setCopyright(array $value)
     {
         $data = [
-            'icp' => $value['icp'],
-            'gov_record' => $value['gov_record'],
-            'gov_url' => $value['gov_url'],
-            'market_supervision_url' => $value['market_supervision_url'],
-            'logo' => $value['logo'],
-            'company_name' => $value['company_name'],
-            'copyright_link' => $value['copyright_link'],
-            'copyright_desc' => $value['copyright_desc']
+            'icp' => $value[ 'icp' ],
+            'gov_record' => $value[ 'gov_record' ],
+            'gov_url' => $value[ 'gov_url' ],
+            'market_supervision_url' => $value[ 'market_supervision_url' ],
+            'logo' => $value[ 'logo' ],
+            'company_name' => $value[ 'company_name' ],
+            'copyright_link' => $value[ 'copyright_link' ],
+            'copyright_desc' => $value[ 'copyright_desc' ]
         ];
-        return $this->core_config_service->setConfig($this->site_id,'COPYRIGHT', $data);
+        return $this->core_config_service->setConfig($this->site_id, 'COPYRIGHT', $data);
     }
 
     /**
@@ -70,9 +70,10 @@ class ConfigService extends BaseAdminService
      */
     public function getWebSite()
     {
-        return (new SiteService())->getInfo($this->site_id);
+        return ( new SiteService() )->getInfo($this->site_id);
 
     }
+
     /**
      * 设置网站信息
      * @return bool
@@ -80,15 +81,17 @@ class ConfigService extends BaseAdminService
     public function setWebSite($data)
     {
 
-        return (new SiteService())->edit($this->site_id, $data);
+        return ( new SiteService() )->edit($this->site_id, $data);
 
     }
+
     /**
      * 获取前端域名
      * @return array|string[]
      */
-    public function getSceneDomain(){
-        return (new CoreSysConfigService())->getSceneDomain($this->site_id);
+    public function getSceneDomain()
+    {
+        return ( new CoreSysConfigService() )->getSceneDomain($this->site_id);
     }
 
     /**
@@ -97,17 +100,16 @@ class ConfigService extends BaseAdminService
      */
     public function getService()
     {
-        $info = (new CoreConfigService())->getConfig(0, 'SERVICE_INFO');
-        if(empty($info))
-        {
+        $info = ( new CoreConfigService() )->getConfig(0, 'SERVICE_INFO');
+        if (empty($info)) {
             $info = [];
-            $info['value'] = [
+            $info[ 'value' ] = [
                 'wechat_code' => '',
                 'enterprise_wechat' => '',
                 'tel' => '',
             ];
         }
-        return $info['value'];
+        return $info[ 'value' ];
     }
 
     /**
@@ -115,14 +117,14 @@ class ConfigService extends BaseAdminService
      * @param array $value
      * @return bool
      */
-    public function setService (array $value)
+    public function setService(array $value)
     {
         $data = [
-            "wechat_code" => $value['wechat_code'],
-            "enterprise_wechat" => $value['enterprise_wechat'],
-            "tel" => $value['tel']
+            "wechat_code" => $value[ 'wechat_code' ],
+            "enterprise_wechat" => $value[ 'enterprise_wechat' ],
+            "tel" => $value[ 'tel' ]
         ];
-        return $this->core_config_service->setConfig(0,'SERVICE_INFO', $data);
+        return $this->core_config_service->setConfig(0, 'SERVICE_INFO', $data);
     }
 
     /**
@@ -133,12 +135,14 @@ class ConfigService extends BaseAdminService
     public function setMap(array $value)
     {
         $data = [
-            'key' => $value['key'],
+            'key' => $value[ 'key' ],
+            'is_open' => $value[ 'is_open' ], // 是否开启定位
+            'valid_time' => $value[ 'valid_time' ] // 定位有效期/分钟，过期后将重新获取定位信息，0为不过期
         ];
         if ($this->site_id == request()->defaultSiteId()) {
-            (new CoreH5Service())->mapKeyChange($value['key']);
+            ( new CoreH5Service() )->mapKeyChange($value[ 'key' ]);
         }
-        return $this->core_config_service->setConfig($this->site_id,'MAPKEY', $data);
+        return $this->core_config_service->setConfig($this->site_id, 'MAPKEY', $data);
     }
 
     /**
@@ -146,102 +150,19 @@ class ConfigService extends BaseAdminService
      */
     public function getMap()
     {
-        $info = (new CoreConfigService())->getConfig($this->site_id, 'MAPKEY');
-        if(empty($info))
-        {
+        $info = ( new CoreConfigService() )->getConfig($this->site_id, 'MAPKEY');
+        if (empty($info)) {
             $info = [];
-            $info['value'] = [
+            $info[ 'value' ] = [
                 'key' => 'IZQBZ-3UHEU-WTCVD-2464U-I5N4V-ZFFU3',
+                'is_open' => 1, // 是否开启定位
+                'valid_time' => 5 // 定位有效期/分钟，过期后将重新获取定位信息，0为不过期
             ];
         }
-        return $info['value'];
-    }
 
-    /**
-     * 获取站点主页配置
-     * @return mixed|string[]
-     */
-    public function getSiteIndexConfig()
-    {
-        $config = (new CoreConfigService())->getConfig($this->site_id, "site_index");
-        if(empty($config))
-        {
-            $config['value'] = [
-              'view_path' => 'index/site_index'
-            ];
-        }else{
-            $result = event("SiteIndex");
-            $index_list = [];
-            foreach ($result as $v)
-            {
-                $index_list = empty($index_list) ? $v: array_merge($index_list, $v);
-            }
-            $tag = 0;
-            $view_path = $config['value']['view_path'];
-            foreach ($index_list as $v)
-            {
-                $v_view_path = $v['view_path'] ?? '';
-                if($view_path == $v_view_path)
-                {
-                    $tag = 1;
-                    break;
-                }
-            }
-            if($tag == 0)
-            {
-                $config['value'] = [
-                    'view_path' => 'index/site_index'
-                ];
-            }
-
-        }
-        return $config['value']['view_path'];
-    }
-
-    /**
-     * 站点主页配置
-     * @param $data
-     * @return true
-     */
-    public function setSiteIndexConfig($data)
-    {
-        $config = [
-            'view_path' => $data['view_path'] ,
-        ];
-        //检测是否路劲一个异常
-        $index_list = $this->getSiteIndexList();
-        $check_tag = 0;
-        foreach($index_list as $v)
-        {
-            if($v['view_path'] == $data['view_path'])
-            {
-                $check_tag = 1;
-            }
-        }
-        if($check_tag == 0) throw new AdminException('SITE_INDEX_VIEW_PATH_NOT_EXIST');
-        (new CoreConfigService())->setConfig($this->site_id, "site_index", $config);
-        return true;
-    }
-
-    /**
-     * 获取站点配置的首页列表
-     * @return array
-     */
-    public function getSiteIndexList()
-    {
-        $result = event("SiteIndex");
-        $index_list = [];
-        foreach ($result as $v)
-        {
-            $index_list = empty($index_list) ? $v: array_merge($index_list, $v);
-        }
-        $view_path = $this->getSiteIndexConfig();
-        foreach ($index_list as $k => $v)
-        {
-            $v_view_path = $v['view_path'] ?? '';
-            $index_list[$k]['is_use'] = ($v_view_path == $view_path) ? 1: 0;
-        }
-        return $index_list;
+        $info[ 'value' ][ 'is_open' ] = $info[ 'value' ][ 'is_open' ] ?? 1;
+        $info[ 'value' ][ 'valid_time' ] = $info[ 'value' ][ 'valid_time' ] ?? 5;
+        return $info[ 'value' ];
     }
 
     /**
@@ -251,7 +172,7 @@ class ConfigService extends BaseAdminService
      */
     public function setShortcutMenu($data)
     {
-        (new CoreConfigService())->setConfig($this->site_id, 'shortcut_menu', $data);
+        ( new CoreConfigService() )->setConfig($this->site_id, 'shortcut_menu', $data);
         return true;
     }
 
@@ -261,109 +182,23 @@ class ConfigService extends BaseAdminService
      */
     public function getShortcutMenu()
     {
-        $config = (new CoreConfigService())->getConfig($this->site_id, 'shortcut_menu');
-        $menu = $config['value'] ?? [];
-        if(!empty($menu)){
+        $config = ( new CoreConfigService() )->getConfig($this->site_id, 'shortcut_menu');
+        $menu = $config[ 'value' ] ?? [];
+        if (!empty($menu)) {
             $menu_service = new MenuService();
-            foreach($menu as $k => &$v){
-                $menu_key = $v['menu_key'] ?? '';
-                if($menu_key != ''){
+            foreach ($menu as $k => &$v) {
+                $menu_key = $v[ 'menu_key' ] ?? '';
+                if ($menu_key != '') {
                     $item_router_path = $menu_service->getFullRouterPath($menu_key);
-                    if(empty($item_router_path)){
-                        unset($v[$k]);
-                    }else{
-                        $v['router_path'] = $item_router_path;
+                    if (empty($item_router_path)) {
+                        unset($v[ $k ]);
+                    } else {
+                        $v[ 'router_path' ] = $item_router_path;
                     }
                 }
             }
         }
         return $menu;
-    }
-    /**
-     * 获取平台主页配置
-     * @return mixed|string[]
-     */
-    public function getAdminIndexConfig()
-    {
-        $config = (new CoreConfigService())->getConfig($this->site_id, "admin_index");
-        if(empty($config))
-        {
-            $config['value'] = [
-                'view_path' => 'index/index'
-            ];
-        }else{
-            $result = event("AdminIndex");
-            $index_list = [];
-            foreach ($result as $v)
-            {
-                $index_list = empty($index_list) ? $v: array_merge($index_list, $v);
-            }
-            $tag = 0;
-            $view_path = $config['value']['view_path'];
-            foreach ($index_list as $v)
-            {
-                $v_view_path = $v['view_path'] ?? '';
-                if($view_path == $v_view_path)
-                {
-                    $tag = 1;
-                    break;
-                }
-            }
-            if($tag == 0)
-            {
-                $config['value'] = [
-                    'view_path' => 'index/index'
-                ];
-            }
-
-        }
-        return $config['value']['view_path'];
-    }
-
-    /**
-     * 站点主页配置
-     * @param $data
-     * @return true
-     */
-    public function setAdminIndexConfig($data)
-    {
-        $config = [
-            'view_path' => $data['view_path'] ,
-        ];
-        //检测是否路劲一个异常
-        $index_list = $this->getAdminIndexList();
-        $check_tag = 0;
-        foreach($index_list as $v)
-        {
-            if($v['view_path'] == $data['view_path'])
-            {
-                $check_tag = 1;
-            }
-        }
-        if($check_tag == 0) throw new AdminException('ADMIN_INDEX_VIEW_PATH_NOT_EXIST');
-        (new CoreConfigService())->setConfig($this->site_id, "admin_index", $config);
-        return true;
-    }
-
-    /**
-     * 获取站点配置的首页列表
-     * @return array
-     */
-    public function getAdminIndexList()
-    {
-        $result = event("AdminIndex");
-        $index_list = [];
-        foreach ($result as $v)
-        {
-            $index_list = empty($index_list) ? $v: array_merge($index_list, $v);
-        }
-        $view_path = $this->getAdminIndexConfig();
-        foreach ($index_list as $k => $v)
-        {
-            $v_view_path = $v['view_path'] ?? '';
-            $index_list[$k]['is_use'] = ($v_view_path == $view_path) ? 1: 0;
-        }
-        return $index_list;
     }
 
     /**
@@ -380,8 +215,9 @@ class ConfigService extends BaseAdminService
      * 获取开发者key
      * @return array
      */
-    public function getDeveloperToken() {
-        return (new CoreConfigService())->getConfigValue(0, "DEVELOPER_TOKEN");
+    public function getDeveloperToken()
+    {
+        return ( new CoreConfigService() )->getConfigValue(0, "DEVELOPER_TOKEN");
     }
 
     /**
@@ -389,7 +225,31 @@ class ConfigService extends BaseAdminService
      * @param array $data
      * @return array
      */
-    public function setDeveloperToken(array $data) {
-        return (new CoreConfigService())->setConfig(0, "DEVELOPER_TOKEN", $data);
+    public function setDeveloperToken(array $data)
+    {
+        return ( new CoreConfigService() )->setConfig(0, "DEVELOPER_TOKEN", $data);
     }
+
+    /**
+     * 获取开发者key
+     * @return array
+     */
+    public function getLayout()
+    {
+        return ( new CoreConfigService() )->getConfigValue(0, "LAYOUT_SETTING");
+    }
+
+    /**
+     * 设置开发者key
+     * @param array $data
+     * @return array
+     */
+    public function setLayout(array $data)
+    {
+        $config_service = new CoreConfigService();
+        $config = $config_service->getConfigValue(0, "LAYOUT_SETTING");
+        $config[ $data[ 'key' ] ] = $data[ 'value' ];
+        return ( new CoreConfigService() )->setConfig(0, "LAYOUT_SETTING", $config);
+    }
+
 }

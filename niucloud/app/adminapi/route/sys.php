@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -18,7 +18,7 @@ use think\facade\Route;
 /**
  * 路由
  */
-Route::group('sys', function () {
+Route::group('sys', function() {
     /***************************************************** 系统整体信息 *************************************************/
     //系统信息
     Route::get('info', 'sys.System/info');
@@ -105,6 +105,11 @@ Route::group('sys', function () {
     Route::put('config/developer_token', 'sys.Config/setDeveloperToken');
     // 开发者key
     Route::get('config/developer_token', 'sys.Config/getDeveloperToken');
+
+    // 布局设置
+    Route::get('config/layout', 'sys.Config/getLayout');
+    // 布局设置
+    Route::put('config/layout', 'sys.Config/setLayout');
 
     /***************************************************** 图片上传 ****************************************************/
     //附件图片上传
@@ -209,6 +214,64 @@ Route::group('sys', function () {
     /***************************************************** 获取布局 ****************************************************/
     Route::get('layout', 'sys.System/layout');
     Route::put('layout', 'sys.System/setLayout');
+    /***************************************************** 获取导出数据 ****************************************************/
+    //报表导出列表
+    Route::get('export', 'sys.Export/lists');
+    //报表导出状态列表
+    Route::get('export/status', 'sys.Export/getExportStatus');
+    //报表导出类型
+    Route::get('export/type', 'sys.Export/getExportDataType');
+    //报表导出数据检查
+    Route::get('export/check/:type', 'sys.Export/check');
+    //报表导出
+    Route::get('export/:type', 'sys.Export/export');
+    //报表删除
+    Route::delete('export/:id', 'sys.Export/del');
+
+    /***************************************************** 自定义海报管理 ****************************************************/
+
+    // 自定义海报分页列表
+    Route::get('poster', 'sys.Poster/pages');
+
+    // 自定义海报列表
+    Route::get('poster/list', 'sys.Poster/lists');
+
+    // 自定义海报信息
+    Route::get('poster/:id', 'sys.Poster/info');
+
+    // 添加自定义海报
+    Route::post('poster', 'sys.Poster/add');
+
+    // 编辑自定义海报
+    Route::put('poster/:id', 'sys.Poster/edit');
+
+    // 删除自定义海报
+    Route::delete('poster/:id', 'sys.Poster/del');
+
+    // 修改自定义海报状态
+    Route::put('poster/status', 'sys.Poster/modifyStatus');
+
+    // 将自定义海报修改为默认海报
+    Route::put('poster/default', 'sys.Poster/modifyDefault');
+
+    // 自定义海报类型
+    Route::get('poster/type', 'sys.Poster/type');
+
+    // 自定义海报模板
+    Route::get('poster/template', 'sys.Poster/template');
+
+    // 自定义海报初始化数据
+    Route::get('poster/init', 'sys.Poster/init');
+
+    // 自定义海报预览
+    Route::get('poster/preview', 'sys.Poster/preview');
+
+    /***************************************************** 百度编辑器 ****************************************************/
+    // 获取百度编辑器配置
+    Route::get('ueditor', 'sys.Ueditor/getConfig');
+    // 百度编辑器文件上传
+    Route::post('ueditor', 'sys.Ueditor/upload');
+
 })->middleware([
     AdminCheckToken::class,
     AdminCheckRole::class,
@@ -216,8 +279,10 @@ Route::group('sys', function () {
 ]);
 
 //系统环境（不效验登录状态）
-Route::group('sys', function () {
+Route::group('sys', function() {
     Route::get('web/website', 'sys.Config/getWebsite');
     // 获取版权信息
     Route::get('web/copyright', 'sys.Config/getCopyright');
+    // 查询布局设置
+    Route::get('web/layout', 'sys.Config/getLayout');
 });

@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -88,6 +88,45 @@ class CoreMemberConfigService extends BaseCoreService
         return true;
     }
 
+    /**
+     * 获取成长值规则配置
+     * @param int $site_id
+     * @return array
+     */
+    public function getGrowthRuleConfig(int $site_id){
+        return (new CoreConfigService())->getConfigValue($site_id, 'GROWTH_RULE');
+    }
+
+    /**
+     * 配置成长值规则
+     * @param int $site_id
+     * @param array $data
+     * @return true
+     */
+    public function setGrowthRuleConfig(int $site_id, array $data){
+        (new CoreConfigService())->setConfig($site_id, 'GROWTH_RULE', $data);
+        return true;
+    }
+
+    /**
+     * 获取积分规则配置
+     * @param int $site_id
+     * @return array
+     */
+    public function getPointRuleConfig(int $site_id){
+        return (new CoreConfigService())->getConfigValue($site_id, 'POINT_RULE');
+    }
+
+    /**
+     * 配置积分规则
+     * @param int $site_id
+     * @param array $data
+     * @return true
+     */
+    public function setPointRuleConfig(int $site_id, array $data){
+        (new CoreConfigService())->setConfig($site_id, 'POINT_RULE', $data);
+        return true;
+    }
 
     /**
      * 获取会员提现设置

@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -155,6 +155,8 @@ return [
     'MOBILE_NOT_CHANGE' => '绑定的手机号与原手机号一致',
     'QRCODE_EXPIRE' => '登录二维码失效',
     'PASSWORD_REQUIRE' => '密码不能为空',
+    'LEVEL_NOT_ALLOWED_DELETE' => '该等级下存在会员不允许删除',
+    'MEMBER_LEVEL_MAX' => '最多只能有十个等级',
 
     //会员提现
     'CASHOUT_NOT_OPEN' => '会员提现业务未开启',
@@ -257,5 +259,26 @@ return [
     'UPLOAD_KEY_NOT_EXIST' => '未找到微信小程序代码上传秘钥',
     'NEED_TO_AUTHORIZE_FIRST' => '使用云服务需先进行授权',
     'WEAPP_UPLOADING' => '小程序有正在上传的版本，请等待上一版本上传完毕后再进行操作',
-    'CLOUD_BUILD_TASK_EXIST' => '已有正在执行中的编译任务'
+    'CLOUD_BUILD_TASK_EXIST' => '已有正在执行中的编译任务',
+
+    //核销相关
+    'VERIFY_TYPE_ERROR' => '核销类型错误',
+    'VERIFY_CODE_EXPIRED' => '核销码已过期',
+    'VERIFIER_NOT_EXIST' => '核销员不存在',
+
+    //签到相关
+    'SIGN_NOT_USE' => '签到未开启',
+    'SIGN_NOT_SET' => '签到参数未配置',
+    'SIGNED_TODAY' => '今日已签到',
+    'CONTINUE_SIGN' => '连签',
+    'DAYS' => '天！',
+    'SIGN_SUCCESS' => '签到成功',
+    'GET_AWARD' => '恭喜您获得以下奖励',
+
+    //导出相关
+    'EXPORT_SUCCESS' => '导出成功',
+    'EXPORT_FAIL' => '导出失败',
+    'EXPORT_NO_DATA' => '暂无可导出数据',
+    'DIRECTORY' => '目录',
+    'WAS_NOT_CREATED' => '创建失败',
 ];

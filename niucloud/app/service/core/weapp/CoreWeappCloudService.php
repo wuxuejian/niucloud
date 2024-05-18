@@ -18,6 +18,7 @@ use app\model\weapp\WeappVersion;
 use app\service\core\addon\CoreAddonDevelopDownloadService;
 use app\service\core\addon\CoreAddonService;
 use app\service\core\addon\WapTrait;
+use app\service\core\diy\CoreDiyConfigService;
 use app\service\core\niucloud\CoreCloudBaseService;
 use app\service\core\site\CoreSiteService;
 use core\exception\CommonException;

@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -88,12 +88,17 @@ class WechatTemplateService extends BaseAdminService
     {
         $site_id = $this->site_id;
         $core_notice_service = new CoreNoticeService();
-        $list = $core_notice_service->getList($site_id);
-        $template = [];
-        foreach ($list as $k => $v) {
-            if (in_array(NoticeTypeDict::WECHAT, $v[ 'support_type' ])) $template[] = $v;
+        $addon_list = $core_notice_service->getAddonList($site_id);
+
+        foreach ($addon_list as &$addon) {
+            foreach ($addon['notice'] as $k => $v) {
+                if (!in_array(NoticeTypeDict::WECHAT, $v[ 'support_type' ])) {
+                    unset($addon['notice'][$k]);
+                }
+            }
+            $addon['notice'] = array_values($addon['notice']);
         }
-        return $template;
+        return $addon_list;
     }
 
 }

@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -110,11 +110,13 @@ class SiteGroupService extends BaseAdminService
 
         $site_list = (new Site())->field('site_id,initalled_addon')->where([ ['group_id', '=', $group_id] ])->select()->toArray();
         if (!empty($site_list)) {
-            foreach ($site_list as $site) {
-                if (count(array_diff($data['app'], $group['app'])) || count(array_diff($data['addon'], $group['addon']))) {
+            sort($data['app']); sort($group['app']); sort($data['addon']); sort($group['addon']);
+
+            if (json_encode($data['app']) != json_encode($group['app']) || json_encode($data['addon']) != json_encode($group['addon'])) {
+                foreach ($site_list as $site) {
                     $this->siteAddonsChange($site, $group, $data);
+                    Cache::tag(CoreSiteService::$cache_tag_name . $site['site_id'])->clear();
                 }
-                Cache::tag(CoreSiteService::$cache_tag_name . $site['site_id'])->clear();
             }
         }
 
@@ -138,7 +140,7 @@ class SiteGroupService extends BaseAdminService
         event("AddSiteAfter", [ 'site_id' => $site_info['site_id'], 'main_app' => array_diff($new_group['app'], $initalled_addon) , 'site_addons' => array_diff($new_group['addon'], $initalled_addon) ]);
 
         $initalled_addon = array_values(array_unique(array_merge($initalled_addon, $new_group['app'], $new_group['addon'])));
-        (new Site())->update(['initalled_addon' => $initalled_addon], [ ['site_id', '=', $site_info['site_id'] ] ]);
+        (new Site())->update(['app' => $new_group['app'], 'initalled_addon' => $initalled_addon], [ ['site_id', '=', $site_info['site_id'] ] ]);
     }
 
     public function checkAddon($group_roles){

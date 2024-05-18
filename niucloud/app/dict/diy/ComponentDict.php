@@ -251,6 +251,18 @@ class ComponentDict
                             'bgColorEnd' => ''
                         ],
                     ],
+                    'MemberLevel' => [
+                        'title' => '会员等级',
+                        'icon' => 'iconfont-iconhuangguan',
+                        'path' => 'edit-member-level',
+                        'support_page' => [],
+                        'uses' => 1,
+                        'sort' => 10009,
+                        'value' => [
+                            "style" => "style-1",
+                            "styleName" => "风格1"
+                        ],
+                    ],
                     'Notice' => [
                         'title' => '公告',
                         'icon' => 'iconfont-icongonggao',

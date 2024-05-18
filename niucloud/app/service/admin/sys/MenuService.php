@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -129,7 +129,7 @@ class MenuService extends BaseAdminService
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getMenuListByMenuKeys(int $site_id, array $menu_keys, string $app_type, int $is_tree = 0, $addon = 'all')
+    public function getMenuListByMenuKeys(int $site_id, array $menu_keys, string $app_type, int $is_tree = 0, $addon = 'all', $is_button = 1)
     {
         sort($menu_keys);
         $cache_name = 'menu' . md5(implode("_", $menu_keys)) . $is_tree.$addon.$site_id;
@@ -182,22 +182,9 @@ class MenuService extends BaseAdminService
             {
                 $v['menu_name'] = $lang_menu_name;
             }
-            //首页加载
-            if($v['menu_key'] == 'overview' && $v['app_type'] == 'site')
-            {
-                $view_path = (new ConfigService())->getSiteIndexConfig();
-                $v['view_path'] = $view_path;
-            }
-
-            if($v['menu_key'] == 'overview' && $v['app_type'] == 'admin')
-            {
-                $view_path = (new ConfigService())->getAdminIndexConfig();
-                $v['view_path'] = $view_path;
-            }
-
         }
 
-        return $is_tree ? $this->menuToTree($menu_list, 'menu_key', 'parent_key', 'children', 'auth', '', 1) : $menu_list;
+        return $is_tree ? $this->menuToTree($menu_list, 'menu_key', 'parent_key', 'children', 'auth', '', $is_button) : $menu_list;
 
     }
 
@@ -230,19 +217,6 @@ class MenuService extends BaseAdminService
             {
                 $v['menu_name'] = $lang_menu_name;
             }
-            //首页加载
-            if($v['menu_key'] == 'overview' && $v['app_type'] == 'site')
-            {
-                $view_path = (new ConfigService())->getSiteIndexConfig();
-                $v['view_path'] = $view_path;
-            }
-
-            if($v['menu_key'] == 'overview' && $v['app_type'] == 'admin')
-            {
-                $view_path = (new ConfigService())->getAdminIndexConfig();
-                $v['view_path'] = $view_path;
-            }
-
         }
 
         return $is_tree ? $this->menuToTree($menu_list, 'menu_key', 'parent_key', 'children', 'auth', '', $is_button) : $menu_list;
@@ -542,18 +516,6 @@ class MenuService extends BaseAdminService
             if($lang_menu_key != $lang_menu_name)
             {
                 $v['menu_name'] = $lang_menu_name;
-            }
-            //首页加载
-            if($v['menu_key'] == 'overview' && $v['app_type'] == 'site')
-            {
-                $view_path = (new ConfigService())->getSiteIndexConfig();
-                $v['view_path'] = $view_path;
-            }
-
-            if($v['menu_key'] == 'overview' && $v['app_type'] == 'admin')
-            {
-                $view_path = (new ConfigService())->getAdminIndexConfig();
-                $v['view_path'] = $view_path;
             }
         }
         return $is_tree ? $this->menuToTree($menu_list, 'menu_key', 'parent_key', 'children', 'auth', '', $is_button) : $menu_list;

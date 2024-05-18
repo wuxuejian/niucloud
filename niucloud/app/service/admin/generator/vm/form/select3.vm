@@ -4,8 +4,8 @@
         <el-option
             v-for="(item, index) in {DICT_TYPE}"
             :key="index"
-            :label="item[{ITEM_LABEL}].name"
-            :value="item[{ITEM_LABEL}].value"
+            :label="item['{ITEM_LABEL}']"
+            :value="item['{ITEM_VALUE}']"
         />
     </el-select>
 </el-form-item>

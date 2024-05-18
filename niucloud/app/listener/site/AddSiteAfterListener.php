@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -104,6 +104,7 @@ class AddSiteAfterListener
         if (!empty($addon_index_template)) {
 
             $diy_service->add([
+                'page_title' => $addon_index_template[ 'title' ],
                 "title" => $addon_index_template[ 'title' ],
                 "name" => $addon_flag,
                 "type" => $addon_flag,
@@ -129,7 +130,7 @@ class AddSiteAfterListener
 
             if ($params[ 'is_start' ] == 1) {
                 // 查询链接，设置启动页
-                $other_page = (new DiyRouteService())->getList([ 'url' => $addon_template_info[ 'page' ], 'addon' => $addon ]);
+                $other_page = ( new DiyRouteService() )->getList([ 'url' => $addon_template_info[ 'page' ], 'addon' => $addon ]);
                 if (!empty($other_page)) {
 
                     $diy_service->changeTemplate([

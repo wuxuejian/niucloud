@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -91,10 +91,13 @@ class CorePayEventService extends BaseCoreService
     {
         $pay_fun = '';
 
+        if(mb_strlen($body, 'UTF-8') > 15){
+            $body = mb_substr($body, 0, 15, 'UTF-8').'...';
+        }
         $params = array(
             'out_trade_no' => $out_trade_no,
             'money' => $money,
-            'body' => mb_substr($body,0,15,'utf-8').'...',
+            'body' => $body,
             'channel' => $this->channel,
             'refund_url' => $refund_url,
             'quit_url' => $quit_url,
@@ -271,9 +274,9 @@ class CorePayEventService extends BaseCoreService
      * @return null
      * @throws Exception
      */
-    public function getTransfer(string $transfer_no)
+    public function getTransfer(string $transfer_no, $batch_id = '')
     {
-        return $this->app()->getTransfer($transfer_no);
+        return $this->app()->getTransfer($transfer_no, $batch_id);
     }
 
 

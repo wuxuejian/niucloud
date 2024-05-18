@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -32,14 +32,15 @@ class CoreSysConfigService extends BaseCoreService
      * @param int $site_id
      * @return array
      */
-    public function getSceneDomain(int $site_id){
+    public function getSceneDomain(int $site_id)
+    {
         $wap_domain = !empty(env("system.wap_domain")) ? preg_replace('#/$#', '', env("system.wap_domain")) : request()->domain();
         $web_domain = !empty(env("system.web_domain")) ? preg_replace('#/$#', '', env("system.web_domain")) : request()->domain();
-        $site_domain = (new CoreSiteService())->getSiteCache($site_id)['site_domain'] ?? '';
+        $site_domain = ( new CoreSiteService() )->getSiteCache($site_id)[ 'site_domain' ] ?? '';
 
-        return  [
-            'wap_url' => $site_domain ? (request()->isSsl() ? "https://" : "http://") . $site_domain . "/wap" : $wap_domain . "/wap/" . $site_id,
-            'web_url' => $site_domain ? (request()->isSsl() ? "https://" : "http://") . $site_domain . "/web" : $web_domain . "/web/" . $site_id
+        return [
+            'wap_url' => $site_domain ? ( request()->isSsl() ? "https://" : "http://" ) . $site_domain . "/wap" : $wap_domain . "/wap/" . $site_id,
+            'web_url' => $site_domain ? ( request()->isSsl() ? "https://" : "http://" ) . $site_domain . "/web" : $web_domain . "/web/" . $site_id
         ];
     }
 
@@ -49,11 +50,10 @@ class CoreSysConfigService extends BaseCoreService
      */
     public function getCopyright($site_id)
     {
-        $info = (new CoreConfigService())->getConfig($site_id, 'COPYRIGHT');
-        if(empty($info))
-        {
+        $info = ( new CoreConfigService() )->getConfig($site_id, 'COPYRIGHT');
+        if (empty($info)) {
             $info = [];
-            $info['value'] = [
+            $info[ 'value' ] = [
                 'icp' => '',
                 'gov_record' => '',
                 'gov_url' => '',
@@ -64,7 +64,7 @@ class CoreSysConfigService extends BaseCoreService
                 'copyright_desc' => ''
             ];
         }
-        return $info['value'];
+        return $info[ 'value' ];
     }
 
     /**
@@ -91,5 +91,30 @@ class CoreSysConfigService extends BaseCoreService
 
         $index_list = array_values($index_list);
         return $index_list;
+    }
+
+    /**
+     * 获取地图key
+     * @param $site_id
+     * @return array|mixed
+     */
+    public function getMap($site_id)
+    {
+        $info = ( new CoreConfigService() )->getConfig($site_id, 'MAPKEY');
+        if (empty($info)) {
+            $info = [];
+            $info[ 'value' ] = [
+                'is_open' => 1, // 是否开启定位
+                'valid_time' => 5 // 定位有效期/分钟，过期后将重新获取定位信息，0为不过期
+            ];
+        }
+
+        // 前端不展示关键信息
+        if (!empty($info[ 'value' ][ 'key' ])) {
+            unset($info[ 'value' ][ 'key' ]);
+        }
+        $info[ 'value' ][ 'is_open' ] = $info[ 'value' ][ 'is_open' ] ?? 1;
+        $info[ 'value' ][ 'valid_time' ] = $info[ 'value' ][ 'valid_time' ] ?? 5;
+        return $info[ 'value' ];
     }
 }

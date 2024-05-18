@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -58,6 +58,7 @@ class Wechat extends BaseController
     public function register(){
         $data = $this->request->params([
             ['openid', ''],
+            ['unionid', ''],
             ['mobile', ''],
         ]);
         //参数验证
@@ -65,7 +66,7 @@ class Wechat extends BaseController
             'mobile' => 'mobile'
         ]);
         $wechat_auth_service = new WechatAuthService();
-        return success($wechat_auth_service->register($data['openid'], $data['mobile']));
+        return success($wechat_auth_service->register($data['openid'], $data['mobile'], wx_unionid: $data['unionid']));
     }
 
     /**

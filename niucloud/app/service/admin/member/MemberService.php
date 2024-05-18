@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -14,8 +14,11 @@ namespace app\service\admin\member;
 use app\dict\member\MemberRegisterChannelDict;
 use app\dict\member\MemberRegisterTypeDict;
 use app\model\member\Member;
+use app\service\admin\sys\ExportService;
 use app\service\core\member\CoreMemberService;
+use app\service\core\sys\CoreExportService;
 use core\base\BaseAdminService;
+use core\dict\DictLoader;
 use core\exception\AdminException;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
@@ -43,7 +46,11 @@ class MemberService extends BaseAdminService
     {
 
         $field = 'member_id, member_no, site_id, username, mobile, password, register_channel, register_type, nickname, headimg, member_level, member_label, wx_openid, weapp_openid, wx_unionid, ali_openid, douyin_openid, login_ip, login_type, login_channel, login_count, login_time, create_time, last_visit_time, last_consum_time, sex, status, birthday, point, point_get, balance, balance_get, growth, growth_get, is_member, member_time, is_del, province_id, city_id, district_id, address, location, delete_time, money, money_get, commission, commission_get, commission_cash_outing';
-        $search_model = $this->model->where([['site_id', '=', $this->site_id]])->withSearch(['keyword','register_type', 'create_time', 'is_del', 'member_label', 'register_channel'],$where)->field($field)->order('member_id desc')->append(['register_channel_name', 'register_type_name', 'sex_name', 'login_channel_name', 'login_type_name', 'status_name']);
+        $search_model = $this->model->where([['site_id', '=', $this->site_id]])->withSearch(['keyword','register_type', 'create_time', 'is_del', 'member_label', 'register_channel','member_level'],$where)
+            ->field($field)
+            ->order('member_id desc')
+            ->with('member_level_name_bind')
+            ->append(['register_channel_name', 'register_type_name', 'sex_name', 'login_channel_name', 'login_type_name', 'status_name']);
         return $this->pageQuery($search_model, function ($item, $key) {
             $item = $this->makeUp($item);
         });
@@ -70,7 +77,7 @@ class MemberService extends BaseAdminService
     public function getInfo(int $member_id)
     {
         $field = 'member_id,member_no, site_id, username, mobile, password, register_channel, register_type, nickname, headimg, member_level, member_label, wx_openid, weapp_openid, wx_unionid, ali_openid, douyin_openid, login_ip, login_type, login_channel, login_count, login_time, create_time, last_visit_time, last_consum_time, sex, status, birthday, point, point_get, balance, balance_get, growth, growth_get, is_member, member_time, is_del, province_id, city_id, district_id, address, location, delete_time, money, money_get, commission, commission_get, commission_cash_outing';
-        return $this->makeUp($this->model->where([['member_id', '=', $member_id], ['site_id', '=', $this->site_id]])->field($field)->append(['register_channel_name', 'register_type_name', 'sex_name', 'login_channel_name', 'login_type_name', 'status_name'])->findOrEmpty()->toArray());
+        return $this->makeUp($this->model->where([['member_id', '=', $member_id], ['site_id', '=', $this->site_id]])->field($field)->with('member_level_name_bind')->append(['register_channel_name', 'register_type_name', 'sex_name', 'login_channel_name', 'login_type_name', 'status_name'])->findOrEmpty()->toArray());
     }
 
     /**
@@ -220,4 +227,68 @@ class MemberService extends BaseAdminService
         return true;
     }
 
+    /**
+     * 导出会员列表
+     * @param array $where
+     * @return true
+     */
+    public function exportMember(array $where = [])
+    {
+        $field = 'member_id, member_no, username, mobile, nickname, point, balance, money, growth, commission, register_channel, status, create_time, last_visit_time';
+        //查询导出数据
+        $data = $this->model->where([['site_id', '=', $this->site_id]])->withSearch(['keyword','register_type', 'create_time', 'is_del', 'member_label', 'register_channel'],$where)->field($field)->append(['register_channel_name', 'status_name'])->select()->toArray();
+        //执行导出
+        (new ExportService())->exportData('member', $data);
+        return true;
+    }
+
+    /**
+     * 获取会员权益字典
+     * @return mixed
+     */
+    public function getMemberBenefitsDict() {
+        return (new DictLoader("MemberBenefits"))->load();
+    }
+
+    /**
+     * 获取会员礼包字典
+     * @return array|null
+     */
+    public function getMemberGiftDict() {
+        return (new DictLoader("MemberGift"))->load();
+    }
+
+    /**
+     * 获取成长值规则字典
+     * @return array|null
+     */
+    public function getGrowthRuleDict() {
+        return (new DictLoader("GrowthRule"))->load();
+    }
+
+    /**
+     * 获取积分规则字典
+     * @return array|null
+     */
+    public function getPointRuleDict() {
+        return (new DictLoader("PointRule"))->load();
+    }
+
+    /**
+     * 获取会员权益内容
+     * @param array $benefits
+     * @return array|null
+     */
+    public function getMemberBenefitsContent(array $benefits) {
+        return (new CoreMemberService())->getBenefitsContent($this->site_id, $benefits);
+    }
+
+    /**
+     * 获取会员礼包内容
+     * @param array $benefits
+     * @return array|null
+     */
+    public function getMemberGiftsContent(array $gifts) {
+        return (new CoreMemberService())->getGiftContent($this->site_id, $gifts);
+    }
 }

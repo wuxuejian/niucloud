@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -89,6 +89,8 @@ class LoginService extends BaseAdminService
         //创建token
         $token_info = $this->createToken($userinfo, $app_type);
 
+        $this->request->uid($userinfo->uid);
+
         //查询权限以及菜单
         $data = [
             'token' => $token_info['token'],
@@ -96,6 +98,7 @@ class LoginService extends BaseAdminService
             'userinfo' => [
                 'uid' => $userinfo->uid,
                 'username' => $userinfo->username,
+                'is_super_admin' => AuthService::isSuperAdmin()
             ],
             'site_id' => $default_site_id,
             'site_info' => null,
@@ -103,6 +106,9 @@ class LoginService extends BaseAdminService
         ];
         if ($app_type == AppTypeDict::ADMIN || ($app_type == AppTypeDict::SITE && $data['site_id']) ) {
             $data['site_info'] = (new SiteService())->getInfo($data['site_id']);
+        }
+        if ($app_type == AppTypeDict::ADMIN && !$data['userinfo']['is_super_admin']) {
+            $data['userinfo']['site_ids'] = (new \app\service\admin\home\AuthSiteService())->getSiteIds();
         }
 
         // 获取站点布局

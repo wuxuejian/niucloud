@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -85,6 +85,23 @@ Route::group('member', function () {
     Route::put('address/:id', 'member.Address/edit');
     //删除会员收货地址
     Route::delete('address/:id', 'member.Address/del');
+
+    /***************************************************** 会员等级 **************************************************/
+    Route::get('level', 'member.Level/lists');
+
+    /***************************************************** 会员签到 **************************************************/
+    //会员签到记录
+    Route::get('sign', 'member.MemberSign/lists');
+    //会员签到详情
+    Route::get('sign/:sign_id', 'member.MemberSign/info');
+    //会员签到
+    Route::post('sign', 'member.MemberSign/sign');
+    //获取月签到数据
+    Route::get('sign/info/:year/:month', 'member.MemberSign/signInfo');
+    //获取月签到数据
+    Route::get('sign/award/:year/:month/:day', 'member.MemberSign/getDayAward');
+    //获取签到设置
+    Route::get('sign/config', 'member.MemberSign/signConfig');
 
 })->middleware(ApiChannel::class)
     ->middleware(ApiCheckToken::class, true)

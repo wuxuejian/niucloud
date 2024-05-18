@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -19,8 +19,10 @@ use app\model\site\Site;
 use app\model\site\SiteGroup;
 use app\model\sys\SysUserRole;
 use app\service\admin\addon\AddonService;
+use app\service\admin\auth\AuthService;
 use app\service\admin\generator\GenerateService;
 use app\service\admin\sys\MenuService;
+use app\service\admin\sys\RoleService;
 use app\service\admin\user\UserRoleService;
 use app\service\admin\user\UserService;
 use app\service\core\site\CoreSiteService;
@@ -58,7 +60,7 @@ class SiteService extends BaseAdminService
     public function getPage(array $where = [])
     {
 
-        $field = 'site_id, site_name, front_end_name, front_end_logo, app_type, keywords, logo, icon, `desc`, status, latitude, longitude, province_id, city_id, 
+        $field = 'site_id, site_name, front_end_name, front_end_logo, front_end_icon, app_type, keywords, logo, icon, `desc`, status, latitude, longitude, province_id, city_id, 
         district_id, address, full_address, phone, business_hours, create_time, expire_time, group_id, app, addons, site_domain';
         $condition = [
             [ 'app_type', '<>', 'admin' ]
@@ -79,7 +81,7 @@ class SiteService extends BaseAdminService
      */
     public function getInfo(int $site_id)
     {
-        $field = 'site_id, site_name, front_end_name, front_end_logo, app_type, keywords, logo, icon, `desc`, status, latitude, longitude, province_id, city_id, 
+        $field = 'site_id, site_name, front_end_name, front_end_logo, front_end_icon, app_type, keywords, logo, icon, `desc`, status, latitude, longitude, province_id, city_id, 
         district_id, address, full_address, phone, business_hours, create_time, expire_time, group_id, app, addons, site_domain';
         $info = $this->model->where([ [ 'site_id', '=', $site_id ] ])->with([ 'groupName' ])->field($field)->append([ 'status_name' ])->findOrEmpty()->toArray();
         if (!empty($info)) {
@@ -264,18 +266,24 @@ class SiteService extends BaseAdminService
         if (empty($site_info))
             return [];
         $app_type = $site_info[ 'app_type' ];
-        if ($app_type == AppTypeDict::ADMIN) {
-            return ( new MenuService() )->getAllMenuList($app_type, $status, $is_tree, $is_button);
+
+        if (AuthService::isSuperAdmin()) {
+            $is_admin = 1;
         } else {
-            $addons = ( new AddonService() )->getAddonKeysBySiteId($site_id);
-            $addons[] = '';
-            if($addon != 'all'){
-                $addons = [$addon];
-            }
-            return ( new MenuService() )->getMenuListBySystem($this->app_type, $addons, $is_tree, $is_button, $status);
+            $user_role_info = (new AuthService())->getAuthRole($this->site_id);
+            if(empty($user_role_info))
+                return [];
+            $is_admin = $user_role_info['is_admin'];//是否是超级管理员组
         }
 
-
+        if ($app_type == AppTypeDict::ADMIN || $is_admin) {
+            return ( new MenuService() )->getAllMenuList($app_type, $status, $is_tree, $is_button);
+        } else {
+            $user_role_ids = $user_role_info['role_ids'];
+            $role_service = new RoleService();
+            $menu_keys = $role_service->getMenuIdsByRoleIds($this->site_id, $user_role_ids);
+            return ( new MenuService() )->getMenuListByMenuKeys($this->site_id, $menu_keys, $this->app_type, 1, is_button:$is_button);
+        }
     }
 
     /**
@@ -339,5 +347,14 @@ class SiteService extends BaseAdminService
     public function getSiteAddons(array $where) {
         $site_addon = (new CoreSiteService())->getAddonKeysBySiteId($this->site_id);
         return (new Addon())->where([['type', '=', AddonDict::ADDON], ['status', '=', AddonDict::ON], ['key', 'in', $site_addon ]])->withSearch(['title'], $where)->append(['status_name'])->field('title, icon, key, desc, status, type, support_app')->select()->toArray();
+    }
+
+    /**
+     * 获取站点支持的应用插件
+     * @return array
+     */
+    public function getAddonKeysBySiteId() {
+        $site_addon = (new CoreSiteService())->getAddonKeysBySiteId($this->site_id);
+        return $site_addon;
     }
 }

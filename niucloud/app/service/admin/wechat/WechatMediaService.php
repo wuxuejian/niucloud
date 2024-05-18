@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -71,11 +71,11 @@ class WechatMediaService extends BaseAdminService
     public function addVideoMedia(array $data) {
         $dir = $this->root_path.'/'.'video'.'/'.$this->site_id.'/'.date('Ym').'/'.date('d');
         $core_upload_service = new CoreUploadService();
-        $upload_res = $core_upload_service->video($data['file'], $this->site_id, $dir, storage_type: StorageDict::LOCAL);
+        $upload_res = $core_upload_service->video($data['file'], $this->site_id, $dir, 0, storage_type: StorageDict::LOCAL);
 
         $data = [
             'site_id' => $this->site_id,
-            'type' => WechatMediaDict::IMAGE,
+            'type' => WechatMediaDict::VIDEO,
             'file_path' => $upload_res['url']
         ];
         return (new CoreWechatMediaService())->addMedia($data);

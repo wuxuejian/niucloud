@@ -58,7 +58,10 @@ class Schedule extends Command
             foreach ($task_list as $item) {
                 //获取定时任务时间字符串
                 new Crontab($this->getCrontab($item['time']), function () use ($core_schedule_service, $item, $output) {
-                    $core_schedule_service->execute($item, $output);
+                    if(!empty($item['class'])){
+                        $core_schedule_service->execute($item, $output);
+                    }
+
                 });
             }
         };

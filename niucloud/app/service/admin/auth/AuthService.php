@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -140,7 +140,7 @@ class AuthService extends BaseAdminService
 
         $menu_service = new MenuService();
         if($is_admin){//查询全部启用的权限
-            return (new AuthSiteService())->getMenuList($is_tree, 1, $addon);
+            return ( new MenuService() )->getAllMenuList($this->app_type, 1, $is_tree, 1);
         }else{
             $user_role_ids = $user_role_info['role_ids'];
             $role_service = new RoleService();

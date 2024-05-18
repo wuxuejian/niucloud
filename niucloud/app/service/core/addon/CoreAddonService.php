@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -116,7 +116,7 @@ class CoreAddonService extends CoreAddonBaseService
     public function getPage(array $where)
     {
         $field = 'id, title, key, desc, version, status, icon, create_time, install_time';
-        $search_model = $this->model->where([])->withSearch(['title'], $where)->field($field)->order('id desc');
+        $search_model = $this->model->withSearch(['title'], $where)->field($field)->order('id desc');
         return $this->pageQuery($search_model);
     }
 
@@ -209,7 +209,13 @@ class CoreAddonService extends CoreAddonBaseService
      * @return array
      */
     public function getInstallAddonList(){
-        return $this->model->where([['status', '=', AddonDict::ON]])->append(['status_name'])->column('title, icon, key, desc, status, type, support_app', 'key');
+        $addon_list = $this->model->where([['status', '=', AddonDict::ON]])->append(['status_name'])->column('title, icon, key, desc, status, type, support_app', 'key');
+        if (!empty($addon_list)) {
+            foreach ($addon_list as &$data) {
+                $data['icon'] = is_file($data['icon']) ? image_to_base64($data['icon']) : '';
+            }
+        }
+        return $addon_list;
     }
 
     /**

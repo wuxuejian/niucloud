@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -203,17 +203,18 @@ class CoreScheduleService extends BaseCoreService
      * @return true
      */
     public function execute(array $schedule, $output){
-        $class = $schedule['class'] ?: 'app\\job\\schedule\\'.Str::studly($schedule['key']);
-        $function = $schedule['function'] ?: 'doJob';
+        $class = !empty($schedule['class']) ? $schedule['class'] : 'app\\job\\schedule\\'.Str::studly($schedule['key']);
+        $name = !empty($schedule['name']) ? $schedule['name'] : '未命名任务';
+        $function = !empty($schedule['function']) ? $schedule['function'] : 'doJob';
         $job = $class.($function == 'doJob' ? '' : '['.$function.']');
-        $output->writeln('['.date('Y-m-d H:i:s').']'." Processing:" . $job.'('.$schedule['name'].')');
+        if(!empty($output)) $output->writeln('[Schedule]['.date('Y-m-d H:i:s').']'." Processing:" . $job.'('.$name.')');
         try {
             $result = Container::getInstance()->invoke([$class, $function ?? 'doJob']);
-            $output->writeln('['.date('Y-m-d H:i:s').']'." Processed:" . $job.'('.$schedule['name'].')');
+            if(!empty($output)) $output->writeln('[Schedule]['.date('Y-m-d H:i:s').']'." Processed:" . $job.'('.$name.')');
         }catch( Throwable $e){
             $error = $e->getMessage();
-            $output->writeln('['.date('Y-m-d H:i:s').']'." Error:" . $job.'('.$schedule['name'].') ,'.$error);
-            Log::write('计划任务:'.$schedule['name'].'发生错误, 错误原因:'.$error);
+            if(!empty($output)) $output->writeln('[Schedule]['.date('Y-m-d H:i:s').']'." Error:" . $job.'('.$name.') ,'.$error);
+            Log::write('计划任务:'.$name.'发生错误, 错误原因:'.$error);
         }
         $schedule = $this->model->find($schedule['id']);
         if(!$schedule->isEmpty()){

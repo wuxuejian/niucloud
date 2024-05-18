@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -38,12 +38,17 @@ class WeappTemplateService extends BaseAdminService
     {
         $site_id = $this->site_id;
         $core_notice_service = new CoreNoticeService();
-        $list = $core_notice_service->getList($site_id);
-        $template = [];
-        foreach ($list as $k => $v){
-            if(in_array(NoticeTypeDict::WEAPP, $v['support_type'])) $template[] = $v;
+        $addon_list = $core_notice_service->getAddonList($site_id);
+
+        foreach ($addon_list as &$addon) {
+            foreach ($addon['notice'] as $k => $v) {
+                if (!in_array(NoticeTypeDict::WEAPP, $v[ 'support_type' ])) {
+                    unset($addon['notice'][$k]);
+                }
+            }
+            $addon['notice'] = array_values($addon['notice']);
         }
-        return $template;
+        return $addon_list;
     }
 
     /**
@@ -87,7 +92,7 @@ class WeappTemplateService extends BaseAdminService
 //        $res = (new CoreWeappTemplateService())->addTemplate($this->site_id, $tid, $kid_list, $scene_desc);
         $res = $template_loader->addTemplate(['tid' => $tid, 'kid_list' => $kid_list, 'scene_desc' => $scene_desc ]);
         $notice_service = new NoticeService();
-        if (isset($res[ 'errcode' ]) && $res[ 'errcode' ] == 0) {
+        if (isset($res[ 'errcode' ]) && in_array($res[ 'errcode' ], [0, 200022])) {
             //修改
             $notice_service->modify($key, 'weapp_template_id', $res[ 'priTmplId' ]);
         } else {

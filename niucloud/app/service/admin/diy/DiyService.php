@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -48,7 +48,7 @@ class DiyService extends BaseAdminService
     public function getPage(array $where = [])
     {
         $where[] = [ 'site_id', '=', $this->site_id ];
-        $field = 'id,site_id,title,name,template,type,mode,is_default,share,visit_count,create_time,update_time,value';
+        $field = 'id,site_id,title,page_title,name,template,type,mode,is_default,share,visit_count,create_time,update_time,value';
         $order = "update_time desc";
         $search_model = $this->model->where([ [ 'site_id', '=', $this->site_id ] ])->withSearch([ "title", "type", 'mode', 'addon_name' ], $where)->field($field)->order($order)->append([ 'type_name', 'type_page', 'addon_name' ]);
         return $this->pageQuery($search_model);
@@ -63,19 +63,19 @@ class DiyService extends BaseAdminService
     public function getPageByCarouselSearch(array $where = [])
     {
         $where[] = [ 'site_id', '=', $this->site_id ];
-        $field = 'id,site_id,title,name,template,type,mode,is_default,share,visit_count,create_time,update_time,value';
+        $field = 'id,site_id,title,page_title,name,template,type,mode,is_default,share,visit_count,create_time,update_time,value';
         $order = "update_time desc";
         $search_model = $this->model->whereOr([
             [
                 [ 'type', '=', 'DIY_PAGE' ],
                 [ 'site_id', '=', $this->site_id ],
-                [ 'value', 'not in', ['top_fixed','right_fixed','bottom_fixed','left_fixed','fixed'] ]
+                [ 'value', 'not in', [ 'top_fixed', 'right_fixed', 'bottom_fixed', 'left_fixed', 'fixed' ] ]
             ],
             [
                 [ 'type', '<>', 'DIY_PAGE' ],
                 [ 'site_id', '=', $this->site_id ],
                 [ 'is_default', '=', 0 ],
-                [ 'value', 'not in', ['top_fixed','right_fixed','bottom_fixed','left_fixed','fixed'] ]
+                [ 'value', 'not in', [ 'top_fixed', 'right_fixed', 'bottom_fixed', 'left_fixed', 'fixed' ] ]
             ]
         ])->field($field)->order($order)->append([ 'type_name', 'type_page', 'addon_name' ]);
         return $this->pageQuery($search_model);
@@ -90,7 +90,7 @@ class DiyService extends BaseAdminService
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getList(array $where = [], $field = 'id,title,name,template,type,mode,is_default,share,visit_count,create_time,update_time')
+    public function getList(array $where = [], $field = 'id,title,page_title,name,template,type,mode,is_default,share,visit_count,create_time,update_time')
     {
         $order = "update_time desc";
         return $this->model->where([ [ 'site_id', '=', $this->site_id ] ])->withSearch([ "title", "type", 'mode' ], $where)->field($field)->order($order)->select()->toArray();
@@ -103,13 +103,13 @@ class DiyService extends BaseAdminService
      */
     public function getInfo(int $id)
     {
-        $field = 'id,site_id,title,name,template,type,mode,value,is_default,is_change,share,visit_count';
+        $field = 'id,site_id,title,page_title,name,template,type,mode,value,is_default,is_change,share,visit_count';
         return $this->model->field($field)->where([ [ 'id', '=', $id ], [ 'site_id', '=', $this->site_id ] ])->findOrEmpty()->toArray();
     }
 
     public function getInfoByName(string $name)
     {
-        $field = 'id,site_id,title,name,template,type,mode,value,is_default,is_change,share,visit_count';
+        $field = 'id,site_id,title,page_title,name,template,type,mode,value,is_default,is_change,share,visit_count';
         return $this->model->field($field)->where([ [ 'name', '=', $name ], [ 'site_id', '=', $this->site_id ], [ 'is_default', '=', 1 ] ])->findOrEmpty()->toArray();
     }
 
@@ -131,7 +131,9 @@ class DiyService extends BaseAdminService
      */
     public function add(array $data)
     {
-        $data[ 'site_id' ] = $this->site_id;
+        if (empty($data[ 'site_id' ])) {
+            $data[ 'site_id' ] = $this->site_id;
+        }
         $data[ 'create_time' ] = time();
         $data[ 'update_time' ] = time();
 
@@ -149,7 +151,7 @@ class DiyService extends BaseAdminService
     }
 
     /**
-     * 自定义页面编辑
+     * 编辑自定义页面
      * @param int $id
      * @param array $data
      * @return bool
@@ -240,19 +242,21 @@ class DiyService extends BaseAdminService
         }
 
         if (!empty($data)) {
-            // 编辑赋值
 
+            // 编辑赋值
             if (isset($template[ $data[ 'type' ] ])) {
                 $page = $template[ $data[ 'type' ] ];
                 $data[ 'type_name' ] = $page[ 'title' ];
                 $data[ 'page' ] = $page[ 'page' ];
             }
+
         } else {
 
             // 新页面赋值
-            $title = $params[ 'title' ] ? : '页面' . $time;
+            $page_title = $params[ 'title' ] ? : '页面' . $time; // 页面标题（用于前台展示）
             $type = $params[ 'type' ] ? : 'DIY_PAGE';
             $name = $type == 'DIY_PAGE' ? 'DIY_PAGE_RANDOM_' . $time : $type;
+            $title = $page_title;
             $type_name = '';
             $template_name = ''; // 页面模板名称
             $page_route = ''; // 页面路径
@@ -265,7 +269,7 @@ class DiyService extends BaseAdminService
                 $page = $template[ $params[ 'name' ] ];
                 $name = $params[ 'name' ];
                 $type = $params[ 'name' ];
-                $title = $page[ 'title' ];
+                $page_title = $page[ 'title' ];
                 $type_name = $page[ 'title' ];
                 $page_route = $page[ 'page' ];
 
@@ -290,9 +294,15 @@ class DiyService extends BaseAdminService
 
             }
 
+            // 页面标题（用于前台展示）
+            if ($type != 'DIY_PAGE') {
+                $title = $type_name;
+            }
+
             $data = [
                 'name' => $name,
-                'title' => $title,
+                'page_title' => $page_title, // 页面名称（用于后台展示）
+                'title' => $title, // 页面标题（用于前台展示）
                 'type' => $type,
                 'type_name' => $type_name,
                 'template' => $template_name,
@@ -360,7 +370,7 @@ class DiyService extends BaseAdminService
             // 查询自定义页面
             if ($k == 'DIY_PAGE') {
                 $order = "update_time desc";
-                $field = 'id,title,name,template,type,mode,is_default,share,visit_count,create_time,update_time';
+                $field = 'id,title,page_title,name,template,type,mode,is_default,share,visit_count,create_time,update_time';
                 $list = $this->model
                     ->whereOr([
                         [
@@ -376,7 +386,7 @@ class DiyService extends BaseAdminService
                 foreach ($list as $ck => $cv) {
                     $link[ $k ][ 'child_list' ][] = [
                         'name' => $cv[ 'name' ],
-                        'title' => $cv[ 'title' ],
+                        'title' => $cv[ 'page_title' ],
                         'url' => '/app/pages/index/diy?id=' . $cv[ 'id' ]
                     ];
                 }
