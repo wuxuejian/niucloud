@@ -8,9 +8,18 @@ import useUserStore from '@/stores/modules/user'
 import { setWindowTitle, getAppType, urlToRouteRaw } from '@/utils/common'
 import storage from '@/utils/storage'
 
+// 加载插件中定义的router
+const ADDON_ROUTE = []
+const addonRoutes = import.meta.globEager('@/addon/**/router/index.ts')
+for (const key in addonRoutes) {
+    const addon = addonRoutes[key]
+    addon.ROUTE && ADDON_ROUTE.push(...addon.ROUTE)
+    addon.NO_LOGIN_ROUTES && NO_LOGIN_ROUTES.push(...addon.NO_LOGIN_ROUTES)
+}
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
-    routes: [ADMIN_ROUTE, HOME_ROUTE, SITE_ROUTE, ...STATIC_ROUTES]
+    routes: [ADMIN_ROUTE, HOME_ROUTE, SITE_ROUTE, ...STATIC_ROUTES, ...ADDON_ROUTE]
 })
 
 /**
@@ -102,7 +111,13 @@ router.beforeEach(async (to, from, next) => {
                     // 设置首页路由
                     let firstRoute: symbol | string | undefined = findFirstValidRoute(userStore.routers)
                     if (getAppType() != 'admin') {
-                        firstRoute = userStore.addonIndexRoute[ userStore.siteInfo?.apps[0].key ]
+                        for (let i = 0; i < userStore.siteInfo?.apps.length; i++) {
+                            const item = userStore.siteInfo?.apps[i]
+                            if (userStore.addonIndexRoute[item.key]) {
+                                firstRoute = userStore.addonIndexRoute[item.key]
+                                break
+                            }
+                        }
                     }
 
                     ROOT_ROUTER.redirect = { name: firstRoute }

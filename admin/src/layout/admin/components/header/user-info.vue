@@ -39,7 +39,7 @@
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
-        <el-dialog v-model="changePasswordDialog" width="450px" title="修改密码" :before-close="handleClose">
+        <el-dialog v-model="changePasswordDialog" width="450px" title="修改密码">
             <div>
                 <el-form :model="saveInfo" label-width="90px" ref="formRef" :rules="formRules" class="page-form">
                     <el-form-item :label="t('originalPassword')" prop="original_password">

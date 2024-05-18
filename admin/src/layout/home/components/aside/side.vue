@@ -12,8 +12,8 @@
 
         <el-main class="menu-wrap">
             <el-scrollbar>
-                <el-menu :default-active="menuActive" :router="true" class="aside-menu h-full" unique-opened="true" :collapse="systemStore.menuIsCollapse">
-                    <menu-item v-for="(route, index) in userStore.routers" :routes="route" :route-path="route.path" :key="index" />
+                <el-menu :default-active="menuActive" :router="true" class="aside-menu h-full" :unique-opened="true" :collapse="systemStore.menuIsCollapse">
+                    <menu-item v-for="(route, index) in userStore.routers" :routes="route" :key="index" />
                 </el-menu>
                 <div class="h-[48px]"></div>
             </el-scrollbar>

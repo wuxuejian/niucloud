@@ -2,8 +2,8 @@
     <el-container class="w-100" :class="[{ 'sidebar-dark-mode': systemStore.sidebar == 'twoType' }, { 'sidebar-brightness-mode': systemStore.sidebar == 'oneType' }]">
         <el-main class="menu-wrap">
             <el-scrollbar>
-                <el-menu :default-active="menuActive" :router="true" class="aside-menu h-full" unique-opened="true" :collapse="systemStore.menuIsCollapse">
-                    <menu-item v-for="(route, index) in userStore.routers[0].children" :routes="route" :route-path="'setting/'+ route.path" :key="index" />
+                <el-menu :default-active="menuActive" :router="true" class="aside-menu h-full" :unique-opened="true" :collapse="systemStore.menuIsCollapse">
+                    <menu-item v-for="(route, index) in userStore.routers[0].children" :routes="route" :key="index" />
                 </el-menu>
                 <div class="h-[48px]"></div>
             </el-scrollbar>

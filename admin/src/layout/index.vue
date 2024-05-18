@@ -6,6 +6,7 @@
 import { ref, markRaw, defineAsyncComponent, provide } from 'vue'
 import { getAppType } from '@/utils/common'
 import useUserStore from '@/stores/modules/user'
+import useSystemStore from '@/stores/modules/system'
 
 const sysLayout = import.meta.glob('./*/index.vue')
 const addonLayout = import.meta.glob('@/addon/**/layout/index.vue')
@@ -21,13 +22,20 @@ switch (getAppType()) {
         break
     default:
         const siteInfo = useUserStore().siteInfo
-        if (siteInfo && siteInfo.apps && siteInfo.apps.length == 1) siteLayout = siteInfo.apps[0].key
+        if (siteInfo && siteInfo.apps) {
+            const layouts = useSystemStore().layoutConfig
+            if (siteInfo.apps.length == 1) {
+                layouts[siteInfo.apps[0].key] != undefined && (siteLayout = layouts[siteInfo.apps[0].key])
+            } else {
+                layouts.system != undefined && (siteLayout = layouts.system)
+            }
+        }
 }
 
 const layout = ref<any>(null)
 
 Object.keys(modules).forEach(key => {
-    key.indexOf(siteLayout) !== -1 && (layout.value = markRaw(defineAsyncComponent(modules[key])))
+    key.indexOf(`/${siteLayout}/`) !== -1 && (layout.value = markRaw(defineAsyncComponent(modules[key])))
 })
 
 !layout.value && (layout.value = markRaw(defineAsyncComponent(modules['./default/index.vue'])))
@@ -39,7 +47,7 @@ provide('setLayout', (name: any) => {
     if (siteLayout == name) return
     siteLayout = name
     Object.keys(modules).forEach(key => {
-        key.indexOf(name) !== -1 && (layout.value = markRaw(defineAsyncComponent(modules[key])))
+        key.indexOf(`/${name}/`) !== -1 && (layout.value = markRaw(defineAsyncComponent(modules[key])))
     })
 })
 </script>

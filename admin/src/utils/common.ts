@@ -130,6 +130,15 @@ export function img(path: string): string {
 }
 
 /**
+ * 输出asset img
+ * @param path
+ * @returns
+ */
+export function assetImg (path: string) {
+    return new URL('@/', import.meta.url) + path
+}
+
+/**
  * 获取字符串字节长度
  * @param str
  * @returns

@@ -21,6 +21,7 @@ const systemStore = useSystemStore()
 const locale = computed(() => (systemStore.lang === 'zh-cn' ? zhCn : en))
 // 查询website信息
 systemStore.getWebsiteInfo()
+systemStore.getWebsiteLayout()
 
 const toggleDark = useToggle(useDark())
 

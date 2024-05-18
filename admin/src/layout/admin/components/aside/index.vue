@@ -2,11 +2,13 @@
     <div :class="['layout-aside ease-in duration-200 flex h-full', { 'bright': !dark }]">
         <div class="flex flex-col h-full border-0 border-r-[1px] border-solid border-[#eee] box-border bg-[#f5f6f8]">
             <div class="w-full h-[64px] flex justify-center items-center w-[65px]flex-shrink-0">
-                <el-image style="width: 40px; height: 40px" :src="img(logoUrl)" fit="contain">
-                    <template #error>
-                        <div class="flex justify-center items-center w-full h-[40px]"><img class="max-w-[40px]" src="@/app/assets/images/site_login_logo.png" alt=""  object-fit="contain"></div>
-                    </template>
-                </el-image>
+                <div class="w-[40px] h-[40px] rounded-[50%] overflow-hidden">
+                    <el-image style="width: 100%; height: 100%" :src="img(logoUrl)" fit="contain">
+                        <template #error>
+                            <div class="flex justify-center items-center w-full h-[40px]"><img class="max-w-[40px]" src="@/app/assets/images/site_login_logo.png" alt=""  object-fit="contain"></div>
+                        </template>
+                    </el-image>
+                </div>
             </div>
             <el-scrollbar class="flex-1 w-[65px] one-menu">
                 <div class="flex flex-col items-center">
@@ -178,6 +180,22 @@ watch(route, () => {
         text-overflow: ellipsis;
         overflow: hidden;
         font-size: var(--el-font-size-base);
+    }
+}
+
+.layout-aside .el-scrollbar__wrap--hidden-default, .layout-aside .el-scrollbar{
+    overflow: inherit !important;
+}
+.layout-aside .menu-item.is-active{
+    position: relative;
+    &:after{
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: var(--el-color-primary);
+        right: -1px;
     }
 }
 </style>

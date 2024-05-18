@@ -35,6 +35,10 @@ export const ADMIN_ROUTE: RouteRecordRaw = {
         },
         {
             path: 'login',
+            meta: {
+                type: 1,
+                title: '用户登录'
+            },
             component: () => import('@/app/views/login/index.vue')
         }
     ]
@@ -74,6 +78,10 @@ export const SITE_ROUTE: RouteRecordRaw = {
         },
         {
             path: 'login',
+            meta: {
+                type: 1,
+                title: '用户登录'
+            },
             component: () => import('@/app/views/login/index.vue')
         }
     ]
