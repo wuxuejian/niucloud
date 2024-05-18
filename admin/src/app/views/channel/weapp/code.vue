@@ -8,7 +8,7 @@
             <el-tab-pane :label="t('subscribeMessage')" name="/channel/weapp/message" />
             <el-tab-pane :label="t('weappRelease')" name="/channel/weapp/code" />
         </el-tabs>
-        <el-card class="box-card !border-none" shadow="never">
+        <el-card class="box-card !border-none" shadow="never" v-loading="loading">
             <div class="mt-[50px]">
                 <el-button type="primary" @click="insert" :loading="uploading" :disabled="weappTableData.loading">{{ t('cloudRelease') }}</el-button>
                 <el-button @click="localInsert" :disabled="weappTableData.loading">{{ t('localRelease') }}</el-button>
@@ -70,6 +70,15 @@
                 {{ failReason }}
             </el-scrollbar>
         </el-dialog>
+        <el-dialog v-model="uploadSuccessShowDialog" :title="t('warning')" width="500px" draggable>
+            <span v-html="t('uploadSuccessTips')"></span>
+            <template #footer>
+                <div class="flex justify-end">
+                    <el-button @click="knownToKnow" type="primary">{{ t('knownToKnow') }}</el-button>
+                    <el-button @click="uploadSuccessShowDialog = false" type="primary" plain>{{ t('confirm') }}</el-button>
+                </div>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
@@ -79,13 +88,16 @@ import { setWeappVersion, getWeappPreview, getWeappVersionList, getWeappUploadLo
 import { t } from '@/lang'
 import { useRoute, useRouter } from 'vue-router'
 import { getAuthinfo } from '@/app/api/module'
+import { getAppType } from '@/utils/common'
 import { ElMessageBox } from 'element-plus'
 import { AnyObject } from '@/types/global'
+import Storage from '@/utils/storage'
 
 const route = useRoute()
 const router = useRouter()
 const pageName = route.meta.title
 const dialogVisible = ref(false)
+const loading = ref(true)
 const weappTableData:{
     page: number,
     limit: number,
@@ -105,14 +117,17 @@ const form = ref({
     path: '',
     content: ''
 })
-
+const uploadSuccessShowDialog = ref(false)
 const authCode = ref('')
+
 getAuthinfo().then(res => {
     if (res.data.data && res.data.data.auth_code) {
         authCode.value = res.data.data.auth_code
         getWeappPreviewImage()
     }
+    loading.value = false
 }).catch(() => {
+    loading.value = false
 })
 
 const weappConfig = ref<{
@@ -211,6 +226,7 @@ const getWeappUploadLogFn = (key: string) => {
             if (last.code == 1 && last.percent == 100) {
                 getWeappVersionListFn()
                 getWeappPreviewImage()
+                !Storage.get('weappUploadTipsLock') && (uploadSuccessShowDialog.value = true)
                 return
             }
             setTimeout(() => {
@@ -221,21 +237,25 @@ const getWeappUploadLogFn = (key: string) => {
 }
 
 const authElMessageBox = () => {
-    ElMessageBox.confirm(
-        t('authTips'),
-        t('warning'),
-        {
-            distinguishCancelAndClose: true,
-            confirmButtonText: t('toBind'),
-            cancelButtonText: t('toNiucloud')
-        }
-    ).then(() => {
-        router.push({ path: '/app/authorize' })
-    }).catch((action: string) => {
-        if (action === 'cancel') {
-            window.open('https://www.niucloud.com/app')
-        }
-    })
+    if (getAppType() == 'admin') {
+        ElMessageBox.confirm(
+            t('authTips'),
+            t('warning'),
+            {
+                distinguishCancelAndClose: true,
+                confirmButtonText: t('toBind'),
+                cancelButtonText: t('toNiucloud')
+            }
+        ).then(() => {
+            router.push({ path: '/app/authorize' })
+        }).catch((action: string) => {
+            if (action === 'cancel') {
+                window.open('https://www.niucloud.com/app')
+            }
+        })
+    } else {
+        ElMessageBox.alert(t('siteAuthTips'), t('warning'))
+    }
 }
 
 const configElMessageBox = () => {
@@ -257,6 +277,11 @@ const failReasonDialogVisible = ref(false)
 const handleFailReason = (data: any) => {
     failReason.value = data.fail_reason
     failReasonDialogVisible.value = true
+}
+
+const knownToKnow = () => {
+    Storage.set({ key: 'weappUploadTipsLock', data: true })
+    uploadSuccessShowDialog.value = false
 }
 </script>
 

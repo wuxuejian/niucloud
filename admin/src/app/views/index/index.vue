@@ -2,29 +2,8 @@
 <template>
     <div v-loading="loading">
         <el-card class="box-card !border-none" shadow="never">
-            <div class="">
-                <div class="flex items-center">
-                    <span class="text-[24px] font-600 text-[#242424] leading-[33px]">欢迎使用niucloud-admin</span>
-                    <div class="ml-[12px] bg-[#333] flex items-center py-[3px] px-[6px] rounded">
-                        <img class="w-[16px] h-[16px]" src="@/app/assets/images/SaaS.png" />
-                        <span class="text-[12px] text-[#fff] font-600 leading-[16px] ml-[3px]">SAAS版</span>
-                    </div>
-                </div>
-                <div class="flex items-center mt-[12px]">
-                    <img class="w-[12px] h-[12px]" src="@/app/assets/images/versions.png" />
-                    <span class="ml-[7px] text-[16px] font-600 text-[#424242] leading-[16px] font-[600]">{{ statInfo.version.version }}</span>
-                    <div class="ml-[10px] cursor-pointer" v-if="newVersion" @click="toUpgrade">
-                        <el-tag type="danger" size="small">{{ t('newVersion') }}{{ newVersion.last_version }}</el-tag>
-                    </div>
-                    <el-link class="text-color ml-[30px] text-[14px] leading-[20px]" href="https://www.niucloud.com/"
-                        target="_blank" :underline="false">{{ t("officialWbsite") }}</el-link>
-                    <el-link class="ml-[12px] text-color text-[14px] leading-[20px]"
-                        href="https://gitee.com/niucloud-team/niucloud.git" target="_blank"
-                        :underline="false">Gitee</el-link>
-                </div>
-            </div>
             <div
-                class="px-[32px] pt-[24px] pb-[14px] bg-[#fff] border-[1px] border-[#E9EBF0] border-solid mt-[42px] box-border">
+                class="px-[32px] pt-[24px] pb-[14px] bg-[#fff] border-[1px] border-[#E9EBF0] border-solid box-border">
                 <el-card class="box-card !border-none profile-data" shadow="never"
                     :body-style="{ padding: '49px 32px 20px' }">
                     <template #header>

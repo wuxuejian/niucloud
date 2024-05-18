@@ -20,6 +20,10 @@
 					<img class="w-20 h-20" v-else src="@/app/assets/images/site_logo.png" alt="" >
                 </el-form-item>
 
+                <el-form-item :label="t('siteDomain')">
+                    <div class="input-width">{{ formData.site_domain || '' }}</div>
+                </el-form-item>
+
                 <el-form-item :label="t('groupName')">
                     <div class="input-width">{{ formData.group_name || '' }}</div>
                 </el-form-item>
@@ -145,7 +149,8 @@ const initialFormData = {
     status: 0,
     create_time: 0,
     site_addons: [],
-    status_name:''
+    status_name: '',
+    site_domain: ''
 }
 const formData: Record<string, any> = reactive({ ...initialFormData })
 

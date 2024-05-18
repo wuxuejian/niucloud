@@ -24,16 +24,15 @@
                 </el-form-item>
 
                 <el-form-item :label="t('userRealName')" prop="real_name">
-                    <el-input v-model="formData.real_name" :placeholder="t('userRealNamePlaceholder')" clearable class="input-width" maxlength="10" show-word-limit />
+                    <el-input v-model="formData.real_name" :placeholder="t('userRealNamePlaceholder')" :readonly="real_name_input" @click="real_name_input = false" @blur="real_name_input = true" clearable class="input-width" maxlength="10" show-word-limit />
                 </el-form-item>
-
                 <div v-if="!formData.uid">
                     <el-form-item :label="t('password')" prop="password">
-                        <el-input v-model="formData.password" :placeholder="t('passwordPlaceholder')" type="password" :show-password="true" clearable class="input-width" />
+                        <el-input v-model="formData.password" :placeholder="t('passwordPlaceholder')" :readonly="password_input" @click="password_input = false" @blur="password_input = true" type="password" :show-password="true" clearable class="input-width" />
                     </el-form-item>
 
                     <el-form-item :label="t('confirmPassword')" prop="confirm_password">
-                        <el-input v-model="formData.confirm_password" :placeholder="t('confirmPasswordPlaceholder')" type="password" :show-password="true" clearable class="input-width" />
+                        <el-input v-model="formData.confirm_password" :placeholder="t('confirmPasswordPlaceholder')" :readonly="confirm_password_input" @click="confirm_password_input = false" @blur="confirm_password_input = true" type="password" :show-password="true" clearable class="input-width" />
                     </el-form-item>
                 </div>
             </div>
@@ -85,7 +84,9 @@ const getUserList = () => {
     }).catch()
 }
 getUserList()
-
+const real_name_input = ref(true)
+const password_input = ref(true)
+const confirm_password_input = ref(true)
 const needAddUserInfo = computed(() => {
     if (formData.uid || !uid.value || typeof uid.value == 'string') {
         return true

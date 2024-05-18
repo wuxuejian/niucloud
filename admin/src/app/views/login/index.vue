@@ -159,14 +159,6 @@ const webSite = computed(() => useSystemStore().website)
 // 判断登录页面[平台或者站点]
 const loginType = ref(getAppType())
 
-watch(() => webSite.value, () => {
-    if (loginType.value == 'site') {
-        setWindowTitle(webSite.value.site_name+'-'+t('siteLogin'))
-    } else {
-        setWindowTitle(webSite.value.site_name+'-'+t('adminLogin'))
-    }
-})
-
 // 验证码 - start
 const verifyRef = ref(null)
 const success = (params:any) => {

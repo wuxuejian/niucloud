@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full p-5 bg-white">
+    <div class="w-full p-5 bg-body">
         <div class="flex justify-between items-center mb-[20px]">
             <span class="text-page-title">{{ t('title') }}</span>
         </div>

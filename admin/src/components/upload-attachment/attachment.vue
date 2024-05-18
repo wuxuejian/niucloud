@@ -4,8 +4,7 @@
         <!-- 分组 -->
         <div class="group-wrap w-[180px] p-[15px] h-full border-r border-color flex flex-col">
 
-            <el-input v-model="categoryParam.name" class="m-0" :placeholder="t('upload.attachmentCategoryPlaceholder')"
-                clearable prefix-icon="Search" @input="getAttachmentCategoryList()" />
+            <el-input v-model="categoryParam.name" class="m-0" :placeholder="t('upload.attachmentCategoryPlaceholder')" clearable prefix-icon="Search" @input="getAttachmentCategoryList()" />
             <div class="group-list flex-1 my-[10px] h-0">
                 <el-scrollbar>
                     <div class="group-item p-[10px] leading-none text-xs rounded cursor-pointer" :class="{ active: attachmentParam.cate_id == 0 }" @click="attachmentParam.cate_id = 0">
@@ -14,8 +13,7 @@
                     <div class="group-item px-[10px] text-xs rounded cursor-pointer flex"
                         v-for="(item, index) in attachmentCategory.data" :key="index"
                         :class="{ active: attachmentParam.cate_id == item.id }">
-                        <div class="flex-1 leading-none truncate py-[10px]" @click="attachmentParam.cate_id = item.id">
-                            {{ item.name }}</div>
+                        <div class="flex-1 leading-none truncate py-[10px]" @click="attachmentParam.cate_id = item.id">{{ item.name }}</div>
                         <div class="leading-none operate py-[10px]" v-if="scene == 'attachment' && prop.type != 'icon'">
                             <!-- 图片操作 -->
                             <el-dropdown :hide-on-click="false" v-if="scene == 'attachment'">
@@ -59,9 +57,7 @@
                     </div>
                 </el-col>
                 <el-col :span="14" class="text-right">
-                    <el-input v-model="attachmentParam.real_name" class="m-0 w-[200px]" clearable
-                        :placeholder="t('upload.placeholder' + type + 'Name')" prefix-icon="Search"
-                        @input="getAttachmentList()" />
+                    <el-input v-model="attachmentParam.real_name" class="m-0 !w-[200px]" clearable :placeholder="t('upload.placeholder' + type + 'Name')" prefix-icon="Search" @input="getAttachmentList()" />
                 </el-col>
             </el-row>
             <div class="flex-1 my-[15px] h-0" v-loading="attachment.loading">

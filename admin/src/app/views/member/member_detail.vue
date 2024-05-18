@@ -1,7 +1,7 @@
 <template>
 	<div class="main-container" v-loading="loading">
 		<div class="detail-head !ml-[20px] !mb-[5px]">
-			<div class="left" @click="router.push({ path: '/member/member' })">
+			<div class="left" @click="back">
 				<span class="iconfont iconxiangzuojiantou !text-xs"></span>
 				<span class="ml-[1px]">{{t('returnToPreviousPage')}}</span>
 			</div>
@@ -9,7 +9,7 @@
 			<span class="right">{{ pageName }}</span>
 		</div>
 		<el-card class="box-card !border-none" shadow="never">
-			<div class="bg-[#FAFAFD] py-[20px] pr-[80px] pl-[280px] relative">
+			<div class="bg-page py-[20px] pr-[80px] pl-[280px] relative">
 				<div class="member-info absolute w-[250px]">
 					<div class="flex items-center">
 						<span class="text-[14px] min-w-[110px] text-right mr-[20px]">{{ t('headimg') }}</span>
@@ -30,7 +30,7 @@
 				</div>
 				<div>
 					<el-row justify="space-evenly" class="flex">
-						<el-col :span="5">
+						<el-col :span="4">
 							<div class="statistic-card">
 								<el-statistic :value="formData.point">
 									<template #title>
@@ -52,7 +52,7 @@
 									</template>
 								</el-statistic>
 								<div class="statistic-footer">
-									<div class="footer-item text-[14px] text-[#333333]">
+									<div class="footer-item text-[14px] text-secondary">
 										<span>{{ t('accumulative') }}</span>
 										<span class="green ml-1">
 											{{ formData.point_get }}
@@ -61,7 +61,7 @@
 								</div>
 							</div>
 						</el-col>
-						<el-col :span="5">
+						<el-col :span="4">
 							<div class="statistic-card">
 								<el-statistic :value="formData.balance">
 									<template #title>
@@ -83,7 +83,7 @@
 									</template>
 								</el-statistic>
 								<div class="statistic-footer">
-									<div class="footer-item text-[14px] text-[#333333]">
+									<div class="footer-item text-[14px] text-secondary">
 										<span>{{ t('accumulative') }}</span>
 										<span class="red ml-1">
 											{{ formData.balance_get }}
@@ -92,9 +92,32 @@
 								</div>
 							</div>
 						</el-col>
-						<el-col :span="5">
+                        <el-col :span="4">
+                            <div class="statistic-card">
+                                <el-statistic :value="formData.growth">
+                                    <template #title>
+                                        <div style="display: inline-flex; align-items: center">
+											<span class="text-[14px]">
+												{{ t('growth') }}
+											</span>
+<!--                                            <el-tooltip effect="dark" :content="t('adjust')" placement="top">-->
+<!--                                                <el-icon @click="adjustGrowth(formData)" class="ml-2 cursor-pointer" :size="12">-->
+<!--                                                    <EditPen color="#273CE2" />-->
+<!--                                                </el-icon>-->
+<!--                                            </el-tooltip>-->
+                                            <el-tooltip effect="dark" :content="t('detail')" placement="top">
+                                                <el-icon @click="infoGrowth(formData)" class="ml-2 cursor-pointer" :size="12">
+                                                    <View />
+                                                </el-icon>
+                                            </el-tooltip>
+                                        </div>
+                                    </template>
+                                </el-statistic>
+                            </div>
+                        </el-col>
+						<el-col :span="4">
 							<div class="statistic-card">
-								<el-statistic :value="formData.money" title="New transactions today ">
+								<el-statistic :value="formData.money" title="New transactions today">
 									<template #title>
 										<div style="display: inline-flex; align-items: center">
 											<span class="text-[14px]">
@@ -109,7 +132,7 @@
 									</template>
 								</el-statistic>
 								<div class="statistic-footer">
-									<div class="footer-item text-[14px] text-[#333333]">
+									<div class="footer-item text-[14px] text-secondary">
 										<span>{{ t('accumulative') }}</span>
 										<span class="green ml-1">
 											{{ formData.money_get }}
@@ -118,7 +141,7 @@
 								</div>
 							</div>
 						</el-col>
-						<el-col :span="5">
+						<el-col :span="4">
 							<div class="statistic-card">
 								<el-statistic :value="formData.commission" title="New transactions today">
 									<template #title>
@@ -135,7 +158,7 @@
 									</template>
 								</el-statistic>
 								<div class="statistic-footer">
-									<div class="footer-item text-[14px] text-[#333333]">
+									<div class="footer-item text-[14px] text-secondary">
 										<span>{{ t('accumulative') }}</span>
 										<span class="green ml-1">
 											{{ formData.commission_get }}
@@ -168,6 +191,14 @@
 					{{ formData.mobile || t('notAvailable') }}
 				</span>
 			</div>
+            <div class="flex items-center mt-[15px]">
+                <span class="text-[14px] w-[130px] text-right mr-[20px]">{{ t('memberLevel') }}</span>
+                <span class="text-[14px] text-[#666666]">
+					{{ formData.member_level_name || t('notAvailable') }}<el-icon @click="editMemberInfo('member_level')" class="-bottom-[2px] -right-[4px] cursor-pointer">
+						<EditPen color="#273CE2" />
+					</el-icon>
+				</span>
+            </div>
 			<div class="flex items-center mt-[15px]">
 				<span class="text-[14px] w-[130px] text-right mr-[20px]">{{ t('memberLabel') }}</span>
 				<span class="text-[14px] text-[#666666]">
@@ -246,7 +277,6 @@ import { img } from '@/utils/common'
 import PointEdit from '@/app/views/member/components/member-point-edit.vue'
 import BalanceEdit from '@/app/views/member/components/member-balance-edit.vue'
 import EditMember from '@/app/views/member/components/edit-member.vue'
-// import colorGradient from '../../../../uniapp/src/uni_modules/vk-uview-ui/libs/function/colorGradient'
 import useAppStore from '@/stores/modules/app'
 
 const route = useRoute()
@@ -341,19 +371,25 @@ const infoBalance = () => {
 }
 
 /**
+ * 成长值明细
+ */
+const infoGrowth = () => {
+    router.push(`/member/growth?id=${id}`)
+}
+
+/**
  * 佣金详情
  */
 const infoCommission = () => {
     router.push(`/member/commission?id=${id}`)
 }
 
+const back = () => {
+    router.go(-1)
+}
 </script>
 
 <style lang="scss" scoped>
-.el-col {
-	background-color: #FAFAFD;
-}
-
 .member-info {
 	left: 0px
 }

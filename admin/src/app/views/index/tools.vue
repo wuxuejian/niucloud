@@ -93,7 +93,7 @@
 				<img src="@/app/assets/images/tools/official_market.png" class="w-[256px] h-[128px]" />
 			</div>
 		</div>
-		<el-dialog v-model="developerDialogVisible" class="developer-dialog-wrap" title="开发人员模式说明" width="30%" :before-close="handleClose">
+		<el-dialog v-model="developerDialogVisible" class="developer-dialog-wrap" title="开发人员模式说明" width="30%">
 			<div>
 				<p class="text-[16px] mb-[4px] text-[#333]">开发模式</p>
 				<div class="text-[14px] indent-[2em]">

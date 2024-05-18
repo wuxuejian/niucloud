@@ -138,12 +138,9 @@ const refreshMenu = () => {
             // type: 'warning'
         }
     ).then(() => {
-        menusTableData.loading = true
         menuRefresh({}).then(res => {
-            menusTableData.loading = false
-        }).catch(() => {
-            menusTableData.loading = false
-        })
+            location.reload()
+        }).catch(() => {})
     }).catch(()=>{})
     
 }

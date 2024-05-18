@@ -16,21 +16,28 @@
                             <Warning />
                         </el-icon>
                         <div>
-                            <p class="text-base">{{ t('operationTip') }} 1、{{ t('operationTipOne') }}</p>
-                            <p class="text-base">2、{{ t('operationTipTwo') }}</p>
+                            <p class="text-base">{{ t('operationTipTwo') }}</p>
                         </div>
                     </div>
                 </template>
             </el-alert>
-
             <div>
-                <el-table :data="cronTableData.data" size="large" v-loading="cronTableData.loading">
+                <el-table :data="cronTableData.data" :span-method="templateSpan" size="large" v-loading="cronTableData.loading">
 
                     <template #empty>
                         <span>{{ !cronTableData.loading ? t('emptyData') : '' }}</span>
                     </template>
-
-                    <el-table-column prop="name" :show-overflow-tooltip="true" :label="t('name')" min-width="150" />
+                    <el-table-column prop="addon_name" :label="t('addon')" min-width="120" />
+                    <el-table-column prop="name" :show-overflow-tooltip="true" :label="t('name')" min-width="150" >
+                        <template #default="{ row }">
+                            <div class="flex items-center">
+                                <span class="mr-[5px]">{{row.name }}</span>
+                                <el-tooltip :content="row.weapp.tips" v-if="row.weapp.tips" placement="top">
+                                    <icon name="element-WarningFilled" />
+                                </el-tooltip>
+                            </div>
+                        </template>
+                    </el-table-column>
 
                     <el-table-column :label="t('response')" min-width="180">
                         <template #default="{ row }">
@@ -89,12 +96,43 @@ const loadCronList = (page: number = 1) => {
 
     getTemplateList().then(res => {
         cronTableData.loading = false
-        cronTableData.data = res.data
+        let data = []
+        res.data.forEach(item => {
+            if (item.notice.length) {
+                const addons = []
+                Object.keys(item.notice).forEach((key, index) => {
+                    const notice = item.notice[key]
+                    notice.addon_name = item.title
+                    addons.push(notice)
+                })
+                if (addons.length) {
+                    addons[0].rowspan = addons.length
+                    data = data.concat(addons)
+                }
+            }
+        })
+        cronTableData.data = data
     }).catch(() => {
         cronTableData.loading = false
     })
 }
 loadCronList()
+
+const templateSpan = (row : any) => {
+    if (row.columnIndex === 0) {
+        if (row.row.rowspan) {
+            return {
+                rowspan: row.row.rowspan,
+                colspan: 1
+            }
+        } else {
+            return {
+                rowspan: 0,
+                colspan: 0
+            }
+        }
+    }
+}
 
 /**
  * 批量获取

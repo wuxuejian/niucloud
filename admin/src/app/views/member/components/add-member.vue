@@ -41,6 +41,7 @@ import { filterNumber } from '@/utils/common'
 
 const showDialog = ref(false)
 const loading = ref(false)
+const repeat = ref(false)
 let popTitle: string = ''
 let memberNo: string = ''
 
@@ -67,7 +68,6 @@ const formRules = computed(() => {
             { required: true, message: t('memberNoPlaceholder'), trigger: 'blur' },
             { validator: memberNoVerify, trigger: 'blur' }
         ],
-
         mobile: [
             { required: true, message: t('mobilePlaceholder'), trigger: 'blur' },
             { validator: mobileVerify, trigger: 'blur' }
@@ -129,14 +129,19 @@ const confirm = async (formEl: FormInstance | undefined) => {
         if (valid) {
             loading.value = true
 
+            if (repeat.value) return
+            repeat.value = true
+
             const data = formData
 
             save(data).then(res => {
                 loading.value = false
+                repeat.value = false
                 showDialog.value = false
                 emit('complete')
             }).catch(() => {
                 loading.value = false
+                repeat.value = false
             })
         }
     })

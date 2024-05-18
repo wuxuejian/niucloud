@@ -1,5 +1,5 @@
 <template>
-    <!-- <div class="w-full p-5 bg-white ">
+    <!-- <div class="w-full p-5  ">
         <div class="flex justify-between items-center mb-[20px]">
             <span class="text-[16px]">{{ t('aliappAccessFlow') }}</span>
         </div>
@@ -79,7 +79,7 @@
             </div>
         </div>
     </div> -->
-    <div class="w-full p-5 bg-white">
+    <div class="w-full p-5 bg-body">
         <div class="flex justify-between items-center mb-[20px]">
             <span class="text-page-title">{{ t('title') }}</span>
         </div>

@@ -5,7 +5,7 @@
                 <div class="flex justify-between items-center h-[32px]">
                     <span class="text-[16px] text-[#222] font-600">{{ t('localAppText') }}</span>
                     <div class="w-[247px]">
-                        <el-input :placeholder="t('search')" v-model="searchName" @keyup.enter="query">
+                        <el-input :placeholder="t('search')" v-model.trim="searchName" @keyup.enter="query">
                             <template #suffix>
                                 <el-icon class="el-input__icon  cursor-pointer" size="14px" @click="query">
                                     <search />
@@ -139,12 +139,12 @@
                     <el-form :model="formData" label-width="0" ref="formRef" :rules="formRules" class="page-form">
                         <el-card class="box-card !border-none" shadow="never">
                             <el-form-item prop="auth_code">
-                                <el-input v-model="formData.auth_code" :placeholder="t('authCodePlaceholder')" class="input-width" clearable size="large" />
+                                <el-input v-model.trim="formData.auth_code" :placeholder="t('authCodePlaceholder')" class="input-width" clearable size="large" />
                             </el-form-item>
 
                             <div class="mt-[20px]">
                                 <el-form-item prop="auth_secret">
-                                    <el-input v-model="formData.auth_secret" clearable :placeholder="t('authSecretPlaceholder')" class="input-width" size="large" />
+                                    <el-input v-model.trim="formData.auth_secret" clearable :placeholder="t('authSecretPlaceholder')" class="input-width" size="large" />
                                 </el-form-item>
                             </div>
 

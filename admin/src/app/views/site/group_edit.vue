@@ -29,7 +29,7 @@
                                         <div class="w-full">
                                             <div class="flex">
                                                 <div class="w-[60px] h-[60px] mr-[10px] rounded-md overflow-hidden">
-                                                    <el-image :src="img(item.icon)" v-if="item.icon"
+                                                    <el-image :src="item.icon" v-if="item.icon"
                                                               class="w-full h-full" />
                                                     <el-image v-else class="w-full h-full">
                                                         <template #error>
@@ -53,7 +53,7 @@
                 </el-form-item>
 
                 <el-form-item :label="t('containAddon')">
-                    <div class="text-gray-400" v-if="!addonList.length">{{ t('appListEmpty') }}</div>
+                    <div class="text-gray-400" v-if="!addonList.length">{{ t('addonListEmpty') }}</div>
                     <el-checkbox-group v-model="formData.addon" class="flex flex-wrap w-full" v-else>
                         <template #default>
                             <div class="flex w-[300px]" v-for="(item, index) in addonList" :key="index">
@@ -63,7 +63,7 @@
                                         <div class="w-full">
                                             <div class="flex">
                                                 <div class="w-[60px] h-[60px] mr-[10px] rounded-md overflow-hidden">
-                                                    <el-image :src="img(item.icon)" v-if="item.icon"
+                                                    <el-image :src="item.icon" v-if="item.icon"
                                                         class="w-full h-full" />
                                                     <el-image v-else class="w-full h-full">
                                                         <template #error>

@@ -5,7 +5,7 @@ import request from '@/utils/request'
  * @param addon
  */
 export function cloudBuild() {
-    return request.post('niucloud/build', {}, { timeout: 0 })
+    return request.post('niucloud/build', {})
 }
 
 /**

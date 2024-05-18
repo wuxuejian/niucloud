@@ -3,7 +3,7 @@
         <el-card class="box-card !border-none" shadow="never">
             <div class="flex justify-between items-center h-[32px] mb-4">
                 <span class="text-page-title text-[#222]">{{ t('localAppText') }}</span>
-                <el-input class="!w-[250px]" :placeholder="t('search')" v-model="search_name" @keyup.enter="query">
+                <el-input class="!w-[250px]" :placeholder="t('search')" v-model.trim="search_name" @keyup.enter="query">
                     <template #suffix>
                         <el-icon class="el-input__icon  cursor-pointer" size="14px" @click="query">
                             <search />
@@ -182,13 +182,13 @@
                 <el-form :model="formData" label-width="0" ref="formRef" :rules="formRules" class="page-form">
                     <el-card class="box-card !border-none" shadow="never">
                         <el-form-item prop="auth_code">
-                            <el-input v-model="formData.auth_code" :placeholder="t('authCodePlaceholder')"
+                            <el-input v-model.trim="formData.auth_code" :placeholder="t('authCodePlaceholder')"
                                 class="input-width" clearable size="large" />
                         </el-form-item>
 
                         <div class="mt-[20px]">
                             <el-form-item prop="auth_secret">
-                                <el-input v-model="formData.auth_secret" clearable :placeholder="t('authSecretPlaceholder')"
+                                <el-input v-model.trim="formData.auth_secret" clearable :placeholder="t('authSecretPlaceholder')"
                                     class="input-width" size="large" />
                             </el-form-item>
                         </div>
@@ -377,7 +377,7 @@
             </el-dialog>
 
             <!-- 下载提示 -->
-            <el-dialog v-model="unloadHintDialog" title="下载提示" width="30%" :before-close="handleClose">
+            <el-dialog v-model="unloadHintDialog" title="下载提示" width="30%">
                 <span>本地已经存在该插件/应用，再次下载会覆盖该插件/应用。</span>
                 <template #footer>
                     <span class="dialog-footer">
@@ -636,6 +636,8 @@ const getInstallTask = (first: boolean = true) => {
                 notificationEl.close()
             }
         }
+    }).catch((e) => {
+        terminalRef.value.pushMessage({ content: e.message, class: 'error' })
     })
 }
 

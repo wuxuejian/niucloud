@@ -10,8 +10,7 @@
             <el-card class="box-card !border-none my-[10px] table-search-wrap" shadow="never">
                 <el-form :inline="true" :model="memberTableData.searchParam" ref="searchFormRef">
                     <el-form-item :label="t('memberInfo')" prop="keyword">
-                        <el-input v-model="memberTableData.searchParam.keyword" class="w-[240px]"
-                            :placeholder="t('memberInfoPlaceholder')" />
+                        <el-input v-model="memberTableData.searchParam.keyword" class="w-[240px]" :placeholder="t('memberInfoPlaceholder')" />
                     </el-form-item>
 
                     <el-form-item :label="t('registerChannel')" prop="register_channel">
@@ -26,18 +25,25 @@
                         <el-select v-model="memberTableData.searchParam.member_label" collapse-tags clearable
                             :placeholder="t('memberLabelPlaceholder')" class="input-width">
                             <el-option :label="t('selectPlaceholder')" value="" />
-                            <el-option :label="item['label_name']" :value="item['label_id']"
-                                v-for="(item, index) in labelSelectData" :key="index" />
+                            <el-option :label="item['label_name']" :value="item['label_id']" v-for="(item, index) in labelSelectData" :key="index" />
                         </el-select>
                     </el-form-item>
+
+                    <el-form-item :label="t('memberLevel')" prop="member_label">
+                        <el-select v-model="memberTableData.searchParam.member_level" collapse-tags clearable
+                            :placeholder="t('memberLevelPlaceholder')" class="input-width">
+                            <el-option :label="t('selectPlaceholder')" value="" />
+                            <el-option :label="item['level_name']" :value="item['level_id']" v-for="(item, index) in levelSelectData" :key="index" />
+                        </el-select>
+                    </el-form-item>
+
                     <el-form-item :label="t('createTime')" prop="create_time">
-                        <el-date-picker v-model="memberTableData.searchParam.create_time" type="datetimerange"
-                            value-format="YYYY-MM-DD HH:mm:ss" :start-placeholder="t('startDate')"
-                            :end-placeholder="t('endDate')" />
+                        <el-date-picker v-model="memberTableData.searchParam.create_time" type="datetimerange" value-format="YYYY-MM-DD HH:mm:ss" :start-placeholder="t('startDate')" :end-placeholder="t('endDate')" />
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="loadMemberList()">{{ t('search') }}</el-button>
                         <el-button @click="resetForm(searchFormRef)">{{ t('reset') }}</el-button>
+                        <el-button type="primary" @click="exportEvent">{{ t('export') }}</el-button>
                     </el-form-item>
                 </el-form>
             </el-card>
@@ -60,6 +66,7 @@
                             </div>
                         </template>
                     </el-table-column>
+                    <el-table-column prop="member_level_name" :label="t('memberLevel')" min-width="130" :show-overflow-tooltip="true" />
                     <el-table-column prop="mobile" :label="t('mobile')" min-width="120" />
                     <el-table-column prop="point" :label="t('point')" min-width="80" align="right">
                         <template #default="{ row }">
@@ -71,21 +78,18 @@
                         <template #default="{ row }">
                             <div class="flex flex-col items-center">
                                 <div v-for="(item, key) in row.member_label_array" class="my-[3px]" :key="key">
-                                    <el-tag  type="info">{{ item.label_name }}</el-tag>
+                                    <el-tag type="info">{{ item.label_name }}</el-tag>
                                 </div>
                             </div>
                         </template>
                     </el-table-column>
 
-                    <el-table-column prop="register_channel_name" :label="t('registerChannel')" min-width="110"
-                        align="center" />
+                    <el-table-column prop="register_channel_name" :label="t('registerChannel')" min-width="110" align="center" />
 
                     <el-table-column prop="member_label" :label="t('status')" min-width="120" align="center">
                         <template #default="{ row }">
-                            <el-tag type="success" v-if="row.status == 1" @click="lockMember(row, 0)"
-                                class="cursor-pointer">{{ t('normal') }}</el-tag>
-                            <el-tag type="error" v-else @click="lockMember(row, 1)"
-                                class="cursor-pointer">{{ t('lock') }}</el-tag>
+                            <el-tag type="success" v-if="row.status == 1" @click="lockMember(row, 0)" class="cursor-pointer">{{ t('normal') }}</el-tag>
+                            <el-tag type="error" v-else @click="lockMember(row, 1)" class="cursor-pointer">{{ t('lock') }}</el-tag>
                         </template>
                     </el-table-column>
                     <el-table-column :label="t('createTime')" min-width="150" align="center">
@@ -104,7 +108,7 @@
                             <div class="flex items-center">
                                 <el-button type="primary" link @click="detailEvent(row)">{{ t('detail') }}</el-button>
                                 <el-button type="primary" link @click="setMemberLable(row)">{{ t('setLable') }}</el-button>
-<!--                                <el-button type="primary" link @click="deleteEvent(row)">{{ t('memberDelete') }}</el-button>-->
+                                <!-- <el-button type="primary" link @click="deleteEvent(row)">{{ t('memberDelete') }}</el-button> -->
                             </div>
                         </template>
                     </el-table-column>
@@ -119,6 +123,7 @@
 
             <add-member ref="addMemberDialog" @complete="loadMemberList()" />
             <edit-member ref="editMemberDialog" @complete="loadMemberList()" />
+            <export-sure ref="exportSureDialog" :show="flag" type="member" :searchParam="memberTableData.searchParam" @close="handleClose" />
         </el-card>
     </div>
 </template>
@@ -127,7 +132,7 @@
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
 import { img } from '@/utils/common'
-import { addMember, getRegisterChannelType, getMemberList, getMemberLabelAll, editMemberStatus, deleteMember } from '@/app/api/member'
+import { addMember, getRegisterChannelType, getMemberList, getMemberLabelAll, editMemberStatus, deleteMember, getMemberLevelAll } from '@/app/api/member'
 import { ElMessageBox, FormInstance } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router'
 import AddMember from '@/app/views/member/components/add-member.vue'
@@ -146,7 +151,8 @@ const memberTableData = reactive({
         register_type: '',
         member_label: '',
         register_channel: '',
-        create_time: []
+        create_time: [],
+        member_level: ''
     }
 })
 
@@ -165,6 +171,11 @@ const getMemberLabelAllFn = async () => {
     labelSelectData.value = await (await getMemberLabelAll()).data
 }
 getMemberLabelAllFn()
+
+const levelSelectData = ref([])
+getMemberLevelAll().then(({ data }) => {
+    levelSelectData.value = data
+})
 
 const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
@@ -201,7 +212,7 @@ const editMemberDialog: Record<string, any> | null = ref(null)
 function memberLable(res: any) {
     let data
     if (!res.member_label_array) return ''
-    data = res.member_label_array.map((item:any) => {
+    data = res.member_label_array.map((item: any) => {
         return item.label_name
     })
     data = data.toString()
@@ -211,7 +222,7 @@ function memberLable(res: any) {
 /**
  * 设置标签
  */
-function setMemberLable (res: any) {
+function setMemberLable(res: any) {
     const data = ref({
         type: 'member_label',
         id: res.member_id,
@@ -262,9 +273,20 @@ const detailEvent = (data: any) => {
 }
 
 /**
+ * 会员导出
+ */
+const exportSureDialog = ref(null)
+const flag = ref(false)
+const handleClose = (val) => {
+    flag.value = val
+}
+const exportEvent = () => {
+    flag.value = true
+}
+/**
  * 变更会员状态
  */
-const lockMember = (res:any, status:any) => {
+const lockMember = (res: any, status: any) => {
     editMemberStatus({
         status: status,
         member_ids: [res.member_id]

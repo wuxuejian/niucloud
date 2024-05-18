@@ -19,9 +19,11 @@
                 <el-button type="primary" class="w-[90px] !h-[34px]" @click="handleChick">创建站点</el-button>
             </div>
             <div class="flex justify-between items-center mt-[18px]">
-                <div class="flex items-center flex-wrap text-[14px] w-[800px]">
-                    <span :class="['mr-[12px] cursor-pointer', {'text-[var(--el-color-primary)]': params.app == ''}]" @click="cutAppFn('')">所有应用</span>
-                    <span :class="['mr-[12px] cursor-pointer', {'text-[var(--el-color-primary)]': params.app == item.key}]" @click="cutAppFn(item.key)" v-for="(item,index) in addonList" :key="index">{{item.title}}</span>
+                <div class="w-[800px] text-[14px] whitespace-nowrap">
+                    <el-scrollbar :always="true">
+                        <span :class="['mr-[12px] cursor-pointer', {'text-[var(--el-color-primary)]': params.app == ''}]" @click="cutAppFn('')">所有应用</span>
+                        <span :class="['mr-[12px] cursor-pointer', {'text-[var(--el-color-primary)]': params.app == item.key}]" @click="cutAppFn(item.key)" v-for="(item,index) in addonList" :key="index">{{item.title}}</span>
+                    </el-scrollbar>
                 </div>
                 <el-input v-model="params.keywords" class="!w-[300px] !h-[34px]" placeholder="请输入要搜索的站点名称" @keyup.enter.native="getHomeSiteFn()">
                     <template #suffix>
@@ -37,7 +39,7 @@
                     <div v-for="(item, index) in tableData" :key="index" @click="selectSite(item)"
                         :class="['home-item w-[285px] box-border mb-[20px] cursor-pointer',{'mr-[20px]': index ==0 || (index+1)%4 != 0}]">
                         <div class="flex items-center px-[24px] pt-[22px] pb-[16px] bg-[#F0F2F4] home-item-head">
-                            <img v-if="item.logo" class="w-[48px] h-[48px] mr-[15px] rounded-[50%] overflow-hidden" :src="img(item.logo)" />
+                            <img v-if="item.icon" class="w-[48px] h-[48px] mr-[15px] rounded-[50%] overflow-hidden" :src="img(item.icon)" />
                             <img v-else class="w-[48px] h-[48px] mr-[15px] rounded-[50%] overflow-hidden" src="@/app/assets/images/member_head.png" />
                             <div class="flex flex-col flex-1 justify-center">
                                 <div class="flex items-center flex-wrap">

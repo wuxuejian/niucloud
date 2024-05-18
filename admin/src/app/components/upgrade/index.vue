@@ -103,18 +103,30 @@
         </div>
     </el-dialog>
 
+    <el-dialog v-model="upgradeTipsShowDialog" :title="t('warning')" width="500px" draggable>
+        <span v-html="t('upgrade.upgradeTips')"></span>
+        <template #footer>
+            <div class="flex justify-end">
+                <el-button @click="upgradeTipsConfirm(true)" type="primary">{{ t('upgrade.knownToKnow') }}</el-button>
+                <el-button @click="upgradeTipsConfirm()" type="primary" plain>{{ t('upgrade.upgradeButton') }}</el-button>
+                <el-button @click="upgradeTipsShowDialog = false">{{ t('cancel') }}</el-button>
+            </div>
+        </template>
+    </el-dialog>
+
     <cloud-build ref="cloudBuildRef" />
 </template>
 
 <script lang="ts" setup>
-import {ref, h, watch} from 'vue'
+import { ref, h, watch } from 'vue'
 import { t } from '@/lang'
 import { getUpgradeContent, getUpgradeTask, upgradeAddon, executeUpgrade, preUpgradeCheck, clearUpgradeTask } from '@/app/api/upgrade'
 import { Terminal, TerminalFlash } from 'vue-web-terminal'
 import 'vue-web-terminal/lib/theme/dark.css'
-import { AnyObject } from "@/types/global"
+import { AnyObject } from '@/types/global'
 import CloudBuild from '@/app/components/cloud-build/index.vue'
-import { ElNotification, ElMessage, ElMessageBox } from "element-plus"
+import { ElNotification, ElMessage, ElMessageBox } from 'element-plus'
+import Storage from '@/utils/storage'
 
 const showDialog = ref<boolean>(false)
 const upgradeContent = ref<null | AnyObject>(null)
@@ -125,6 +137,7 @@ const uploading = ref(false)
 const terminalRef = ref(null)
 const emits = defineEmits(['complete'])
 const cloudBuildRef = ref(null)
+const upgradeTipsShowDialog = ref<boolean>(false)
 
 let upgradeLog = []
 /**
@@ -229,16 +242,20 @@ const open = (addonKey: string = '') => {
     if (upgradeTask.value) {
         ElMessage({ message: '已有正在执行中的升级任务', type: 'error' })
         showDialog.value = true
-        return
+    } else {
+        getUpgradeContent(addonKey).then(({ data }) => {
+            upgradeContent.value = data
+            if (!data.version_list.length) {
+                ElMessage({ message: '已经是最新版本了', type: 'error' })
+                return
+            }
+            if (Storage.get('upgradeTipsLock')) {
+                showDialog.value = true
+            } else {
+                upgradeTipsShowDialog.value = true
+            }
+        }).catch()
     }
-    getUpgradeContent(addonKey).then(({ data }) => {
-        upgradeContent.value = data
-        if (!data.version_list.length) {
-            ElMessage({ message: '已经是最新版本了', type: 'error' })
-            return
-        }
-        showDialog.value = true
-    }).catch()
 }
 
 /**
@@ -307,6 +324,12 @@ const clearUpgradeTaskFn = () => {
 const handleCloudBuild = () => {
     showDialog.value = false
     cloudBuildRef.value?.open()
+}
+
+const upgradeTipsConfirm = (isLock: boolean = false) => {
+    isLock && Storage.set({ key: 'upgradeTipsLock', data: isLock })
+    upgradeTipsShowDialog.value = false
+    !isLock && (showDialog.value = true)
 }
 
 defineExpose({

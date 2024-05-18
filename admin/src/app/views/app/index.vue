@@ -1,12 +1,12 @@
 <template>
-    <div class="main-container w-full bg-white" v-loading="loading">
+    <div class="main-container w-full " v-loading="loading">
         <el-card class="box-card !border-none" shadow="never">
             <div class="flex justify-between items-center">
                 <span class="text-page-title">应用管理</span>
             </div>
             <div class="flex flex-wrap plug-list pb-10 plug-large" v-if="appList.length">
                 <div v-for="(item, index) in appList" :key="index + 'b'">
-                    <div class="relative app-item cursor-pointer px-4 mr-4 mt-[20px] bg-[#f7f7f7] border-[1px] hover:border-primary">
+                    <div class="relative bg-page cursor-pointer px-4 mr-4 mt-[20px] border-br-light border-[1px] hover:border-primary">
                         <div @click="toLink(item.key)" class="flex py-5 items-center">
                             <div class="flex justify-center items-center">
                                 <el-image class="w-[40px] h-[40px]" :src="img(item.icon)" fit="contain">
@@ -18,7 +18,7 @@
                                 </el-image>
                             </div>
                             <div class="flex flex-col justify-between text-left w-[190px]">
-                                <p class="app-text w-[190px] text-[17px] text-[#222] pl-3">{{ item.title }}</p>
+                                <p class="app-text w-[190px] text-[17px] pl-3">{{ item.title }}</p>
                             </div>
                         </div>
                     </div>

@@ -3,7 +3,7 @@
         <el-card class="box-card !border-none" shadow="never" v-loading="loading">
             <div class="flex">
                 <div class="w-[360px] h-[400px] absolute mr-[30px] border-[1px] border-gray-300">
-                    <div class="flex items-center justify-between absolute h-[60px] left-[0px] right-[0px] bottom-[0px] bg-white border-[1px] border-primary" :style="{ 'backgroundColor': diyBottomData.value.backgroundColor }">
+                    <div class="flex items-center justify-between absolute h-[60px] left-[0px] right-[0px] bottom-[0px]  border-[1px] border-primary" :style="{ 'backgroundColor': diyBottomData.value.backgroundColor }">
                         <div class="flex flex-1 flex-col items-center justify-center" v-for="(item, index) in diyBottomData.value.list" :key="'b' + index">
                             <el-image class="w-[22px] h-[22px] mb-[5px] leading-1" :src="img(item.iconPath)" :fit="contain"  v-if="['1', '2'].includes(diyBottomData.value.type.toString())">
                                 <template #error>
@@ -44,7 +44,7 @@
                                             <el-input class="w-[215px]" v-model="item.text" :placeholder="t('titleContent')" maxlength="5" show-word-limit />
                                         </el-form-item>
                                         <el-form-item :label="t('navLinkOne')">
-                                            <diy-link v-model="item.link"></diy-link>
+                                            <diy-link v-model="item.link"/>
                                         </el-form-item>
                                         <el-icon class="close-icon cursor-pointer -top-[11px] -right-[8px]" @click="deleteNav(index)">
                                             <CircleCloseFilled />

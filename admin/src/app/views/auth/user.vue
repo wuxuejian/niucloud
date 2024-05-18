@@ -16,7 +16,6 @@
                 </el-form>
                 <el-button type="primary" class="w-[100px] self-start" @click="addEvent">{{ t('addUser') }}</el-button>
             </div>
-
             <div>
                 <el-table :data="userTableData.data" size="large" v-loading="userTableData.loading">
                     <template #empty>

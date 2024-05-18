@@ -210,7 +210,6 @@ const router = useRouter()
 const toMember = (member_id: number) => {
     router.push(`/member/detail?id=${member_id}`)
 }
-
 </script>
 
 <style lang="scss" scoped></style>

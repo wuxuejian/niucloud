@@ -60,7 +60,7 @@
 import { t } from '@/lang'
 import { ref, reactive, computed } from 'vue'
 import { ElMessage } from 'element-plus'
-import { img } from '@/utils/common'
+import { img,deepClone } from '@/utils/common'
 
 const prop = defineProps({
     modelValue: {
@@ -585,7 +585,8 @@ const save = () => {
         item.unit = '%'
     })
 
-    value.value.heatMapData = dragBoxArr
+    value.value.heatMapData = deepClone(dragBoxArr)
+
     showDialog.value = false
 }
 

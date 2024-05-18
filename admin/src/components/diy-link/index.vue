@@ -107,43 +107,49 @@ const childList: any = ref([])
 const selectLink: any = ref([])
 
 const show = () => {
-    // 每次打开时赋值
-    if (value.value.name != '') {
-        selectLink.value = cloneDeep(value.value)
-        parentLinkName.value = selectLink.value.parent
-        for (let key in link.value){
-            if(link.value[key].name == parentLinkName.value){
-                changeParentLink(link.value[key]);
-            }
-        }
-    }
-    showDialog.value = true
-}
+    getLinkFn(()=>{
 
-getLink({}).then((res: any) => {
-    link.value = res.data
-
-    if(prop.ignore && prop.ignore.length){
-        for (let key in link.value){
-            for(let i=0;i<prop.ignore.length;i++){
-                if(key == prop.ignore[i]){
-                    delete link.value[key];
-                    break;
+        // 每次打开时赋值
+        if (value.value.name != '') {
+            selectLink.value = cloneDeep(value.value)
+            parentLinkName.value = selectLink.value.parent
+            for (let key in link.value){
+                if(link.value[key].name == parentLinkName.value){
+                    changeParentLink(link.value[key]);
                 }
             }
         }
-    }
+        showDialog.value = true
+    })
+}
 
-    childList.value = Object.values(link.value)[0].child_list
-    if (value.value.name != '') {
-        selectLink.value = cloneDeep(value.value)
-    } else {
-        selectLink.value = {
-            parent: Object.values(link.value)[0].name
+const getLinkFn = (callback:any=null)=> {
+    getLink({}).then((res: any) => {
+        link.value = res.data
+        if (prop.ignore && prop.ignore.length) {
+            for (let key in link.value) {
+                for (let i = 0; i < prop.ignore.length; i++) {
+                    if (key == prop.ignore[i]) {
+                        delete link.value[key];
+                        break;
+                    }
+                }
+            }
         }
-    }
-    parentLinkName.value = selectLink.value.parent
-})
+
+        childList.value = Object.values(link.value)[0].child_list
+        if (value.value.name != '') {
+            selectLink.value = cloneDeep(value.value)
+        } else {
+            selectLink.value = {
+                parent: Object.values(link.value)[0].name
+            }
+        }
+        parentLinkName.value = selectLink.value.parent
+
+        if (callback) callback()
+    })
+}
 
 // 选择父级链接
 const changeParentLink = (item: any) => {

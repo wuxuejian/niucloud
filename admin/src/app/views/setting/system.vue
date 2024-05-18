@@ -34,14 +34,18 @@
                         <el-input v-model="formData.desc" type="textarea" rows="4" clearable :placeholder="t('descPlaceholder')" class="input-width" maxlength="100" show-word-limit />
                     </el-form-item>
                 </el-card>
-                <el-card class="box-card !border-none" shadow="never">
+                <el-card class="box-card !border-none" shadow="never" v-show="appType == 'site'">
                     <h3 class="panel-title !text-sm">{{ t('frontEndInfo') }}</h3>
                     <el-form-item :label="t('frontEndName')">
                         <el-input v-model="formData.front_end_name" :placeholder="t('frontEndNamePlaceholder')" class="input-width" clearable maxlength="20" show-word-limit />
                     </el-form-item>
 
-                    <el-form-item :label="t('frontEndLogo')">
+                    <el-form-item :label="t('logo')">
                         <upload-image v-model="formData.front_end_logo" />
+                    </el-form-item>
+
+                    <el-form-item :label="t('icon')">
+                        <upload-image v-model="formData.front_end_icon" />
                     </el-form-item>
                 </el-card>
                 <el-card class="box-card !border-none" shadow="never" v-if="appType == 'admin'">
@@ -96,6 +100,7 @@ const formData = reactive<Record<string, string>>({
     phone: '',
     front_end_name: '',
     front_end_logo: '',
+    front_end_icon: '',
     icon: '',
     wechat_code: '',
     enterprise_wechat: '',

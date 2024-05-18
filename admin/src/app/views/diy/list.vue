@@ -36,7 +36,7 @@
                     <span>{{ !diyPageTableData.loading ? t('emptyData') : '' }}</span>
                 </template>
 
-                <el-table-column prop="title" :label="t('title')" min-width="120" />
+                <el-table-column prop="page_title" :label="t('title')" min-width="120" />
                 <el-table-column prop="addon_name" :label="t('forAddon')" min-width="80" />
                 <el-table-column prop="type_name" :label="t('typeName')" min-width="80" />
                 <el-table-column :label="t('status')" min-width="80">
@@ -129,7 +129,6 @@ import { t } from '@/lang'
 import { getApps,getDiyPageList, deleteDiyPage, getDiyTemplate, editDiyPageShare, setUseDiyPage } from '@/app/api/diy'
 import { ElMessageBox, FormInstance } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
-import { getUrl } from '@/app/api/sys'
 
 const router = useRouter()
 const route = useRoute()
@@ -161,23 +160,18 @@ const addEvent = async (formEl: FormInstance | undefined) => {
 
     await formEl.validate(async (valid) => {
         if (valid) {
-            dialogVisible.value = false
             const query = { type: formData.type, title: formData.title }
             const url = router.resolve({
                 path: '/decorate/edit',
                 query
             })
             window.open(url.href)
+            dialogVisible.value = false
+            formData.title = ''
+            formData.type = ''
         }
     })
 }
-
-const wapDomain = ref('')
-const getDomain = async () => {
-    wapDomain.value = (await getUrl()).data.wap_url
-}
-
-getDomain()
 
 // 获取自定义页面类型
 const loadDiyTemplate = (addon = '')=> {

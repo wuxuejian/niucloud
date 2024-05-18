@@ -129,33 +129,33 @@ const formRef = ref<FormInstance>()
 // 表单验证规则
 const formRules = computed(() => {
     return {
-        'wechatpay_config.mch_id': [
-            { required: true, message: t('mchIdPlaceholder'), trigger: 'blur' }
-        ],
-        'wechatpay_config.mch_secret_key': [
-            { required: true, message: t('mchSecretKeyPlaceholder'), trigger: 'blur' }
-        ],
-        'wechatpay_config.mch_secret_cert': [
-            { required: true, message: t('mchSecretCertPlaceholder'), trigger: 'blur' }
-        ],
-        'wechatpay_config.mch_public_cert_path': [
-            { required: true, message: t('mchPublicCertPathPlaceholder'), trigger: 'blur' }
-        ],
-        'alipay_config.app_id': [
-            { required: true, message: t('appIdPlaceholder'), trigger: 'blur' }
-        ],
-        'alipay_config.app_secret_cert': [
-            { required: true, message: t('appSecretCertPlaceholder'), trigger: 'blur' }
-        ],
-        'alipay_config.app_public_cert_path': [
-            { required: true, message: t('appPublicCertPathPlaceholder'), trigger: 'blur' }
-        ],
-        'alipay_config.alipay_public_cert_path': [
-            { required: true, message: t('alipayPublicCertPathPlaceholder'), trigger: 'blur' }
-        ],
-        'alipay_config.alipay_root_cert_path': [
-            { required: true, message: t('alipayRootCertPathPlaceholder'), trigger: 'blur' }
-        ]
+        // 'wechatpay_config.mch_id': [
+        //     { required: true, message: t('mchIdPlaceholder'), trigger: 'blur' }
+        // ],
+        // 'wechatpay_config.mch_secret_key': [
+        //     { required: true, message: t('mchSecretKeyPlaceholder'), trigger: 'blur' }
+        // ],
+        // 'wechatpay_config.mch_secret_cert': [
+        //     { required: true, message: t('mchSecretCertPlaceholder'), trigger: 'blur' }
+        // ],
+        // 'wechatpay_config.mch_public_cert_path': [
+        //     { required: true, message: t('mchPublicCertPathPlaceholder'), trigger: 'blur' }
+        // ],
+        // 'alipay_config.app_id': [
+        //     { required: true, message: t('appIdPlaceholder'), trigger: 'blur' }
+        // ],
+        // 'alipay_config.app_secret_cert': [
+        //     { required: true, message: t('appSecretCertPlaceholder'), trigger: 'blur' }
+        // ],
+        // 'alipay_config.app_public_cert_path': [
+        //     { required: true, message: t('appPublicCertPathPlaceholder'), trigger: 'blur' }
+        // ],
+        // 'alipay_config.alipay_public_cert_path': [
+        //     { required: true, message: t('alipayPublicCertPathPlaceholder'), trigger: 'blur' }
+        // ],
+        // 'alipay_config.alipay_root_cert_path': [
+        //     { required: true, message: t('alipayRootCertPathPlaceholder'), trigger: 'blur' }
+        // ]
     }
 })
 

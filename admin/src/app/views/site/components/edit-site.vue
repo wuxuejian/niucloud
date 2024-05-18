@@ -1,8 +1,9 @@
 <template>
     <el-dialog v-model="showDialog" :title="elDialogTitle" width="500px" :destroy-on-close="true">
-        <el-form :model="formData" label-width="90px" ref="formRef" :rules="formRules" class="page-form"
+        <el-form :model="formData" label-width="90px" ref="formRef" :rules="formRules" class="page-form" autocomplete="off"
             v-loading="loading">
-
+            <!-- 用于处理点击站点管理出现账号密码浮窗，位置不能变，类型不能变 -->
+            <input type="password" class="absolute left-[9999px]"> 
             <div v-if="formData.site_id == 0">
                 <el-form-item :label="t('siteName')" prop="site_name">
                     <el-input v-model="formData.site_name" clearable :placeholder="t('siteNamePlaceholder')"
@@ -19,9 +20,8 @@
                 <!-- <el-form-item :label="t('realName')" prop="real_name" v-if="!formData.site_id && !loading">
                         <el-input v-model="formData.real_name" clearable :placeholder="t('realNamePlaceholder')" class="input-width" />
                     </el-form-item> -->
-
                 <el-form-item :label="t('manager')" prop="uid">
-                    <el-select v-model="formData.uid" :placeholder="t('managerPlaceholder')" class="input-width" filterable autocomplete="off">
+                    <el-select v-model="formData.uid" :placeholder="t('managerPlaceholder')" class="input-width" filterable>
                         <el-option :label="t('newAddManager')" :value="0">
                             <template #default>
                                 <div class="flex items-center">
@@ -45,17 +45,17 @@
                 <div v-show="formData.uid === 0">
                     <el-form-item :label="t('username')" prop="username">
                         <el-input v-model="formData.username" clearable :placeholder="t('usernamePlaceholder')"
-                            class="input-width" autocomplete="new-password"/>
+                            class="input-width"/>
                     </el-form-item>
 
                     <el-form-item :label="t('password')" prop="password">
                         <el-input v-model="formData.password" clearable :placeholder="t('passwordPlaceholder')"
-                            class="input-width" :show-password="true" type="password" autocomplete="new-password"/>
+                            class="input-width" :show-password="true" type="password"/>
                     </el-form-item>
 
                     <el-form-item :label="t('confirmPassword')" prop="confirm_password">
                         <el-input v-model="formData.confirm_password" :placeholder="t('confirmPasswordPlaceholder')"
-                            type="password" :show-password="true" clearable class="input-width" autocomplete="new-password" />
+                            type="password" :show-password="true" clearable class="input-width"/>
                     </el-form-item>
                 </div>
             </div>
@@ -79,6 +79,7 @@
                 <div>
                     <p class="text-[12px] text-[#a9a9a9] leading-normal mt-[5px]">{{ t('siteDomainTips') }}</p>
                     <p class="text-[12px] text-[#a9a9a9] leading-normal mt-[5px]">{{ t('siteDomainTipsTwo') }}</p>
+                    <p class="text-[12px] text-[#a9a9a9] leading-normal mt-[5px]">{{ t('siteDomainTipsThree') }}</p>
                 </div>
             </el-form-item>
 
@@ -244,6 +245,14 @@ const confirm = async (formEl: FormInstance | undefined) => {
         }
     })
 }
+
+// 禁止点击input输入框时浏览器显示默认的账号信息
+window.onload = function() {
+    var inputs = document.getElementsByTagName('input');
+    for(var i=0; i<inputs.length; i++) {
+        inputs[i].setAttribute('autocomplete', 'off');
+    }
+};
 
 defineExpose({
     showDialog,

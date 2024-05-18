@@ -8,7 +8,7 @@
                     <el-button type="primary" class="w-[100px]" @click="addEvent">
                         {{ t('addSite') }}
                     </el-button>
-                    <el-button type="default" class="w-[100px]" @click="toSiteLink">
+                    <el-button type="default" class="w-[100px]" @click="toSiteLink()">
                         {{ t('toSite') }}
                     </el-button>
                 </div>
@@ -130,6 +130,7 @@
                             <el-button type="primary" link @click="editEvent(row)">{{ t('edit') }}</el-button>
                             <el-button type="primary" link @click="deleteEvent(row)">{{ t('delete') }}</el-button>
                             <el-button type="primary" link @click="infoEvent(row)">{{ t('info') }}</el-button>
+                            <el-button type="primary" link @click="toSiteLink(row.site_id)">{{ t('toSite') }}</el-button>
                         </template>
                     </el-table-column>
 
@@ -151,7 +152,7 @@ import { reactive, ref } from 'vue'
 import { getToken, img } from '@/utils/common'
 import { t } from '@/lang'
 import { getSiteList, getSiteGroupAll, getStatusList, closeSite, openSite, deleteSite } from '@/app/api/site'
-import { ElMessageBox, FormInstance } from 'element-plus'
+import { ElMessage, ElMessageBox, FormInstance } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router'
 import EditSite from '@/app/views/site/components/edit-site.vue'
 import { getInstalledAddonList } from '@/app/api/addon'
@@ -281,11 +282,28 @@ const editEvent = (data: any) => {
  * 站点登录
  * @param data
  */
-const toSiteLink = () => {
+const toSiteLink = (siteId:number = 0) => {
     window.localStorage.setItem('site.token', getToken())
     window.localStorage.setItem('site.comparisonTokenStorage', getToken())
-    window.localStorage.setItem('site.userinfo',  JSON.stringify(useUserStore().userInfo))
-    window.open(`${location.origin}/home/index`)
+    window.localStorage.setItem('site.userinfo', JSON.stringify(useUserStore().userInfo))
+    if (siteId) {
+        const userinfo = useUserStore().userInfo
+        if (userinfo.is_super_admin != undefined && !userinfo.is_super_admin) {
+            const siteIds = userinfo.site_ids || []
+            if (siteIds.indexOf(siteId) == -1) {
+                ElMessage({
+                    message: t('noPermission'),
+                    type: 'warning'
+                })
+                return
+            }
+        }
+        window.localStorage.setItem('site.siteId', siteId)
+        window.localStorage.setItem('site.comparisonSiteIdStorage', siteId)
+        window.open(`${location.origin}/site/`)
+    } else {
+        window.open(`${location.origin}/home/index`)
+    }
 }
 
 const openClose = (i, site_id) => {

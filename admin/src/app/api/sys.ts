@@ -633,14 +633,6 @@ export function getLayouts() {
 }
 
 /**
- * 设置布局
- * @returns
- */
-export function setLayout(key: string) {
-    return request.put('sys/layout', { key }, { showSuccessMessage: true })
-}
-
-/**
  * 获取支付待审核记录
  */
 export function getPayAuditList(params: Record<string, any>) {
@@ -699,4 +691,80 @@ export function getDeveloperToken() {
  */
 export function setDeveloperToken(params: Record<string, any>) {
     return request.put(`sys/config/developer_token`, params, { showSuccessMessage: true })
+}
+
+
+/**
+ * 获取布局设置
+ * @returns
+ */
+export function getWebsiteLayout() {
+    return request.get('sys/web/layout')
+}
+
+/**
+ * 获取布局设置
+ * @returns
+ */
+export function getLayout() {
+    return request.get('sys/config/layout')
+}
+
+/**
+ * 更新布局设置
+ * @param params
+ * @returns
+ */
+export function setLayout(params: Record<string, any>) {
+    return request.put(`sys/config/layout`, params, { showSuccessMessage: true })
+}
+
+/***************************************************** 报表导出 ****************************************************/
+
+/**
+ * 获取报表导出列表
+ * @returns
+ */
+export function getExportList(params: Record<string, any>) {
+    return request.get(`sys/export`, { params })
+}
+
+/**
+ * 获取报表导出状态列表
+ * @returns
+ */
+export function getExportStatusList() {
+    return request.get('sys/export/status')
+}
+
+/**
+ * 获取报表导出类型
+ * @returns
+ */
+export function getExportKeyList() {
+    return request.get('sys/export/type')
+}
+
+/**
+ * 报表导出
+ * @returns
+ */
+export function exportData(type: string, params: Record<string, any>) {
+    return request.get(`sys/export/${type}`, { params })
+}
+
+/**
+ * 报表导出数据检查
+ * @returns
+ */
+export function exportDataCheck(type: string, params: Record<string, any>) {
+    return request.get(`sys/export/check/${type}`, { params })
+}
+
+/**
+ * 报表删除
+ * @param id
+ */
+export function deleteExport(id: number) {
+    return request.delete(`sys/export/${id}`, { showSuccessMessage: true })
 }

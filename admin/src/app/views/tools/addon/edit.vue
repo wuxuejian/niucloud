@@ -28,6 +28,9 @@
                             @click="getAddonDevelopCheckFn(form.key)">官方市场标识检测</el-button>
                         <p class="text-[12px] text-[#a9a9a9] leading-normal mt-[5px]">{{ t('keyPlaceholder1') }}</p>
                         <p class="text-[12px] text-[#a9a9a9] leading-normal">{{ t('keyPlaceholder2') }}</p>
+                        <p v-if="keyBlackList.length" class="text-[12px] text-[#a9a9a9] leading-normal">
+                            插件标识不能定义成黑名单中的值，插件标识黑名单：{{ keyBlackList.join('，') }}
+                        </p>
                     </div>
 
                 </el-form-item>
@@ -96,7 +99,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import { t } from '@/lang'
-import { getAddontype, addAddonDevelop, editAddonDevelop, getAddonDevelopInfo, getAddonDevelopCheck } from '@/app/api/tools'
+import { getAddontype, addAddonDevelop, editAddonDevelop, getAddonDevelopInfo, getAddonDevelopCheck, getAddonKeyBlackList } from '@/app/api/tools'
 import { getAddonList } from '@/app/api/sys'
 import { ElMessageBox, ElMessage, FormInstance } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router'
@@ -119,6 +122,7 @@ const form = ref({
 const options = ref([])
 const loading = ref(false)
 const formRef = ref()
+const keyBlackList = ref([])
 const validKey = (rule:any, value:any, callback:any) => {
     if (value !== '') {
         const reg = /^[a-zA-Z][a-zA-Z0-9_]*$/
@@ -131,6 +135,7 @@ const validKey = (rule:any, value:any, callback:any) => {
         return callback(new Error(t('keyPlaceholder')))
     }
 }
+
 const validVersion = (rule:any, value:any, callback:any) => {
     if (value !== '') {
         const reg = /^([0-9]\d|[0-9])(\.([0-9]){1}){2}$/
@@ -143,6 +148,7 @@ const validVersion = (rule:any, value:any, callback:any) => {
         return callback(new Error(t('versionPlaceholder')))
     }
 }
+
 const rules = ref({
     title: [
         { required: true, message: t('titlePlaceholder'), trigger: 'blur' }
@@ -169,14 +175,17 @@ const rules = ref({
         { required: true, message: t('typePlaceholder'), trigger: 'change' }
     ]
 })
+
 onMounted(async () => {
     const res = await getAddontype()
     options.value = res.data
     if (route.query.key) getAddonDevelopInfoFn(route.query.key)
 })
+
 const typeChange = () => {
     form.value.support_app = ''
 }
+
 // 详情查询
 const getAddonDevelopInfoFn = (key: any) => {
     loading.value = true
@@ -187,6 +196,7 @@ const getAddonDevelopInfoFn = (key: any) => {
         loading.value = false
     })
 }
+
 // 获取app列表
 const AppLst = ref<Array<any>>([])
 const getAddonListFn = async () => {
@@ -232,4 +242,8 @@ const onSave = async (formEl: FormInstance | undefined) => {
         }
     })
 }
+
+getAddonKeyBlackList().then(({ data }) => {
+    keyBlackList.value = data
+})
 </script>

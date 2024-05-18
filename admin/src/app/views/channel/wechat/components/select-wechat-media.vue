@@ -24,7 +24,7 @@
                         <!-- 素材管理 -->
                         <div v-if="attachment.data.length">
                             <div class="flex flex-wrap" v-if="prop.type != 'news'">
-                                <div class="attachment-item mr-[10px] w-[120px]" v-for="(item, index) in attachment.data"
+                                <div class="attachment-item mr-[10px] mb-[10px] w-[120px]" v-for="(item, index) in attachment.data"
                                      :key="index" @click="selectedFile = item">
                                     <div
                                         class="attachment-wrap w-full rounded cursor-pointer overflow-hidden relative flex items-center justify-center h-[120px]">
