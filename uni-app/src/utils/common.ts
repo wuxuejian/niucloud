@@ -4,6 +4,7 @@ import useMemberStore from '@/stores/member'
 import pagesZh from '@/locale/zh-Hans.json'
 import pagesEn from '@/locale/en.json'
 import { onReady } from '@dcloudio/uni-app'
+import useSystemStore from '@/stores/system'
 
 /**
 * 跳转页面
@@ -310,6 +311,20 @@ export function copy(value, callback) {
 		data: value,
 		success: () => {
 			typeof callback == 'function' && callback();
+		},
+		fail: (res)=>{
+			// 在隐私协议中没有声明chooseLocation:fail api作用域
+			if(res.errMsg && res.errno) {
+				if(res.errno == 104){
+				    let msg = '用户未授权隐私权限，设置剪贴板数据失败';
+				    uni.showToast({title: msg, icon: 'none'})
+				}else if(res.errno == 112){
+					let msg = '隐私协议中未声明，设置剪贴板数据失败';
+					uni.showToast({title: msg, icon: 'none'})
+				}else {
+					uni.showToast({title: res.errMsg, icon: 'none'})
+				}
+			}
 		}
 	});
 	// #endif
@@ -338,4 +353,69 @@ export function handleOnloadParams(option:any) {
 		params = option;
 	}
 	return params;
+}
+
+/**
+ * 获取定位信息
+ */
+export function getLocation(param = {}) {
+	uni.getLocation({
+		type: param.type ?? 'gcj02',
+		success: res => {
+		const systemStore = useSystemStore()
+		systemStore.setLocation(res);
+			typeof param.success == 'function' && param.success(res);
+		},
+		fail: res => {
+			typeof param.fail == 'function' && param.fail(res);
+		},
+		complete: res => {
+			typeof param.complete == 'function' && param.complete(res);
+		}
+	});
+}
+
+/**
+ * 定位信息（缓存）
+ */
+export function locationStorage () {
+	let data = uni.getStorageSync('location');
+	let mapConfig = uni.getStorageSync('mapConfig');
+	if (data) {
+		var date = new Date();
+		if (mapConfig.valid_time > 0) {
+			data.is_expired = (date.getTime() / 1000) > data.valid_time; // 是否过期
+		} else {
+			data.is_expired = false;
+		}
+	}
+	return data;
+}
+
+/**
+ * @description 深度克隆
+ * @param {object} obj 需要深度克隆的对象
+ * @returns {*} 克隆后的对象或者原值（不是对象）
+ */
+export function deepClone(obj: object) {
+    // 对常见的“非”值，直接返回原来值
+    if ([null, undefined, NaN, false].includes(obj)) return obj
+    if (typeof obj !== 'object' && typeof obj !== 'function') {
+        // 原始类型直接返回
+        return obj
+    }
+    const o = isArray(obj) ? [] : {}
+    for (const i in obj) {
+        if (obj.hasOwnProperty(i)) {
+            o[i] = typeof obj[i] === 'object' ? deepClone(obj[i]) : obj[i]
+        }
+    }
+    return o
+}
+
+const isArray = (value: any) => {
+    if (typeof Array.isArray === 'function') {
+        return Array.isArray(value)
+    }
+    return Object.prototype.toString.call(value) === '[object Array]'
 }

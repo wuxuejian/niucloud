@@ -120,7 +120,7 @@
                 key: 'selectAddressCallback',
                 data: selectAddress,
                 success() {
-                    redirect({url: selectAddress.back,mode:'redirectTo' })
+                    redirect({url: selectAddress.back, mode: 'redirectTo'})
                 }
             })
         }

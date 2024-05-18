@@ -3,9 +3,9 @@
 	<view @touchmove.prevent.stop class="share-popup">
 	    <u-popup :show="sharePopupShow" type="bottom" @close="sharePopuClose" overlayOpacity="0.8">
 	        <view @touchmove.prevent.stop>
-				<image v-if="isPosterAnimation" class="poster-animation" :src="img('addon/shop/poster_animation.gif')" mode=""></image>
-				<view v-if="isPosterImg" class="poster-img">
-					<image :src="img(poster)" mode="aspectFit"></image>
+				<view class="poster-img-wrap" :style="{'top': shareTop}">
+					<image v-if="isPosterAnimation" class="poster-animation" :src="img('addon/shop/poster_animation.gif')" mode="aspectFit"></image>
+					<image v-if="isPosterImg" class="poster-img" :src="img(poster)" mode="aspectFit"></image>
 				</view>
 				<view class="share-content">
 					<!-- #ifdef MP || APP-PLUS  -->
@@ -36,6 +36,18 @@
 				<view class="share-footer" @click="sharePopuClose"><text>取消分享</text></view>
 	        </view>
 	    </u-popup>
+		<u-popup :show="show" mode="center" :round="10" :closeable="true"  @close="show = false" :safe-area-inset-bottom="false">
+			<view class="dialog-popup">
+				<view class="title">提示</view>
+				<view class="message">您拒绝了保存图片到相册的授权请求，无法保存图片到相册，如需正常使用，请授权之后再进行操作。</view>
+				<view class="action-wrap">
+					<view @click="closeDialog">取消</view>
+					<view>
+						<button type="default" class="authorization-btn" open-type="openSetting" @opensetting="closeDialog" hover-class="none">立即授权</button>
+					</view>
+				</view>
+			</view>
+		</u-popup>
 	</view>
 </template>
 
@@ -45,6 +57,10 @@ import { img, copy } from '@/utils/common';
 import { getPoster } from '@/app/api/system'
 
 const props = defineProps({
+    posterId: {
+        type: String || Number,
+        default: 0
+    },
     posterType: {
         type: String,
         default: ''
@@ -53,6 +69,10 @@ const props = defineProps({
         type: Object,
         default: {}
     },
+	copyUrl: { // 例 "/wap/addon/shop_fenxiao/pages/goods"
+	    type: String,
+	    default: ''
+	},
 	copyUrlParam: {
         type: String,
         default: ''
@@ -60,11 +80,14 @@ const props = defineProps({
 })
 
 let sharePopupShow = ref(false);
-/************** 分享海报-start *******************/ 
+
 // 复制
 const copyUrl = () => {
 	let data = ''
-	data = location.origin +  location.pathname + props.copyUrlParam;
+	if(props.copyUrl)
+		data = location.origin +  props.copyUrl + props.copyUrlParam;
+	else
+		data = location.origin +  location.pathname + props.copyUrlParam;
 	copy(data, () => {
 		sharePopupShow.value = false;
 	});
@@ -84,9 +107,10 @@ const goodsPosterShowFn = () => {
 	isPosterAnimation.value = true;
 	isPosterImg.value = false;
 	let obj = {
-		type: props.posterType,
-		param: props.posterParam
-	}
+        id: props.posterId,
+        type: props.posterType,
+        param: props.posterParam
+    }
 	let startTime = Date.parse(new Date());
 	getPoster(obj).then((res:any) => {
 		poster.value = res.data && img(res.data) || '';
@@ -107,6 +131,11 @@ const goodsPosterShowFn = () => {
 		sharePopuClose();
 	})
 }
+let show = ref(false);
+
+const closeDialog = ()=> {
+	show.value = false;
+}
 
 // #ifdef MP || APP-PLUS
 //小程序中保存海报
@@ -125,17 +154,25 @@ const saveGoodsPoster = () => {
 						});
 					},
 					fail: (err) => {
-						uni.showToast({
-							title: '保存失败，请稍后重试',
-							icon: 'none'
-						});
+						if(err.errno == 104){
+						    let msg = '用户未授权隐私权限，将图像保存到相册失败';
+						    uni.showToast({title: msg, icon: 'none'})
+						}else if (err.errMsg == "saveImageToPhotosAlbum:fail auth deny" ||
+								err.errMsg == "saveImageToPhotosAlbum:fail:auth denied") {
+								show.value = true; 
+						}else if(err.errMsg == "saveImageToPhotosAlbum:fail cancel"){
+							let msg = '用户取消将图片保存到相册';
+							uni.showToast({title: msg, icon: 'none'})
+						}else{
+							uni.showToast({title: err.errMsg, icon: 'none'})
+						}
 					}
 				});
 			}
 		},
 		fail: (err) => {
 			uni.showToast({
-				title: '保存失败，请稍后重试',
+				title: err.errMsg,
 				icon: 'none'
 			});
 		}
@@ -143,6 +180,17 @@ const saveGoodsPoster = () => {
 }
 // #endif
 
+
+let shareTop = ref(0)
+/************ 获取微信头部-start ****************/
+// 获取系统状态栏的高度
+let menuButtonInfo = {};
+// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
+// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
+menuButtonInfo = uni.getMenuButtonBoundingClientRect();
+shareTop.value = menuButtonInfo.top + menuButtonInfo.height + 'px';
+// #endif
+/************ 获取微信头部-end ****************/
 
 const sharePopuClose = ()=>{
 	sharePopupShow.value = false;
@@ -154,18 +202,16 @@ const sharePopuClose = ()=>{
 defineExpose({
     openShare
 })
-/************** 分享海报-end *******************/ 
 	
 </script>
-
 <style lang="scss" scoped>
 .share-popup {
 	:deep(.u-transition), :deep(.u-popup__content){
 		background-color: transparent;
 	}
 	.share-content {
-		border-top-left-radius: 20rpx;
-		border-top-right-radius: 20rpx;
+		border-top-left-radius: 40rpx;
+		border-top-right-radius: 40rpx;
 		overflow: hidden;
 		display: flex;
 		display: -webkit-flex;
@@ -191,7 +237,7 @@ defineExpose({
 				
 				text {
 					margin-top: 20rpx;
-					font-size: 28rpx;
+					font-size: 24rpx;
 					display: block;
 					color: #333;
 				}
@@ -216,37 +262,85 @@ defineExpose({
 		line-height: 90rpx;
 		border-top: 2rpx solid #eee;
 		text-align: center;
+		font-size: 26rpx;
 	}
+	
 }
-.poster-animation{
-	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
-	top: -74vh;
-	width: 542rpx;
-	height: 960rpx;
-}
-.poster-img{
-	position: absolute;
-	top: -74vh;
-	left: 50%;
-	transform: translateX(-50%);
+
+.poster-img-wrap{
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: calc(constant(safe-area-inset-bottom) + 300rpx); //300是海报弹窗下面高度的问题
+	bottom: calc(env(safe-area-inset-bottom) + 300rpx);
+	right: 0;
 	display: flex;
+	justify-content: center;
 	align-items: center;
-	flex-direction: column;
-	image{
-		width: 600rpx;
-		height: 960rpx;
+	.poster-img{
+		width: 80%;
+		height: 80%;
 	}
-	.save-btn{
+	.poster-animation{
+		width: 60%;
+		height: 65%;
+	}
+}
+
+.dialog-popup {
+	width: 580rpx;
+	background: #fff;
+	box-sizing: border-box;
+	border-radius: 10rpx;
+	overflow: hidden;
+	height: initial;
+
+	.title {
+		padding: 30rpx 30rpx 0 30rpx;
 		text-align: center;
-		height: 80rpx;
-		line-height: 80rpx;
-		background-color: var(--primary-color);
-		border-radius: 10rpx;
-		width: 90%;
-		color: #fff;
+		font-size: 32rpx;
+		font-weight: bold;
+	}
+
+	.message {
+		padding: 0 30rpx;
+		color: #666;
+		text-align: center;
+		line-height: 1.3;
 		margin-top: 30rpx;
+	}
+
+	.action-wrap {
+		margin-top: 50rpx;
+		height: 80rpx;
+		display: flex;
+		border-top: 2rpx solid #eee;
+
+		&>view {
+			flex: 1;
+			text-align: center;
+			line-height: 80rpx;
+
+			&:first-child {
+				border-right: 2rpx solid #eee;
+				color: #999;
+			}
+
+			button {
+				border: none;
+				line-height: 80rpx;
+				padding: 0;
+				margin: 0;
+				width: 100%;
+				height: 100%;
+			}
+		}
+	}
+	.authorization-btn{
+		background-color: #07c160;
+		color: #fff;
+		font-size: 28rpx;
+		border-radius: 0;
 	}
 }
 </style>

@@ -98,6 +98,16 @@
 			"needLogin": true
 		},
 		{
+			"path": "app/pages/member/level",
+			"style": {
+				// #ifndef H5
+				"navigationStyle": "custom",
+				// #endif
+				"navigationBarTitleText": "%pages.member.level%"
+			},
+			"needLogin": true
+		},
+		{
 			"path": "app/pages/member/detailed_account",
 			"style": {
 				"navigationBarTitleText": "%pages.member.detailed_account%"
@@ -182,6 +192,16 @@
 			"needLogin": true
 		},
 		{
+			"path": "app/pages/member/sign_in",
+			"style": {
+				// #ifndef H5
+				"navigationStyle": "custom",
+				// #endif
+				"navigationBarTitleText": "%pages.member.sign_in%"
+			},
+			"needLogin": true
+		},
+		{
 			"path": "app/pages/pay/browser",
 			"style": {
 				"navigationBarTitleText": "%pages.pay.browser%"
@@ -211,6 +231,40 @@
 			"style": {
 				"navigationBarTitleText": "%pages.index.develop%"
 			}
+		},
+		{
+			"path": "app/pages/verify/index",
+			"style": {
+				"navigationBarTitleText": "%pages.verify.index%"
+			},
+			"needLogin": true
+		},
+		{
+			"path": "app/pages/verify/verify",
+			"style": {
+				"navigationBarTitleText": "%pages.verify.verify%"
+			},
+			"needLogin": true
+		},
+		{
+			"path": "app/pages/verify/detail",
+			"style": {
+				"navigationBarTitleText": "%pages.verify.detail%"
+			},
+			"needLogin": true
+		},
+		{
+			"path": "app/pages/verify/record",
+			"style": {
+				"navigationBarTitleText": "%pages.verify.record%"
+			},
+			"needLogin": true
+		},
+		{
+			"path": "app/pages/weapp/order_shipping",
+			"style": {
+				"navigationBarTitleText": "%pages.weapp.order_shipping%"
+			}
 		}
 	],
 	"subPackages": [
@@ -218,7 +272,7 @@
 			"root": "addon",
 			"pages": [
 				// {{ PAGE_BEGAIN }}
-				// {{ PAGE_END }}}
+        		// {{ PAGE_END }}}
 				{
 					"path": "end"
 				}
@@ -248,6 +302,8 @@
 			"diy-group": "@/addon/components/diy/group/index.vue",
 			"fixed-group": "@/addon/components/fixed/group/index.vue",
 			"^u-(.*)": "uview-plus/components/u-$1/u-$1.vue",
+			"^up-(.*)": "uview-plus/components/u-$1/u-$1.vue",
+			"^u-([^-].*)": "uview-plus/components/u-$1/u-$1.vue",
 			"diy-(\W.*)": "@/app/components/diy/$1/index.vue",
 			"fixed-(\W.*)": "@/app/components/fixed/$1/index.vue"
 		}

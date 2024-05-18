@@ -107,6 +107,7 @@
 
     uni.getStorageSync('openid') && (Object.assign(formData, { openid: uni.getStorageSync('openid') }))
     uni.getStorageSync('pid') && (Object.assign(formData, { pid: uni.getStorageSync('pid') }))
+    uni.getStorageSync('unionid') && (Object.assign(formData, { unionid: uni.getStorageSync('unionid') }))
 
     const captcha = useCaptcha(formData)
     captcha.refresh()

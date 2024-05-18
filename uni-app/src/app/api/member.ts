@@ -167,3 +167,46 @@ export function editAddress(params: Record<string, any>) {
 export function deleteAddress(id: number) {
 	return request.delete(`member/address/${id}`, { showErrorMessage: true, showSuccessMessage: true })
 }
+
+/**
+ * 获取会员等级
+ */
+export function getMemberLevel() {
+	return request.get(`member/level`);
+}
+
+/**
+ * 获取成长值任务
+ */
+export function getTaskGrowth() {
+	return request.get(`task/growth`);
+}
+
+/**
+ * 获取签到日期
+ */
+export function getSignInfo(data : AnyObject) {
+	return request.get(`member/sign/info/${data.year}/${data.month}`, {})
+}
+
+/**
+ * 获取日签到奖励
+ */
+export function getDayPack(data : AnyObject) {
+	return request.get(`member/sign/award/${data.year}/${data.month}/${data.day}`)
+}
+/**
+ * 获取签到设置
+ */
+export function getSignConfig() {
+	return request.get(`member/sign/config`)
+}
+
+/**
+ * 点击签到
+ * @param params
+ * @returns
+ */
+export function setSign() {
+	return request.post('member/sign')
+}

@@ -154,10 +154,12 @@
 
     const setModuleLocation = ()=> {
         nextTick(() => {
-            const query = uni.createSelectorQuery().in(instance);
-            query.select('.fixed-wrap').boundingClientRect(data => {
-                moduleHeight.value = (data.height || 0) + 'px';
-            }).exec();
+			setTimeout(()=>{
+				const query = uni.createSelectorQuery().in(instance);
+				query.select('.fixed-wrap').boundingClientRect((data:any) => {
+					moduleHeight.value = (data.height || 0) + 'px';
+				}).exec();
+			})
         })
     }
 
@@ -165,7 +167,19 @@
 	const fixedStyle = computed(()=>{
         if (diyStore.mode == 'decorate') return '';
         var style = '';
+        // #ifdef H5
+        if(props.global.topStatusBar.isShow && props.global.topStatusBar.style == 'style-4') {
+            style += 'top:' + diyStore.topTabarHeight + 'px;';
+        }
+        // #endif
         if(diyComponent.value.positionWay == 'fixed') {
+            // #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
+			menuButtonInfo = uni.getMenuButtonBoundingClientRect();
+			if(props.global.topStatusBar.isShow) {
+				style += 'top:' + diyStore.topTabarHeight + 'px;';
+			}
+            // #endif
+			
 			fixedStyleBg.value = false;
             if (diyStore.scrollTop > 20) {
 				let str = diyComponent.value.fixedBgColor;
@@ -215,9 +229,14 @@
 	const bgImgBoxStyle = computed(()=>{
 		var style = '';
 		let str = props.global.pageStartBgColor ? props.global.pageStartBgColor : 'rgba(255,255,255,1)';
-		let arr = str.split('(')[1].split(')')[0].split(',');
-		if(diyComponent.value.bgGradient == true)
-			style += `background: linear-gradient(rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0) 65%, rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0.6) 70%, rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0.85) 80%, rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0.95) 90%,  rgb(${arr[0]}, ${arr[1]}, ${arr[2]}, 1) 100%);`;
+		if(str.indexOf('(') > -1) {
+            let arr = str.split('(')[1].split(')')[0].split(',');
+            if (diyComponent.value.bgGradient == true) {
+                style += `background: linear-gradient(rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0) 65%, rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0.6) 70%, rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0.85) 80%, rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, 0.95) 90%,  rgb(${arr[0]}, ${arr[1]}, ${arr[2]}, 1) 100%);`;
+            }
+        }else{
+            style += `background: (${str});`;
+		}
 		return style;
 	});
 
@@ -270,6 +289,10 @@
         }
     }
 
+    let tabAllPopup = ref(false);
+    let menuButtonInfo:any = {};
+    let navbarInnerStyle = ref('')
+
     onMounted(() => {
         refresh();
         // 装修模式下刷新
@@ -283,6 +306,23 @@
                 }
             )
         }
+
+        // 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
+        // #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
+	    if(diyComponent.value.positionWay == 'fixed') {
+            menuButtonInfo = uni.getMenuButtonBoundingClientRect();
+            // 导航栏内部盒子的样式
+            // 导航栏宽度，如果在小程序下，导航栏宽度为胶囊的左边到屏幕左边的距离
+            // 如果是各家小程序，导航栏内部的宽度需要减少右边胶囊的宽度
+			if(props.global.topStatusBar.isShow == false) {
+				let rightButtonWidth = menuButtonInfo.width ? menuButtonInfo.width * 2 + 'rpx' : '70rpx';
+				navbarInnerStyle.value += 'padding-right:calc(' + rightButtonWidth + ' + 30rpx);';
+				navbarInnerStyle.value += 'padding-top:' + menuButtonInfo.top + 'px;';
+			}
+			
+        }
+        // #endif
+
     });
 	
 	const refresh = ()=> {
@@ -332,7 +372,9 @@
                     }
 
                     if (item.margin) {
-                        item.pageStyle += 'padding-top:' + item.margin.top * 2 + 'rpx' + ';';
+                        if (item.margin.top > 0) {
+                            item.pageStyle += 'padding-top:' + item.margin.top * 2 + 'rpx' + ';';
+                        }
                         item.pageStyle += 'padding-bottom:' + item.margin.bottom * 2 + 'rpx' + ';';
                         item.pageStyle += 'padding-right:' + item.margin.both * 2 + 'rpx' + ';';
                         item.pageStyle += 'padding-left:' + item.margin.both * 2 + 'rpx' + ';';
@@ -344,23 +386,6 @@
             }
         });
     }
-	let tabAllPopup = ref(false);
-	
-	
-	let menuButtonInfo = {};
-	let navbarInnerStyle = ref('')
-	// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-	// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-	menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-	
-	// 导航栏内部盒子的样式
-	// 导航栏宽度，如果在小程序下，导航栏宽度为胶囊的左边到屏幕左边的距离
-	// style += 'height:' + this.navbarHeight + 'px;';
-	// // 如果是各家小程序，导航栏内部的宽度需要减少右边胶囊的宽度
-	let rightButtonWidth = menuButtonInfo.width ? menuButtonInfo.width * 2 + 'rpx' : '70rpx';
-	navbarInnerStyle.value += 'padding-right:calc(' + rightButtonWidth + ' + 30rpx);';
-	navbarInnerStyle.value += 'padding-top:' + menuButtonInfo.top + 'px;';
-	// #endif
 
     const toRedirect = (data: {}) => {
         if (Object.keys(data).length) {
@@ -409,7 +434,7 @@
 				top: 0;
 				right: 0;
 				bottom: 0;
-				left: 0;	
+				left: 0;
 			}
 		}
 	}

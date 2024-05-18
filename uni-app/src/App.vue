@@ -13,6 +13,8 @@
 		// 添加初始化拦截器
 		launchInterceptor()
 
+        uni.removeStorageSync('isWatchShare')
+
 		// #ifdef H5
 		uni.getSystemInfoSync().platform == 'ios' && (uni.setStorageSync('initUrl', location.href))
 
@@ -51,6 +53,7 @@
 		const configStore = useConfigStore()
 		await configStore.getLoginConfig()
 
+		useSystemStore().getMapFn()
 		useSystemStore().getSiteInfoFn()
 
 		// 隐藏tabbar
@@ -64,7 +67,7 @@
 
 		if (!getToken()) {
 			const login = useLogin()
-			// 三方平台自动登录
+			// 第三方平台自动登录
 			// #ifdef MP
 			login.getAuthCode()
 			// #endif

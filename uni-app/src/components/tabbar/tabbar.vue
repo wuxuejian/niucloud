@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 	import { computed } from 'vue'
-	import { redirect, currRoute, img } from '@/utils/common'
+	import { redirect, currRoute,currShareRoute, img } from '@/utils/common'
 	import useConfigStore from '@/stores/config'
 
     const props = defineProps({
@@ -35,11 +35,16 @@
 	}
 
 	const tabbar = computed(() => {
-		return useConfigStore().tabbar
+        return useConfigStore().tabbar
 	})
 
 	const value = computed(() => {
-		return '/' + currRoute()
+        let query:any = currShareRoute().params;
+        let str = [];
+        for (let key in query) {
+            str.push(key + '=' + query[key]);
+        }
+		return '/' + currRoute() + (str.length > 0 ? '?' + str.join('&') : '')
 	})
 
 	const tabbarChange = (url : string) => {
@@ -60,6 +65,15 @@
             redirect({ url,mode: 'reLaunch' })
         }
 	}
+
+	const setAddon = (addon:any)=> {
+        const configStore = useConfigStore()
+        configStore.getTabbarConfig(addon)
+    }
+
+    defineExpose({
+        setAddon
+    })
 </script>
 
 <style lang="scss" scoped>

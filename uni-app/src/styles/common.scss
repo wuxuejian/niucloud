@@ -81,5 +81,5 @@ button[type='primary'],uni-button[type='primary']{
 
 // 去掉uveiew 点击时变灰【针对于微信小程序处理，官方提供的方法，在小程序中不起作用】
 .u-button.u-button--active:before{
-		opacity: 0 !important; 
+	opacity: 0 !important;
 }

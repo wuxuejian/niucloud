@@ -67,6 +67,7 @@ export function useLogin() {
                 useMemberStore().setToken(res.data.token)
             } else {
                 uni.setStorageSync('openid', res.data.openid)
+                uni.setStorageSync('unionid', res.data.unionid)
             }
         })
     }
@@ -92,7 +93,7 @@ export function useLogin() {
         let query = urlDeconstruction(location.href).query
         query.code && (delete query.code)
         Object.keys(query).length && (url += uni.$u.queryParams(query))
-        
+
         getWechatAuthCode({
             url,
             scopes

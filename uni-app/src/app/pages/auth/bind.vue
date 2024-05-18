@@ -85,6 +85,7 @@
 
     uni.getStorageSync('openid') && (Object.assign(formData, { openid: uni.getStorageSync('openid') }))
     uni.getStorageSync('pid') && (Object.assign(formData, { pid: uni.getStorageSync('pid') }))
+    uni.getStorageSync('unionid') && (Object.assign(formData, { unionid: uni.getStorageSync('unionid') }))
 
     const rules = {
         'mobile': [
@@ -161,6 +162,7 @@
 
             request({
                 openid: formData.openid,
+                unionid: formData.unionid || '',
                 mobile_code: e.detail.code
             }).then((res) => {
                 uni.hideLoading()
@@ -175,6 +177,15 @@
                 uni.hideLoading()
             })
         }
+
+		if(e.detail.errno == 104){
+		    let msg = '用户未授权隐私权限';
+		    uni.showToast({title: msg, icon: 'none'})
+		}
+		if(e.detail.errMsg == "getPhoneNumber:fail user deny"){
+		    let msg = '用户拒绝获取手机号码';
+		    uni.showToast({title: msg, icon: 'none'})
+		}
     }
 </script>
 

@@ -36,7 +36,7 @@
                         </u-form-item>
                     </view>
                     <view class="mt-[40rpx]">
-                        <u-button type="primary" shape="circle" :text="t('save')" @click="save" :loading="operateLoading"></u-button>
+                        <u-button type="primary" shape="circle" :text="t('save')" @click="save" :disabled="btnDisabled" :loading="operateLoading"></u-button>
                     </view>
                 </u-form>
             </view>
@@ -60,6 +60,7 @@
 
     const type = ref('')
     const source = ref('')
+    const btnDisabled = ref(false)
 
     const formData = ref({
         id: 0,
@@ -176,7 +177,7 @@
     const operateLoading = ref(false)
     const save = ()=> {
         if (uni.$u.test.isEmpty(formData.value.area)) {
-            uni.showToast({ title: t('selectAddressPlaceholder'), icon: 'none' })
+            uni.showToast({title: t('selectAddressPlaceholder'), icon: 'none'})
             return
         }
 
@@ -186,16 +187,24 @@
             if (operateLoading.value) return
             operateLoading.value = true
 
+            btnDisabled.value = true
+
             formData.value.full_address = `${formData.value.area}${formData.value.address_name}${formData.value.address}`
 
             save(formData.value).then((res) => {
                 operateLoading.value = false
                 uni.removeStorageSync('addressInfo');
-                setTimeout(()=> {
-                    redirect({ url: '/app/pages/member/address', param: { type: type.value } })
+                setTimeout(() => {
+                    btnDisabled.value = false
+                    redirect({
+                        url: '/app/pages/member/address',
+                        mode: 'redirectTo',
+                        param: {type: type.value, source: source.value}
+                    })
                 }, 1000)
             }).catch(() => {
                 operateLoading.value = false
+                btnDisabled.value = false
             })
         })
     }
@@ -212,7 +221,10 @@
             fail: (res)=>{
                 // 在隐私协议中没有声明chooseLocation:fail api作用域
                 if(res.errMsg && res.errno) {
-                    if(res.errno == 112){
+                    if(res.errno == 104){
+                        let msg = '用户未授权隐私权限，选择位置失败';
+                        uni.showToast({title: msg, icon: 'none'})
+                    }else if(res.errno == 112){
                         let msg = '隐私协议中未声明，打开地图选择位置失败';
                         uni.showToast({title: msg, icon: 'none'})
                     }else {

@@ -2,7 +2,7 @@ import { img, isWeixinBrowser, currRoute, currShareRoute, getToken } from '@/uti
 import { onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 import { getShareInfo } from '@/app/api/diy';
 import useMemberStore from '@/stores/member'
-import { watch } from 'vue'
+import { watch,computed } from 'vue'
 
 // #ifdef H5
 import wechat from '@/utils/wechat'
@@ -31,10 +31,18 @@ export const useShare = () => {
 
 	const setShare = async (options : any = {}) => {
 		let memberStore = useMemberStore();
+		let isWatch = uni.getStorageSync('isWatchShare');
 
-		watch(() => memberStore.info, () => {
-			setShare(options)
-		})
+		// 防重复监听
+		if(!isWatch) {
+			watch(() => memberStore.info, (newValue: any, oldValue: any) => {
+				// 如果会员发生变化，则请求分享接口
+				if (newValue && oldValue && newValue.member_id != oldValue.member_id) {
+					setShare(options)
+				}
+			})
+			uni.setStorageSync('isWatchShare', true);
+		}
 
 		// #ifdef H5
 		// 初始化sdk
@@ -60,6 +68,11 @@ export const useShare = () => {
 				link: options.wechat.link || link,
 				desc: options.wechat.desc || '',
 				imgUrl: options.wechat.url ? img(options.wechat.url) : ''
+			}
+			const userInfo = computed(() => memberStore.info)
+			if(wechatOptions.link == ''){
+				//分享首页拼接参数
+				wechatOptions.link = location.href + '?mid=' + userInfo.value.member_id
 			}
 			wechatShare()
 			// #endif

@@ -28,7 +28,7 @@
                 </u-form-item>
             </view>
             <view class="mt-[40rpx]">
-                <u-button type="primary" shape="circle" :text="t('save')" @click="save" :loading="operateLoading"></u-button>
+                <u-button type="primary" shape="circle" :text="t('save')" @click="save" :disabled="btnDisabled" :loading="operateLoading"></u-button>
             </view>
         </u-form>
         <area-select ref="areaRef" @complete="areaSelectComplete" :area-id="formData.district_id"/>
@@ -61,6 +61,7 @@
     const formRef = ref(null)
     const type = ref('')
     const source = ref('')
+    const btnDisabled = ref(false)
     
     onLoad((data) => {
         if (data.id) {
@@ -129,20 +130,28 @@
     const operateLoading = ref(false)
     const save = ()=> {
         const save = formData.value.id ? editAddress : addAddress
-        
+
         formRef.value.validate().then(() => {
             if (operateLoading.value) return
             operateLoading.value = true
-            
+
+            btnDisabled.value = true
+
             formData.value.full_address = formData.value.area + formData.value.address
-        
+
             save(formData.value).then((res) => {
                 operateLoading.value = false
-                setTimeout(()=> {
-                    redirect({ url: '/app/pages/member/address', param: { type: type.value, source : source.value } })
+                setTimeout(() => {
+                    btnDisabled.value = false
+                    redirect({
+                        url: '/app/pages/member/address',
+                        mode: 'redirectTo',
+                        param: {type: type.value, source: source.value}
+                    })
                 }, 1000)
             }).catch(() => {
                 operateLoading.value = false
+                btnDisabled.value = false
             })
         })
     }

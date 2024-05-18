@@ -6,7 +6,8 @@ const t = (message: string) => {
     const route = currRoute()
     const file = language.getFileKey(`/${route}`)
     const key = `${file.fileKey}.${message}`
-    return i18n.global.t(key) != key ? i18n.global.t(key) : i18n.global.t(message)
+    if (i18n.global.t(message) != message) return i18n.global.t(message)
+    return i18n.global.t(key) != key ? i18n.global.t(key) : ''
 }
 
 export { language, t }

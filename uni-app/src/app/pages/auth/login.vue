@@ -88,6 +88,7 @@
     })
 
     uni.getStorageSync('openid') && (Object.assign(formData, { openid: uni.getStorageSync('openid') }))
+    uni.getStorageSync('unionid') && (Object.assign(formData, { unionid: uni.getStorageSync('unionid') }))
     uni.getStorageSync('pid') && (Object.assign(formData, { pid: uni.getStorageSync('pid') }))
 
     const memberStore = useMemberStore()
