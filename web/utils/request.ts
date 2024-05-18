@@ -1,6 +1,7 @@
 import { breakpointsTailwind } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import useMemberStore from '@/stores/member'
+import qs from 'qs'
 
 interface ConfigOption {
     showErrorMessage?: boolean
@@ -60,7 +61,8 @@ class Http {
     }
 
     public get(url: string, query = {}, config: ConfigOption = {}) {
-        return this.request(url, 'GET', { query }, config)
+        url += '?' + qs.stringify(query)
+        return this.request(url, 'GET', {}, config)
     }
 
     public post(url: string, body = {}, config: ConfigOption = {}) {

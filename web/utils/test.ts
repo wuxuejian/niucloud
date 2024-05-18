@@ -209,7 +209,7 @@ const test = {
      */
     image(value: string) {
         const newValue = value.split('?')[0]
-        const IMAGE_REGEXP = /\.(jpeg|jpg|gif|png|svg|webp|jfif|bmp|dpg)/i
+        const IMAGE_REGEXP = /\.(jpeg|jpg|gif|png|svg|jfif|bmp|dpg)/i // todo 暂不支持webp格式
         return IMAGE_REGEXP.test(newValue)
     },
     /**

@@ -32,7 +32,7 @@ const configStore = useConfigStore()
 configStore.getLoginConfig()
 
 // 查询站点信息
-systemStore.getSitenfo()
+systemStore.getSiteInfoFn()
 
 // 如果已登录
 getToken() && useMemberStore().setToken(getToken())
