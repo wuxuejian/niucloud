@@ -67,13 +67,17 @@ class Alipay extends BasePay
      */
     public function wap(array $params)
     {
-        return $this->returnFormat(Pay::alipay()->h5([
+        $response = Pay::alipay()->h5([
             'out_trade_no' => $params['out_trade_no'],
             'total_amount' => $params['money'],
             'subject' => $params['body'],
             'quit_url' => $params['quit_url'] ?? '',//用户付款中途退出返回商户网站的地址, 一般是商品详情页或购物车页
             '_method' => 'get',
-        ]));
+        ]);
+
+        $redirects = $response->getHeader('Location');
+        $effective_url = end($redirects);
+        return ['url' => $effective_url];
     }
 
     /**
@@ -158,15 +162,15 @@ class Alipay extends BasePay
             throw new PayException($result['sub_msg']);
         } else {
             $status = $result['status'];
-            $status_array = array(
+            $status_array = [
                 'SUCCESS' => TransferDict::SUCCESS,
                 'WAIT_PAY' => TransferDict::WAIT,
                 'CLOSED' => TransferDict::FAIL,
                 'FAIL' => TransferDict::FAIL
-            );
-            $res = array(
+            ];
+            $res = [
                 'status' => $status_array[$status],
-            );
+            ];
             if ($status == 'FAIL') {
                 $res['fail_reason'] = $result['fail_reason'];
             }

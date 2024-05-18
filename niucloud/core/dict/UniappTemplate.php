@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -12,6 +12,7 @@ namespace core\dict;
 
 
 use app\service\admin\addon\AddonService;
+use app\service\admin\site\SiteService;
 
 class UniappTemplate extends BaseDict
 {
@@ -25,7 +26,7 @@ class UniappTemplate extends BaseDict
         if (!empty($params[ 'params' ][ 'addon' ])) {
             $addons = [ $params[ 'params' ][ 'addon' ] ];
         } else {
-            $addons = $this->getLocalAddons();
+            $addons = (new SiteService())->getAddonKeysBySiteId();
         }
 
         $app_keys = []; // 应用插件key集合

@@ -16,6 +16,9 @@ $data = [
 
         //计划任务 自定义命令
         'cron:schedule' => 'app\command\schedule\Schedule',
+
+        //wokrerman的启动停止和重启
+        'workerman' => 'app\command\workerman\Workerman',
     ],
 ];
 return (new DictLoader("Console"))->load($data);

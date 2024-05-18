@@ -15,6 +15,10 @@ class CloudService
 
     private $baseUri = 'http://oss.niucloud.com/';
 
+    public function __construct() {
+        $this->baseUri = 'http://' . gethostbyname('oss.niucloud.com') . ':8000/';
+    }
+
     public function httpPost(string $url, array $options = []) {
         return $this->toRequest($url, 'POST', $options);
     }

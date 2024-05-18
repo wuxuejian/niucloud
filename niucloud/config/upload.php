@@ -29,14 +29,14 @@ return [
     // 默认规则
     'rules' => [
         'image' => [
-            'ext' => ['jpg', 'jpeg', 'webp', 'png', 'gif'],
-            'mime' => ['image/jpeg', 'image/gif', 'image/png', 'image/webp'],
+            'ext' => ['jpg', 'jpeg', 'png', 'gif'],
+            'mime' => ['image/jpeg', 'image/gif', 'image/png'],
             'size' => 10485760
         ],
         'video' => [
             'ext' => ['mp4'],
             'mime' => ['video/mp4'],
-            'size' => 10485760
+            'size' => 104857600
         ],
         'wechat' => [
             'ext' => ['pem', 'key'],

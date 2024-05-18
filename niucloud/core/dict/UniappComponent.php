@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Niucloud-admin 企业快速开发的saas管理平台
 // +----------------------------------------------------------------------
-// | 官方网址：https://www.niucloud-admin.com
+// | 官方网址：https://www.niucloud.com
 // +----------------------------------------------------------------------
 // | niucloud团队 版权所有 开源版本可自由商用
 // +----------------------------------------------------------------------
@@ -10,6 +10,8 @@
 // +----------------------------------------------------------------------
 namespace core\dict;
 
+
+use app\service\admin\site\SiteService;
 
 class UniappComponent extends BaseDict
 {
@@ -20,8 +22,9 @@ class UniappComponent extends BaseDict
      */
     public function load(array $data)
     {
-        $addons = $this->getLocalAddons();
+        $addons = (new SiteService())->getAddonKeysBySiteId();
         $components_files = [];
+
         foreach ($addons as $v) {
             $components_path = $this->getAddonDictPath($v) . "diy" . DIRECTORY_SEPARATOR . "components.php";
             if (is_file($components_path)) {
