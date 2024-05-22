@@ -1004,7 +1004,9 @@ CREATE TABLE `wechat_reply`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '公众号消息回调表' ROW_FORMAT = Dynamic;
 
 INSERT INTO `site`(site_id, site_name, group_id, keywords, app_type, logo, `desc`, status, latitude, longitude, province_id, city_id, district_id, address, full_address, phone, business_hours, create_time, expire_time, front_end_name, front_end_logo, front_end_icon, icon, member_no, app, addons, initalled_addon, site_domain) VALUES
-(0, 'niucloud-admin', 0, '', 'admin', '', '', 1, '', '', 0, 0, 0, '', '', '', '', 0, 0, '', '', '', '', '0', '', '', '', '');
+(1, 'niucloud-admin', 0, '', 'admin', '', '', 1, '', '', 0, 0, 0, '', '', '', '', 0, 0, '', '', '', '', '0', '', '', '', '');
+
+UPDATE `site` SET site_id = 0 WHERE  site_id = 1;
 
 INSERT INTO `sys_user` VALUES ('1', '', '', '', '', '', '0', '0', '0', '1', '0', '0', '0');
 
