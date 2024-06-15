@@ -291,7 +291,7 @@ class AttachmentService extends BaseAdminService
             foreach ($icon as $ck => $cv) {
                 // 素材表中数据保持要一致
                 $icon[ $ck ][ 'att_id' ] = $cv[ 'icon_id' ];
-                $icon[ $ck ][ 'url' ] = $v[ 'font_family' ] . '-' . $v[ 'css_prefix_text' ] . $cv[ 'font_class' ];
+                $icon[ $ck ][ 'url' ] = $v[ 'font_family' ] . ' ' . $v[ 'css_prefix_text' ] . $cv[ 'font_class' ];
                 $icon[ $ck ][ 'real_name' ] = $cv[ 'name' ];
 
                 // 查询名称

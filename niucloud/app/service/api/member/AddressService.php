@@ -35,10 +35,10 @@ class AddressService extends BaseApiService
      */
     public function getList(array $where = [])
     {
-        $field = 'id,member_id,name,mobile,address,address_name,full_address,is_default,type';
+        $field = 'id,member_id,name,mobile,address,address_name,full_address,is_default,lng,lat';
         $order = 'is_default desc, id desc';
 
-        $list = $this->model->where([ ['site_id', '=', $this->site_id],['member_id', '=', $this->member_id ] ])->withSearch(["type"], $where)->field($field)->order($order)->select()->toArray();
+        $list = $this->model->where([ ['site_id', '=', $this->site_id],['member_id', '=', $this->member_id ] ])->field($field)->order($order)->select()->toArray();
         return $list;
     }
 
@@ -49,7 +49,7 @@ class AddressService extends BaseApiService
      */
     public function getInfo(int $id)
     {
-        $field = 'id,member_id,name,mobile,province_id,city_id,district_id,address,address_name,full_address,lng,lat,is_default,type';
+        $field = 'id,member_id,name,mobile,province_id,city_id,district_id,address,address_name,full_address,lng,lat,is_default';
 
         $info = $this->model->field($field)->where([ ['id', '=', $id], ['site_id', '=', $this->site_id], ['member_id', '=', $this->member_id ] ])->findOrEmpty()->toArray();
         return $info;
@@ -63,7 +63,7 @@ class AddressService extends BaseApiService
     public function add(array $data)
     {
         if ($data['is_default']) {
-            $this->model->where([ ['member_id', '=', $this->member_id ], ['type', '=', $data['type']] ])->update(['is_default' => 0]);
+            $this->model->where([ ['member_id', '=', $this->member_id ]  ])->update(['is_default' => 0]);
         }
         $data['member_id'] = $this->member_id;
         $data['site_id'] = $this->site_id;
@@ -80,7 +80,7 @@ class AddressService extends BaseApiService
     public function edit(int $id, array $data)
     {
         if ($data['is_default']) {
-            $this->model->where([ ['member_id', '=', $this->member_id ], ['type', '=', $data['type']] ])->update(['is_default' => 0]);
+            $this->model->where([ ['member_id', '=', $this->member_id ] ])->update(['is_default' => 0]);
         }
         $this->model->where([ ['id', '=', $id], ['site_id', '=', $this->site_id], ['member_id', '=', $this->member_id ] ])->update($data);
         return true;

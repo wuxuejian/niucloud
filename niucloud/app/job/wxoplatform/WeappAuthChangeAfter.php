@@ -9,3 +9,26 @@
 // | Author: Niucloud Team
 // +----------------------------------------------------------------------
 
+namespace app\job\wxoplatform;
+
+use app\service\admin\wxoplatform\WeappVersionService;
+use app\service\core\pay\CorePayService;
+use core\base\BaseJob;
+use think\facade\Log;
+
+/**
+ * 小程序授权变更之后
+ */
+class WeappAuthChangeAfter extends BaseJob
+{
+    /**
+     * 消费
+     * @param $data
+     * @return true
+     */
+    protected function doJob($site_id, $event)
+    {
+        event('WeappAuthChangeAfter', ['site_id' => $site_id, 'event' => $event]);
+        return true;
+    }
+}
