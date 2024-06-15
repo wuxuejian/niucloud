@@ -86,6 +86,9 @@
 		{
 			"path": "app/pages/member/commission",
 			"style": {
+				// #ifndef H5
+				"navigationStyle": "custom",
+				// #endif
 				"navigationBarTitleText": "%pages.member.commission%"
 			},
 			"needLogin": true
@@ -93,6 +96,9 @@
 		{
 			"path": "app/pages/member/balance",
 			"style": {
+				// #ifndef H5
+				"navigationStyle": "custom",
+				// #endif
 				"navigationBarTitleText": "%pages.member.balance%"
 			},
 			"needLogin": true
@@ -128,10 +134,10 @@
 		{
 			"path": "app/pages/member/index",
 			"style": {
-				"navigationBarTitleText": "%pages.member.index%",
 				// #ifndef H5
 				"navigationStyle": "custom",
 				// #endif
+				"navigationBarTitleText": "%pages.member.index%",
 				"usingComponents": {
 					"diy-group": "../../../../addon/components/diy/group/index",
 					"fixed-group": "../../../../addon/components/fixed/group/index"
@@ -152,7 +158,17 @@
 		{
 			"path": "app/pages/member/point",
 			"style": {
+				// #ifndef H5
+				"navigationStyle": "custom",
+				// #endif
 				"navigationBarTitleText": "%pages.member.point%"
+			},
+			"needLogin": true
+		},
+		{
+			"path": "app/pages/member/point_detail",
+			"style": {
+				"navigationBarTitleText": "%pages.member.point_detail%"
 			},
 			"needLogin": true
 		},

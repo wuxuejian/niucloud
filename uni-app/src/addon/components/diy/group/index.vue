@@ -61,22 +61,43 @@
    import topTabbar from '@/components/top-tabbar/top-tabbar.vue'
 
    import useDiyStore from '@/app/stores/diy';
-   import { ref, onMounted, nextTick, computed } from 'vue';
-	import { getLocation } from '@/utils/common';
+   import { ref, onMounted, nextTick, computed, watch  } from 'vue';
+   import { useRouter } from 'vue-router';
+   import { getLocation } from '@/utils/common';
    import Sortable from 'sortablejs';
    import { range } from 'lodash-es';
    import { onPageScroll } from '@dcloudio/uni-app'
    import useConfigStore from '@/stores/config'
+
    const props = defineProps(['data','pullDownRefreshCount']);
    const diyStore = useDiyStore();
-
-   const data = computed(() => {
-       if (diyStore.mode == 'decorate') {
-           return diyStore;
-       } else {
-           return props.data;
-       }
+   const router = useRouter();
+   const data = computed(()=>{
+		if (diyStore.mode == 'decorate') {
+		   return diyStore;
+		} else {
+		   return props.data;
+		}
    })
+   
+   // 兼容轮播搜索组件-切换分类时，导致个人中心白屏 - start
+   // #ifdef H5
+	watch(() => router.currentRoute.value, (newRoute) => {
+		if(newRoute.path != "/addon/shop/pages/index"){
+			diyStore.topFixedStatus = 'home'
+		}
+	});
+
+	// #endif
+
+	// #ifdef MP
+	wx.onAppRoute(function(res) {
+		if(res.path != "addon/shop/pages/index"){
+			diyStore.topFixedStatus = 'home'
+		}
+	});
+	// #endif
+	// 兼容轮播搜索组件-切换分类时，导致个人中心白屏 - end
 
    const tabbarAddonName = computed(() => {
        return useConfigStore().addon;
@@ -100,7 +121,7 @@
        }
        return obj;
    }
-
+	
    onMounted(() => {
        // #ifdef H5
        if (diyStore.mode == 'decorate') {
