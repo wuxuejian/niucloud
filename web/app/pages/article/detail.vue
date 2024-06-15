@@ -22,7 +22,7 @@
 import { ref, reactive, computed } from 'vue'
 import { getArticleDetail } from '@/app/api/article'
 import { ArrowRight } from '@element-plus/icons-vue'
-import { nMounted } from 'vue';
+import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
 const Route = useRoute(); //获取到值
