@@ -15,7 +15,7 @@ class Config extends BaseDict
 {
     public function load(array $data)
     {
-        $config = $data['config'];
+        $config = $data['name'];
         $system_config = $data['data'] ?? [];
 
         $addons = $this->getAllLocalAddons();
