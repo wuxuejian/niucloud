@@ -350,7 +350,6 @@ const setContinueSignAward = async () => {
 
         setMemberBenefitsContents(contentData, continue_award.value, 0, 1)
 
-
         if (!isEdit) {
             formData.continue_award.push(JSON.parse(JSON.stringify(continue_award.value)))
         } else {

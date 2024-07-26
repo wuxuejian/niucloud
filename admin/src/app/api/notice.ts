@@ -28,7 +28,6 @@ export function getNoticeLog(params: any) {
     return request.get(`notice/log`, {params})
 }
 
-
 /**
  * 消息启动与关闭
  * @param params

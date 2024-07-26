@@ -41,6 +41,15 @@ export function getAllUserList(params: Record<string, any>) {
 }
 
 /**
+ * 获取添加站点可选用户列表
+ * @param params
+ * @returns
+ */
+export function getUserListSelect(params: Record<string, any>) {
+    return request.get(`user/user_select`, { params })
+}
+
+/**
  * 查询用户名是否存在
  * @param username
  * @returns
@@ -51,7 +60,7 @@ export function checkUsernameIsExist(username: string) {
 
 /**
  * 获取用户站点创建限制
- * @param params
+ * @param uid
  */
 export function getUserCreateSiteLimit(uid: number) {
     return request.get(`user/user/create_site_limit/${uid}`)
@@ -83,7 +92,7 @@ export function editUserCreateSiteLimit(params: Record<string, any>) {
 
 /**
  * 编辑用户站点创建限制
- * @param params
+ * @param id
  */
 export function delUserCreateSiteLimit(id: number) {
     return request.delete(`user/user/create_site_limit/${id}`, { showSuccessMessage: true })

@@ -141,7 +141,7 @@ watch(route, () => {
 }, { immediate: true })
 
 // 让二级菜单默认展开
-let menuOption = ref([])
+const menuOption = ref([])
 watch(twoMenuData.value, () => {
     menuOption.value = [];
     if(twoMenuData.value && Object.values(twoMenuData.value).length){

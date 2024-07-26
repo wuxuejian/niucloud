@@ -108,8 +108,8 @@
 import { reactive, ref, computed } from 'vue'
 import { t } from '@/lang'
 import { getVersions } from '@/app/api/auth'
-import { getAuthinfo, setAuthinfo, getFrameworkVersionList } from '@/app/api/module'
-import { ElMessageBox, FormInstance, FormRules } from 'element-plus'
+import { getAuthInfo, setAuthInfo, getFrameworkVersionList } from '@/app/api/module'
+import { ElMessageBox, FormInstance, FormRules,ElMessage  } from 'element-plus'
 import Upgrade from '@/app/components/upgrade/index.vue'
 import CloudBuild from '@/app/components/cloud-build/index.vue'
 
@@ -121,9 +121,20 @@ const authCodeApproveDialog = ref(false)
 const isCheck = ref(false)
 const frameworkVersionList = ref([])
 
+const checkVersion = ref(false)
 const getFrameworkVersionListFn = () => {
     getFrameworkVersionList().then(({ data }) => {
         frameworkVersionList.value = data
+        if (checkVersion.value) {
+            if (!newVersion.value || (newVersion.value && newVersion.value.version_no == versions.value)) {
+                ElMessage({
+                    message: t('versionTips'),
+                    type: 'success'
+                })
+            }
+        } else {
+            checkVersion.value = true
+        }
     })
 }
 getFrameworkVersionListFn()
@@ -156,7 +167,7 @@ const authinfo = ref<AuthInfo>({
 const loading = ref(true)
 const saveLoading = ref(false)
 const checkAppMange = () => {
-    getAuthinfo().then((res) => {
+    getAuthInfo().then((res) => {
         loading.value = false
         if (res.data.data && res.data.data.length != 0) {
             authinfo.value = res.data.data
@@ -193,7 +204,7 @@ const save = async (formEl: FormInstance | undefined) => {
         if (valid) {
             saveLoading.value = true
 
-            setAuthinfo(formData).then(() => {
+            setAuthInfo(formData).then(() => {
                 saveLoading.value = false
                 checkAppMange()
             }).catch(() => {
@@ -220,7 +231,7 @@ getVersionsInfo()
  * 升级
  */
 const handleUpgrade = () => {
-    if (!authinfo.value) {
+    if (!authinfo.value.auth_code) {
         authCodeApproveFn()
         return
     }
@@ -228,7 +239,7 @@ const handleUpgrade = () => {
 }
 
 const handleCloudBuild = () => {
-    if (!authinfo.value) {
+    if (!authinfo.value.auth_code) {
         authCodeApproveFn()
         return
     }

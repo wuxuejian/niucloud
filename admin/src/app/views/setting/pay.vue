@@ -124,8 +124,6 @@ const checkPayConfigList = () => {
                 sortableFn(item, index)
             })
         })
-    }).catch(() => {
-
     })
 }
 checkPayConfigList()

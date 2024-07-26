@@ -147,7 +147,6 @@ loadUserList()
 
 /**
  * 查看详情
- * @param uid
  */
 const detailEvent = (uid: number, tab: string = '') => {
     router.push({ path: '/admin/site/user_info', query: { uid, tab } })

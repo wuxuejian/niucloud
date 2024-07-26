@@ -63,19 +63,19 @@ const formData = reactive<Record<string, number | boolean>>({
 
 const formRules = computed(() => {
     return {
-        type: [
-            {
-                required: true,
-                trigger: 'change',
-                validator: (rule: any, value: any, callback: any) => {
-                    if (!formData.is_mobile && !formData.is_username) {
-                        callback(new Error(t('mobileOrUsernameNoEmpty')))
-                    } else {
-                        callback()
-                    }
-                }
-            }
-        ]
+        // type: [
+        //     {
+        //         required: true,
+        //         trigger: 'change',
+        //         validator: (rule: any, value: any, callback: any) => {
+        //             if (!formData.is_mobile && !formData.is_username) {
+        //                 callback(new Error(t('mobileOrUsernameNoEmpty')))
+        //             } else {
+        //                 callback()
+        //             }
+        //         }
+        //     }
+        // ]
     }
 })
 

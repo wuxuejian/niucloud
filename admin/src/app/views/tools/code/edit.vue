@@ -514,10 +514,6 @@ const onSave = async (code: number) => {
             generateCreateFn(code)
         } else {
             loading.value = false
-            ElMessage({
-                type: 'success',
-                message: '操作成功'
-            })
             setTimeout(() => {
                 window.codeActiveName = 'codeList'
                 back()

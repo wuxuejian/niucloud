@@ -14,7 +14,7 @@
                     </el-form-item>
 
                     <el-form-item :label="t('noticeKey')" prop="key">
-                        <el-select v-model="recordsTableData.searchParam.key" clearable :placeholder="t('groupIdPlaceholder')" class="input-width">
+                        <el-select v-model="recordsTableData.searchParam.key" clearable :placeholder="t('noticeKeyPlaceholder')" class="input-width">
                             <el-option :label="t('selectPlaceholder')" value="" />
                             <el-option-group v-for="(group, gindex) in templateList" :key="gindex" :label="group.label">
                                 <el-option :label="item.name" :value="item.value" :disabled="item.disabled ?? false" v-for="(item, index) in group.list" :key="index" />

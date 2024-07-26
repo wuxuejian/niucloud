@@ -138,7 +138,6 @@ export function getMenuByTypeDir(key: any = 'system') {
     return request.get(`sys/menu/dir/${key}`)
 }
 
-
 /***************************************************** 站点菜单 ****************************************************/
 
 /**
@@ -148,7 +147,6 @@ export function getMenuByTypeDir(key: any = 'system') {
 export function getSiteMenus() {
     return request.get(`site/site/menu`)
 }
-
 
 /***************************************************** 设置 ****************************************************/
 
@@ -280,20 +278,6 @@ export function getAuthMenu() {
 }
 
 /**
- * 获取快捷菜单
- */
-export function getShortcutMenu() {
-    return request.get(`sys/config/shortcut_menu`)
-}
-
-/**
- * 添加快捷菜单
- */
-export function setShortcutMenu(params: Record<string, any>) {
-    return request.put(`sys/config/shortcut_menu`, params, { showSuccessMessage: true })
-}
-
-/**
  * 获取图标库分类列表
  * @param params
  * @returns
@@ -335,7 +319,6 @@ export function getAreaListByPid(pid: number = 0) {
 export function getAreatree(level: number = 1) {
     return request.get(`sys/area/tree/${level}`)
 }
-
 
 /**
  * 获取地址信息
@@ -528,7 +511,6 @@ export function getChannelType() {
     return request.get(`sys/channel`);
 }
 
-
 /**
  * 获取渠道域名
  * @returns
@@ -569,13 +551,12 @@ export function setPatConfig(params: Record<string, any>) {
     return request.post(`pay/channel/set/all`, params, { showSuccessMessage: true })
 }
 
-
 /***************************************************** 刷新菜单 ****************************************************/
 /**
  * 刷新菜单
  */
 export function menuRefresh(params: Record<string, any>) {
-    return request.post(`sys/menu/refresh`, {}, { showSuccessMessage: true })
+    return request.post(`sys/menu/refresh`, {})
 }
 
 /**
@@ -584,7 +565,6 @@ export function menuRefresh(params: Record<string, any>) {
 export function clearSchemaCache(params: Record<string, any>) {
     return request.post(`sys/schema/clear`, {}, { showSuccessMessage: true })
 }
-
 
 /***************************************************** 获取应用 ****************************************************/
 /**
@@ -608,21 +588,6 @@ export function setMap(params: Record<string, any>) {
  */
 export function getMap() {
     return request.get(`sys/config/map`)
-}
-
-/***************************************************** 首页 ****************************************************/
-/**
- * 获取首页列表
- */
-export function getIndexList() {
-    return request.get(`sys/config/site_index`)
-}
-
-/**
- * 设置首页模版
- */
-export function setIndexList(params: Record<string, any>) {
-    return request.put(`sys/config/site_index`, params, { showSuccessMessage: true })
 }
 
 /**
@@ -663,13 +628,6 @@ export function getAddonList() {
 }
 
 /**
- * 获取手机端首页列表
- */
-export function getWapIndexList(params: Record<string, any>) {
-    return request.get('sys/config/wap_index', { params })
-}
-
-/**
  * 获取开发者key
  * @returns
  */
@@ -685,7 +643,6 @@ export function getDeveloperToken() {
 export function setDeveloperToken(params: Record<string, any>) {
     return request.put(`sys/config/developer_token`, params, { showSuccessMessage: true })
 }
-
 
 /**
  * 获取布局设置
@@ -728,7 +685,6 @@ export function getThemecolor() {
 export function setThemecolor(params: Record<string, any>) {
     return request.put(`sys/config/themecolor`, params)
 }
-
 
 /***************************************************** 报表导出 ****************************************************/
 

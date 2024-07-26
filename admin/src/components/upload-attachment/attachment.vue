@@ -365,9 +365,10 @@ const upload = computed(() => {
     const headers: Record<string, any> = {}
     headers[import.meta.env.VITE_REQUEST_HEADER_TOKEN_KEY] = getToken()
     headers[import.meta.env.VITE_REQUEST_HEADER_SITEID_KEY] = storage.get('siteId') || 0
+    const baseURL = import.meta.env.VITE_APP_BASE_URL.substr(-1) == '/' ? import.meta.env.VITE_APP_BASE_URL : `${import.meta.env.VITE_APP_BASE_URL}/`;
 
     return {
-        action: `${import.meta.env.VITE_APP_BASE_URL}/sys/${prop.type}`,
+        action: `${baseURL}sys/${prop.type}`,
         multiple: true,
         data: {
             cate_id: attachmentParam.cate_id
@@ -391,7 +392,10 @@ watch(selectAll, () => {
     if (selectAll.value) {
         const keys = Object.keys(toRaw(selectedFile))
         attachment.data.forEach((item: Record<string, any>) => {
-            if (!keys.includes(item.att_id)) selectedFile[item.att_id] = toRaw(item)
+            if (!keys.includes(item.att_id)) {
+                selectedFile[item.att_id] = toRaw(item)
+                selectedFileIndex.push(item.att_id)
+            }
         })
     } else {
         clearSelected()
@@ -406,6 +410,7 @@ const clearSelected = () => {
     if (keys.length) {
         keys.forEach((key) => {
             delete selectedFile[key]
+            selectedFileIndex.splice(selectedFileIndex.indexOf(key), 1)
         })
         selectAll.value = false
     }

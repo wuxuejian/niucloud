@@ -104,8 +104,8 @@ const style = computed(() => {
 })
 
 /**
-     * 选择视频
-     */
+ * 选择视频
+ */
 const confirmSelect = (data: Record<string, any>) => {
     if (prop.limit == 1) {
         videos.data.splice(0, 1)

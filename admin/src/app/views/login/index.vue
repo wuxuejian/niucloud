@@ -65,8 +65,7 @@
                                     </el-form-item>
 
                                     <el-form-item prop="password">
-                                        <el-input type="password" v-model="form.password" @keyup.enter="handleLogin(formRef)"
-                                        autocomplete="new-password" :show-password="true" class="w-50 m-1 h-[40px]" :placeholder="t('passwordPlaceholder')">
+                                        <el-input type="password" v-model="form.password" @keyup.enter="handleLogin(formRef)" autocomplete="new-password" :show-password="true" class="w-50 m-1 h-[40px]" :placeholder="t('passwordPlaceholder')">
                                             <template #prefix>
                                                 <icon name="element Lock" />
                                             </template>
@@ -74,8 +73,7 @@
                                     </el-form-item>
 
                                     <el-form-item>
-                                        <el-button type="primary" class="mt-[30px] h-[40px] w-full" @click="handleLogin(formRef)" :loading="loading">{{ loading ? t('logging') :
-                                            t('login') }}</el-button>
+                                        <el-button type="primary" class="mt-[30px] h-[40px] w-full" @click="handleLogin(formRef)" :loading="loading">{{ loading ? t('logging') : t('login') }}</el-button>
                                     </el-form-item>
                                 </el-form>
                             </div>

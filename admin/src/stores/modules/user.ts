@@ -42,24 +42,24 @@ const userStore = defineStore('user', {
         login(form: object, app_type: any) {
             return new Promise((resolve, reject) => {
                 login(form, app_type)
-                    .then(async (res) => {
-                        if (app_type == 'admin' && Test.empty(res.data.userrole)) {
-                            storage.setPrefix('site')
-                        }
-                        this.token = res.data.token
-                        this.userInfo = res.data.userinfo
-                        this.siteInfo = res.data.site_info || {}
-                        setToken(res.data.token)
-                        storage.set({ key: 'userinfo', data: res.data.userinfo })
-                        storage.set({ key: 'siteId', data: res.data.site_id || 0 })
-                        storage.set({ key: 'siteInfo', data: res.data.site_info || {} })
-                        storage.set({ key: 'comparisonSiteIdStorage', data: res.data.site_id || 0 })
-                        storage.set({ key: 'comparisonTokenStorage', data: res.data.token })
-                        resolve(res)
-                    })
-                    .catch((error) => {
-                        reject(error)
-                    })
+                .then(async(res) => {
+                    if (app_type == 'admin' && Test.empty(res.data.userrole)) {
+                        storage.setPrefix('site')
+                    }
+                    this.token = res.data.token
+                    this.userInfo = res.data.userinfo
+                    this.siteInfo = res.data.site_info || {}
+                    setToken(res.data.token)
+                    storage.set({ key: 'userinfo', data: res.data.userinfo })
+                    storage.set({ key: 'siteId', data: res.data.site_id || 0 })
+                    storage.set({ key: 'siteInfo', data: res.data.site_info || {} })
+                    storage.set({ key: 'comparisonSiteIdStorage', data: res.data.site_id || 0 })
+                    storage.set({ key: 'comparisonTokenStorage', data: res.data.token })
+                    resolve(res)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
             })
         },
         logout() {
@@ -78,29 +78,27 @@ const userStore = defineStore('user', {
         },
         getAuthMenus() {
             return new Promise((resolve, reject) => {
-                getAuthMenus({})
-                    .then((res) => {
-                        this.routers = formatRouters(res.data)
-                        // 获取插件的首个菜单
-                        this.routers.forEach((item, index) => {
-                            if (item.meta.addon !== '') {
-                                if (item.children && item.children.length) {
-                                    this.addonIndexRoute[item.meta.addon] = findFirstValidRoute(item.children)
-                                } else {
-                                    this.addonIndexRoute[item.meta.addon] = item.name
-                                }
+                getAuthMenus({}).then((res) => {
+                    this.routers = formatRouters(res.data)
+                    // 获取插件的首个菜单
+                    this.routers.forEach((item, index) => {
+                        if (item.meta.addon !== '') {
+                            if (item.children && item.children.length) {
+                                this.addonIndexRoute[item.meta.addon] = findFirstValidRoute(item.children)
+                            } else {
+                                this.addonIndexRoute[item.meta.addon] = item.name
                             }
-                        })
-                        resolve(res)
+                        }
                     })
-                    .catch((error) => {
-                        reject(error)
-                    })
+                    resolve(res)
+                }).catch((error) => {
+                    reject(error)
+                })
             })
         },
         setUserInfo(data: any) {
             this.userInfo = data
-            storage.set({ key: 'userinfo', data: data})
+            storage.set({ key: 'userinfo', data: data })
         }
     }
 })

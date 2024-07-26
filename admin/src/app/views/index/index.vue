@@ -127,10 +127,8 @@ import { AnyObject } from '@/types/global'
 import useStyleStore from '@/stores/modules/style'
 
 const loading = ref(true)
-
 const newSiteStat = ref<any>(null)
 const addUser = ref<any>(null)
-
 const styleStore = useStyleStore()
 
 interface NewVersion{
@@ -153,7 +151,7 @@ const newVersion = ref<NewVersion>({
 
 getFrameworkNewVersion().then(({ data }) => {
     newVersion.value = data
-}).catch()
+})
 
 const statInfo = ref<StatInfo>({
     today_data: {},
@@ -165,6 +163,7 @@ const statInfo = ref<StatInfo>({
     site_group_stat: {},
     app: {}
 })
+
 const getStatInfoFn = async (id: number = 0) => {
     statInfo.value = await (await getStatInfo()).data
     loading.value = false
@@ -255,6 +254,7 @@ const toHref = (url:any, id:any) => {
 const toApplication = () => {
     window.open('https://www.niucloud.com/app')
 }
+
 // 更新时间
 const time = ref('')
 const nowTime = () => {
