@@ -82,7 +82,7 @@ class VerifyService extends BaseApiService
             ['site_id', '=', $this->site_id],
             ['verifier_member_id', '=', $this->member_id]
         ])
-        ->withSearch(['code', 'type', 'create_time', 'relate_tag'], $data)
+        ->withSearch(['code', 'type', 'create_time', 'relate_tag', 'keyword'], $data)
         ->with([
             'member' =>  function($query){
                 $query->field('member_id, nickname, mobile, headimg');

@@ -213,7 +213,7 @@ class CoreOplatformService extends BaseCoreService
      */
     public static function releaseWeapp($site_id) {
         $app = CoreWeappService::app($site_id);
-        return $app->getClient()->post('/wxa/release')->toArray();
+        return $app->getClient()->post('/wxa/release', ['json' => []])->toArray();
     }
 
     /**

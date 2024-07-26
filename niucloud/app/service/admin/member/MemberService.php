@@ -116,7 +116,7 @@ class MemberService extends BaseAdminService
         $password_hash = create_password($data['password']);
         $data['password'] = $password_hash;
         $data['register_type'] = MemberRegisterTypeDict::MANUAL;
-        $data['register_channel'] = MemberRegisterChannelDict::MANUAL;//todo 公共化渠道
+        $data['register_channel'] = MemberRegisterChannelDict::MANUAL; // todo 公共化渠道
 
         $member = $this->model->create($data);
         $data['member_id'] = $member->member_id;

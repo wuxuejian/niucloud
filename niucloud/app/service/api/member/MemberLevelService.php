@@ -59,7 +59,7 @@ class MemberLevelService extends BaseApiService
                     }
                 }
 
-                $level_key = $k % 8 + 1;
+                $level_key = $k % 7 + 1;
                 $list[$k]['level_bg'] = '/static/resource/images/member/level/bg_'. $level_key .'.png';
                 $list[$k]['member_bg'] = '/static/resource/images/member/level/member_'. $level_key .'.png';
                 $list[$k]['level_icon'] = '/static/resource/images/member/level/level_icon'. $level_key .'.png';

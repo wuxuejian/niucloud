@@ -51,6 +51,15 @@ class User extends BaseAdminController
         return success($list);
     }
 
+    public function getUserSelect()
+    {
+        $data = $this->request->params([
+            ['username', '']
+        ]);
+        $list = (new UserService())->getUserSelect($data);
+        return success($list);
+    }
+
     public function checkUserIsExist() {
         $data = $this->request->params([
             ['username', ''],

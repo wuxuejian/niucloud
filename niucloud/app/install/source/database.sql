@@ -22,6 +22,7 @@ CREATE TABLE `addon`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '插件表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `addon_log`;
 CREATE TABLE `addon_log`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -33,6 +34,7 @@ CREATE TABLE `addon_log`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '插件日志表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `applet_site_version`;
 CREATE TABLE `applet_site_version`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -43,6 +45,7 @@ CREATE TABLE `applet_site_version`  (
   `create_time` int(11) NOT NULL DEFAULT 0 COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '站点小程序版本表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `applet_version`;
 CREATE TABLE `applet_version`  (
@@ -63,6 +66,7 @@ CREATE TABLE `applet_version`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '小程序版本表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `diy_page`;
 CREATE TABLE `diy_page`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -81,7 +85,8 @@ CREATE TABLE `diy_page`  (
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci COMMENT='自定义页面' ROW_FORMAT=DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '自定义页面' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `diy_route`;
 CREATE TABLE `diy_route`  (
@@ -95,6 +100,7 @@ CREATE TABLE `diy_route`  (
   `sort` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '自定义路由' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `generate_column`;
 CREATE TABLE `generate_column`  (
@@ -125,6 +131,7 @@ CREATE TABLE `generate_column`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成表字段信息表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `generate_table`;
 CREATE TABLE `generate_table`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -142,6 +149,7 @@ CREATE TABLE `generate_table`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `jobs`;
 CREATE TABLE `jobs`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -154,6 +162,7 @@ CREATE TABLE `jobs`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '消息队列任务表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `jobs_failed`;
 CREATE TABLE `jobs_failed`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -165,6 +174,7 @@ CREATE TABLE `jobs_failed`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '消息队列任务失败记录表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `member`;
 CREATE TABLE `member`  (
   `member_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -174,7 +184,7 @@ CREATE TABLE `member`  (
   `username` varchar(255) NOT NULL DEFAULT '' COMMENT '会员用户名',
   `mobile` varchar(20) NOT NULL DEFAULT '' COMMENT '手机号',
   `password` varchar(255) NOT NULL DEFAULT '' COMMENT '会员密码',
-  `nickname` varchar(50) NOT NULL DEFAULT '' COMMENT '会员昵称',
+  `nickname` varchar(255) NOT NULL DEFAULT '' COMMENT '会员昵称',
   `headimg` varchar(1000) NOT NULL DEFAULT '' COMMENT '会员头像',
   `member_level` int(11) NOT NULL DEFAULT 0 COMMENT '会员等级',
   `member_label` varchar(255) NOT NULL DEFAULT '' COMMENT '会员标签',
@@ -221,6 +231,7 @@ CREATE TABLE `member`  (
   PRIMARY KEY (`member_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会员表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `member_account_log`;
 CREATE TABLE `member_account_log`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -236,30 +247,28 @@ CREATE TABLE `member_account_log`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会员账单表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `member_address`;
 CREATE TABLE `member_address` (
-   id int UNSIGNED NOT NULL AUTO_INCREMENT,
-   member_id int NOT NULL DEFAULT 0 COMMENT '会员id',
-   site_id int NOT NULL DEFAULT 0 COMMENT '站点id',
-   name varchar(255) NOT NULL DEFAULT '' COMMENT '用户姓名',
-   mobile varchar(255) NOT NULL DEFAULT '' COMMENT '手机',
-   province_id int NOT NULL DEFAULT 0 COMMENT '省id',
-   city_id int NOT NULL DEFAULT 0 COMMENT '市id',
-   district_id int NOT NULL DEFAULT 0 COMMENT '区县id',
-   address varchar(255) NOT NULL DEFAULT '' COMMENT '地址信息',
-   address_name varchar(255) NOT NULL DEFAULT '',
-   full_address varchar(255) NOT NULL DEFAULT '' COMMENT '详细地址信息',
-   lng varchar(255) NOT NULL DEFAULT '' COMMENT '经度',
-   lat varchar(255) NOT NULL DEFAULT '' COMMENT '纬度',
-   is_default tinyint NOT NULL DEFAULT 0 COMMENT '是否是默认地址',
-   PRIMARY KEY (id)
-)
-ENGINE = INNODB,
-CHARACTER SET utf8mb4,
-COLLATE utf8mb4_general_ci,
-COMMENT = '会员收货地址';
+   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+   `member_id` int NOT NULL DEFAULT 0 COMMENT '会员id',
+   `site_id` int NOT NULL DEFAULT 0 COMMENT '站点id',
+   `name` varchar(255) NOT NULL DEFAULT '' COMMENT '用户姓名',
+   `mobile` varchar(255) NOT NULL DEFAULT '' COMMENT '手机',
+   `province_id` int NOT NULL DEFAULT 0 COMMENT '省id',
+   `city_id` int NOT NULL DEFAULT 0 COMMENT '市id',
+   `district_id` int NOT NULL DEFAULT 0 COMMENT '区县id',
+   `address` varchar(255) NOT NULL DEFAULT '' COMMENT '地址信息',
+   `address_name` varchar(255) NOT NULL DEFAULT '',
+   `full_address` varchar(255) NOT NULL DEFAULT '' COMMENT '详细地址信息',
+   `lng` varchar(255) NOT NULL DEFAULT '' COMMENT '经度',
+   `lat` varchar(255) NOT NULL DEFAULT '' COMMENT '纬度',
+   `is_default` tinyint NOT NULL DEFAULT 0 COMMENT '是否是默认地址',
+   PRIMARY KEY (`id`)
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会员收货地址' ROW_FORMAT = Dynamic;
 
 ALTER TABLE `member_address`ADD INDEX IDX_member_address (member_id);
+
 
 DROP TABLE IF EXISTS `member_cash_out`;
 CREATE TABLE `member_cash_out`  (
@@ -282,15 +291,16 @@ CREATE TABLE `member_cash_out`  (
   `money` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '提现到账金额',
   `audit_time` int(11) NOT NULL DEFAULT 0 COMMENT '审核时间',
   `status` int(11) NOT NULL DEFAULT 0 COMMENT '状态1待审核2.待转账3已转账 -1拒绝 -2 已取消',
-  `remark` varchar(100) NOT NULL DEFAULT '' COMMENT '备注',
+  `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
   `create_time` int(11) NOT NULL DEFAULT 0 COMMENT '申请时间',
-  `refuse_reason` varchar(100) NOT NULL DEFAULT '' COMMENT '拒绝理由',
+  `refuse_reason` varchar(255) NOT NULL DEFAULT '' COMMENT '拒绝理由',
   `update_time` int(11) NOT NULL DEFAULT 0,
   `transfer_no` varchar(50) NOT NULL DEFAULT '' COMMENT '转账单号',
   `cancel_time` int(11) NOT NULL DEFAULT 0 COMMENT '取消时间',
   `final_transfer_type` varchar(255) NOT NULL DEFAULT '' COMMENT '转账方式',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会员提现表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `member_cash_out_account`;
 CREATE TABLE `member_cash_out_account`  (
@@ -306,6 +316,7 @@ CREATE TABLE `member_cash_out_account`  (
   PRIMARY KEY (`account_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会员提现账户' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `member_label`;
 CREATE TABLE `member_label`  (
   `label_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '标签id',
@@ -318,6 +329,7 @@ CREATE TABLE `member_label`  (
   PRIMARY KEY (`label_id`) USING BTREE,
   INDEX `label_id`(`label_id` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会员标签' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `member_level`;
 CREATE TABLE `member_level`  (
@@ -332,7 +344,8 @@ CREATE TABLE `member_level`  (
   `level_benefits` text COMMENT '等级权益',
   `level_gifts` text COMMENT '等级礼包',
   PRIMARY KEY (`level_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci COMMENT='会员等级' ROW_FORMAT=DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会员等级' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `member_sign`;
 CREATE TABLE `member_sign` (
@@ -347,7 +360,8 @@ CREATE TABLE `member_sign` (
   `start_time` int(11) NOT NULL DEFAULT '0' COMMENT '签到周期开始时间',
   `is_sign` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否签到（0未签到 1已签到）',
   PRIMARY KEY (`sign_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci COMMENT='会员签到表' ROW_FORMAT=DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会员签到表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `pay`;
 CREATE TABLE `pay`  (
@@ -374,6 +388,7 @@ CREATE TABLE `pay`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '支付记录表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `pay_channel`;
 CREATE TABLE `pay_channel`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -387,6 +402,7 @@ CREATE TABLE `pay_channel`  (
   `sort` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '支付渠道配置表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `pay_refund`;
 CREATE TABLE `pay_refund`  (
@@ -411,7 +427,8 @@ CREATE TABLE `pay_refund`  (
   `main_id` int NOT NULL DEFAULT 0 COMMENT '操作人',
   `pay_refund_no` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '外部支付方式的退款单号',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '支付记录表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '退款记录表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `pay_transfer`;
 CREATE TABLE `pay_transfer`  (
@@ -440,6 +457,7 @@ CREATE TABLE `pay_transfer`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '转账表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `recharge_order`;
 CREATE TABLE `recharge_order`  (
   `order_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -467,6 +485,7 @@ CREATE TABLE `recharge_order`  (
   PRIMARY KEY (`order_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `recharge_order_item`;
 CREATE TABLE `recharge_order_item`  (
   `order_item_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -487,6 +506,7 @@ CREATE TABLE `recharge_order_item`  (
   PRIMARY KEY (`order_item_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单商品表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `recharge_order_item_refund`;
 CREATE TABLE `recharge_order_item_refund`  (
   `refund_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -506,6 +526,7 @@ CREATE TABLE `recharge_order_item_refund`  (
   PRIMARY KEY (`refund_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单退款表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `recharge_order_log`;
 CREATE TABLE `recharge_order_log`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -520,6 +541,7 @@ CREATE TABLE `recharge_order_log`  (
   `action_time` int(11) NOT NULL DEFAULT 0 COMMENT '操作时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单操作记录表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `site`;
 CREATE TABLE `site`  (
@@ -547,12 +569,13 @@ CREATE TABLE `site`  (
   `front_end_icon` varchar(255) NOT NULL DEFAULT '' COMMENT '前台icon',
   `icon` varchar(255) NOT NULL DEFAULT '' COMMENT '网站图标',
   `member_no` varchar(255) NOT NULL DEFAULT '0' COMMENT '最大会员码值',
-  `app` text NOT NULL COMMENT '站点主应用',
+  `app` text NOT NULL COMMENT '站点应用',
   `addons` text NOT NULL COMMENT '站点包含的插件',
   `initalled_addon` text DEFAULT NULL COMMENT '站点已执行初始化方法的插件',
   `site_domain` varchar(255) NOT NULL DEFAULT '' COMMENT '站点域名',
   PRIMARY KEY (`site_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 10000 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '站点表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `site_account_log`;
 CREATE TABLE `site_account_log`  (
@@ -565,6 +588,7 @@ CREATE TABLE `site_account_log`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '站点账单记录' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `site_group`;
 CREATE TABLE `site_group`  (
   `group_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '分组ID',
@@ -576,6 +600,7 @@ CREATE TABLE `site_group`  (
   `update_time` int(11) NOT NULL DEFAULT 0 COMMENT '更新时间',
   PRIMARY KEY (`group_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '店铺分组（分组权限）' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `stat_hour`;
 CREATE TABLE `stat_hour` (
@@ -614,7 +639,7 @@ CREATE TABLE `stat_hour` (
   `hour_22` decimal(10,2) NOT NULL DEFAULT '0.00',
   `hour_23` decimal(10,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci COMMENT='小时统计表' ROW_FORMAT=DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '小时统计表' ROW_FORMAT = Dynamic;
 
 DROP TABLE IF EXISTS `sys_agreement`;
 CREATE TABLE `sys_agreement`  (
@@ -627,6 +652,7 @@ CREATE TABLE `sys_agreement`  (
   `update_time` int(11) NOT NULL DEFAULT 0 COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '协议表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `sys_area`;
 CREATE TABLE `sys_area`  (
@@ -641,6 +667,7 @@ CREATE TABLE `sys_area`  (
   `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT '状态1有效',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '地址表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `sys_attachment`;
 CREATE TABLE `sys_attachment`  (
@@ -660,6 +687,7 @@ CREATE TABLE `sys_attachment`  (
   PRIMARY KEY (`att_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '附件管理表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `sys_attachment_category`;
 CREATE TABLE `sys_attachment_category`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -673,6 +701,7 @@ CREATE TABLE `sys_attachment_category`  (
   UNIQUE INDEX `id`(`id` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '附件分类表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `sys_config`;
 CREATE TABLE `sys_config`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -685,6 +714,7 @@ CREATE TABLE `sys_config`  (
   `addon` varchar(255) NOT NULL DEFAULT '' COMMENT '所属插件',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统配置表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `sys_cron_task`;
 CREATE TABLE `sys_cron_task`  (
@@ -708,6 +738,7 @@ CREATE TABLE `sys_cron_task`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = ' 系统任务' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `sys_dict`;
 CREATE TABLE `sys_dict`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'id',
@@ -718,7 +749,8 @@ CREATE TABLE `sys_dict`  (
   `create_time` int(11) NOT NULL DEFAULT 0 COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT 0 COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据字典表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据字典表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `sys_export`;
 CREATE TABLE `sys_export` (
@@ -732,7 +764,8 @@ CREATE TABLE `sys_export` (
   `fail_reason` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '失败原因',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '导出时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci COMMENT='导出报表' ROW_FORMAT=DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '导出报表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `verifier`;
 CREATE TABLE `verifier` (
@@ -743,7 +776,8 @@ CREATE TABLE `verifier` (
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
   `verify_type` varchar(255) NOT NULL DEFAULT '' COMMENT '核销类型',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci COMMENT='核销员表' ROW_FORMAT=DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '核销员表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `verify`;
 CREATE TABLE `verify` (
@@ -758,7 +792,8 @@ CREATE TABLE `verify` (
   `body` varchar(500) NOT NULL DEFAULT '' COMMENT '描述',
   `relate_tag` varchar(255) NOT NULL DEFAULT '' COMMENT '业务标识',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci COMMENT='核销记录' ROW_FORMAT=DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '核销记录' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu`  (
@@ -785,6 +820,7 @@ CREATE TABLE `sys_menu`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `sys_notice`;
 CREATE TABLE `sys_notice`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -802,6 +838,7 @@ CREATE TABLE `sys_notice`  (
   `wechat_remark` varchar(255) NOT NULL DEFAULT '' COMMENT '微信说明',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '通知模型' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `sys_notice_log`;
 CREATE TABLE `sys_notice_log`  (
@@ -823,6 +860,7 @@ CREATE TABLE `sys_notice_log`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '通知记录表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `sys_notice_sms_log`;
 CREATE TABLE `sys_notice_sms_log`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
@@ -842,6 +880,7 @@ CREATE TABLE `sys_notice_sms_log`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '短信发送表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role`  (
   `role_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '角色id',
@@ -853,6 +892,7 @@ CREATE TABLE `sys_role`  (
   `update_time` int(11) NOT NULL DEFAULT 0 COMMENT '最后修改时间',
   PRIMARY KEY (`role_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `sys_poster`;
 CREATE TABLE `sys_poster` (
@@ -868,7 +908,42 @@ CREATE TABLE `sys_poster` (
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci COMMENT='海报表' ROW_FORMAT=DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '海报表' ROW_FORMAT = Dynamic;
+
+
+DROP TABLE IF EXISTS `sys_printer`;
+CREATE TABLE `sys_printer` (
+  `printer_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `site_id` INT(11) NOT NULL DEFAULT 0 COMMENT '站点id',
+  `printer_name` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '打印机名称',
+  `brand` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '设备品牌（易联云，365，飞鹅）',
+  `printer_code` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '打印机编号',
+  `printer_key` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '打印机秘钥',
+  `open_id` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '开发者id',
+  `apikey` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '开发者密钥',
+  `template_type` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '小票打印模板类型，多个逗号隔开',
+  `trigger` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '触发打印时机',
+  `value` LONGTEXT DEFAULT NULL COMMENT '打印模板数据，json格式',
+  `print_width` VARCHAR(255) NOT NULL DEFAULT '58mm' COMMENT '纸张宽度',
+  `status` TINYINT(4) NOT NULL DEFAULT 1 COMMENT '状态（0，关闭，1：开启）',
+  `create_time` INT(11) NOT NULL DEFAULT 0 COMMENT '创建时间',
+  `update_time` INT(11) NOT NULL DEFAULT 0 COMMENT '修改时间',
+  PRIMARY KEY (`printer_id`)
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '小票打印机' ROW_FORMAT = Dynamic;
+
+
+DROP TABLE IF EXISTS `sys_printer_template`;
+CREATE TABLE `sys_printer_template` (
+  `template_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `site_id` INT(11) NOT NULL DEFAULT 0 COMMENT '站点id',
+  `template_name` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '模板名称',
+  `template_type` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '模板类型',
+  `value` LONGTEXT DEFAULT NULL COMMENT '模板数据，json格式',
+  `create_time` INT(11) NOT NULL DEFAULT 0 COMMENT '创建时间',
+  `update_time` INT(11) NOT NULL DEFAULT 0 COMMENT '修改时间',
+  PRIMARY KEY (`template_id`)
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '小票打印模板' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `sys_schedule`;
 CREATE TABLE `sys_schedule`  (
@@ -887,6 +962,7 @@ CREATE TABLE `sys_schedule`  (
   `sort` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统任务' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`  (
@@ -907,6 +983,7 @@ CREATE TABLE `sys_user`  (
   INDEX `uid`(`uid` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '后台管理员表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `sys_user_log`;
 CREATE TABLE `sys_user_log`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '管理员操作记录ID',
@@ -921,6 +998,7 @@ CREATE TABLE `sys_user_log`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '管理员操作记录表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -932,6 +1010,7 @@ CREATE TABLE `sys_user_role`  (
   `status` int(11) NOT NULL DEFAULT 1 COMMENT '状态',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户权限表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `weapp_version`;
 CREATE TABLE `weapp_version`  (
@@ -948,7 +1027,8 @@ CREATE TABLE `weapp_version`  (
   `from_type` VARCHAR(255) NOT NULL DEFAULT 'cloud_build',
   `auditid` VARCHAR(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '小程序版本' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `wechat_fans`;
 CREATE TABLE `wechat_fans`  (
@@ -975,6 +1055,7 @@ CREATE TABLE `wechat_fans`  (
   PRIMARY KEY (`fans_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '微信粉丝列表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `wechat_media`;
 CREATE TABLE `wechat_media`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -986,6 +1067,7 @@ CREATE TABLE `wechat_media`  (
   `media_id` varchar(70) NOT NULL DEFAULT '0' COMMENT '微信端返回的素材id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '微信素材表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `wechat_reply`;
 CREATE TABLE `wechat_reply`  (
@@ -1004,6 +1086,7 @@ CREATE TABLE `wechat_reply`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '公众号消息回调表' ROW_FORMAT = Dynamic;
 
+
 DROP TABLE IF EXISTS `wx_oplatfrom_weapp_version`;
 CREATE TABLE `wx_oplatfrom_weapp_version` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -1018,10 +1101,8 @@ CREATE TABLE `wx_oplatfrom_weapp_version` (
   `create_time` INT(11) NOT NULL DEFAULT 0,
   `update_time` INT(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-)
-ENGINE = INNODB,
-CHARACTER SET utf8mb4,
-COLLATE utf8mb4_general_ci;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '微信小程序开发平台版本表' ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `user_create_site_limit`;
 CREATE TABLE `user_create_site_limit` (
@@ -1031,17 +1112,14 @@ CREATE TABLE `user_create_site_limit` (
   `num` INT(11) NOT NULL DEFAULT 0,
   `month` INT(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-)
-ENGINE = INNODB,
-CHARACTER SET utf8mb4,
-COLLATE utf8mb4_general_ci;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户站点创建限制表' ROW_FORMAT = Dynamic;
 
 INSERT INTO `site`(site_id, site_name, group_id, keywords, app_type, logo, `desc`, status, latitude, longitude, province_id, city_id, district_id, address, full_address, phone, business_hours, create_time, expire_time, front_end_name, front_end_logo, front_end_icon, icon, member_no, app, addons, initalled_addon, site_domain) VALUES
 (1, 'niucloud-admin', 0, '', 'admin', '', '', 1, '', '', 0, 0, 0, '', '', '', '', 0, 0, '', '', '', '', '0', '', '', '', '');
 
 UPDATE `site` SET site_id = 0 WHERE  site_id = 1;
 
-INSERT INTO `sys_user` VALUES ('1', '', '', '', '', '', '0', '0', '0', '1', '0', '0', '0');
+-- INSERT INTO `sys_user` VALUES ('1', '', '', '', '', '', '0', '0', '0', '1', '0', '0', '0');
 
 INSERT INTO `sys_user_role` VALUES ('1', '1', '0', '', '0', '1', '1');
 

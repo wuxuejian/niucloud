@@ -550,8 +550,10 @@ class ComponentDict
                         'sort' => 10014,
                         'position' => 'fixed',
                         'value' => [
-                            "imageSize" => 40,
+                            "imageSize" => 80,
                             "aroundRadius" => 0,
+                            'style' => 'style-1',
+                            "styleName" => "风格一",
                             "bottomPosition" => "lowerRight", // 左上：upperLeft，右上：upperRight，左下：lowerLeft，右下：lowerRight
                             "list" => [
                                 [

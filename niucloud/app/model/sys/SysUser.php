@@ -80,8 +80,8 @@ class SysUser extends BaseModel
      */
     public function searchUsernameAttr($query, $value)
     {
-        if ($value) {
-            $query->whereLike('username', '%' . $value . '%');
+        if ($value != '') {
+            $query->whereLike('username', '%' . $this->handelSpecialCharacter($value) . '%');
         }
 
     }
@@ -93,7 +93,7 @@ class SysUser extends BaseModel
      */
     public function searchRealnameAttr($query, $value)
     {
-        if ($value) {
+        if ($value != '') {
             $query->whereLike('real_name', '%' . $value . '%');
         }
 

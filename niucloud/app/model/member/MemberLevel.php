@@ -63,7 +63,7 @@ class MemberLevel extends BaseModel
     public function searchLevelNameAttr($query, $value, $data)
     {
         if ($value != '') {
-            $query->where('level_name', 'like', '%'.$value.'%');
+            $query->where('level_name', 'like', '%' . $this->handelSpecialCharacter($value) . '%');
         }
     }
 }

@@ -400,10 +400,10 @@ class CorePayService extends BaseCoreService
         $status = $params['status'];
         switch ($status) {
             case OnlinePayDict::SUCCESS://支付成功
-                $this->paySuccess($site_id, [
+                $this->paySuccess($site_id, array_merge([
                     'out_trade_no' => $out_trade_no,
                     'type' => $type
-                ]);
+                ], $params));
                 break;
             case OnlinePayDict::CLOSED://支付关闭
                 $this->payClose($site_id, [

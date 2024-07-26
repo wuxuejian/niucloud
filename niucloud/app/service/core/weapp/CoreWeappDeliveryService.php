@@ -111,6 +111,7 @@ class CoreWeappDeliveryService extends BaseCoreService
 
             return $result;
         } catch (\Exception $e) {
+            Log::write('uploadShippingInfo，报错：' . $e->getMessage() . "，File：" . $e->getFile() . "，line：" . $e->getLine());
             return $e->getMessage() . "，File：" . $e->getFile() . "，line：" . $e->getLine();
         }
     }

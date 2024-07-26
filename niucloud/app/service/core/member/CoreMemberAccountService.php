@@ -11,6 +11,8 @@
 
 namespace app\service\core\member;
 
+use app\dict\member\MemberAccountChangeTypeDict;
+use app\dict\member\MemberAccountTypeDict;
 use app\model\member\Member;
 use app\model\member\MemberAccountLog;
 use core\base\BaseCoreService;
@@ -63,7 +65,17 @@ class CoreMemberAccountService extends BaseCoreService
             //账户更新
             if($account_data > 0)
             {
-                $account_type_get = $member_info[ $account_type."_get" ] + $account_data;
+                if ($account_type == MemberAccountTypeDict::GROWTH) {
+                    $account_type_get = $member_info[ $account_type."_get" ] + $account_data;
+                } else {
+                    $from_type_arr = MemberAccountChangeTypeDict::getType($account_type)[$from_type];
+                    $is_change_get = $from_type_arr['is_change_get'] ?? 1;
+                    if ($is_change_get) {
+                        $account_type_get = $member_info[ $account_type."_get" ] + $account_data;
+                    } else {
+                        $account_type_get = $member_info[ $account_type."_get" ];
+                    }
+                }
             }else{
                 $account_type_get = $member_info[ $account_type."_get" ];
             }

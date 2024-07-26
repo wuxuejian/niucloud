@@ -54,7 +54,7 @@ class Dict extends BaseModel
      */
     public function searchNameAttr($query, $value, $data)
     {
-        if ($value) {
+        if ($value != '') {
             $query->where("name", $value);
         }
     }
@@ -66,7 +66,7 @@ class Dict extends BaseModel
      */
     public function searchKeyAttr($query, $value, $data)
     {
-        if ($value) {
+        if ($value != '') {
             $query->where("key", $value);
         }
     }

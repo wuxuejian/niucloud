@@ -152,16 +152,24 @@ class Index extends BaseInstall
                     ];
 
                 } else {
-                    if (@mysqli_select_db($conn, $dbname)) {
-                        $result = [
-                            "status" => 2,
-                            "message" => "数据库存在，系统将覆盖数据库"
-                        ];
-                    } else {
+                    try {
+                        if (@mysqli_select_db($conn, $dbname)) {
+                            $result = [
+                                "status" => 2,
+                                "message" => "数据库存在，系统将覆盖数据库"
+                            ];
+                        } else {
+                            $result = [
+                                "status" => 1,
+                                "message" => "数据库不存在,系统将自动创建"
+                            ];
+                        }
+                    } catch ( Exception $e) {
                         $result = [
                             "status" => 1,
                             "message" => "数据库不存在,系统将自动创建"
                         ];
+                        return fail($result);
                     }
                 }
                 @mysqli_close($conn);

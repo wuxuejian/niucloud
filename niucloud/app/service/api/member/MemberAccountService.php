@@ -11,6 +11,7 @@
 
 namespace app\service\api\member;
 
+use app\dict\member\MemberAccountChangeTypeDict;
 use app\dict\member\MemberAccountTypeDict;
 use app\model\member\Member;
 use app\model\member\MemberAccountLog;
@@ -40,16 +41,46 @@ class MemberAccountService extends BaseApiService
     {
         $where['member_id'] = $this->member_id;
         $field = 'id, member_id, site_id, account_type, account_data, from_type, related_id, create_time, memo';
-        $search_model = $this->model->where([['site_id', '=', $this->site_id]])->withSearch(['member_id','account_type', 'from_type', 'create_time','account_data_gt', 'account_data_lt'],$where)->field($field)->order('create_time desc')->append(['from_type_name', 'account_type_name']);
+        $search_model = $this->model->where([['site_id', '=', $this->site_id]])->withSearch(['member_id','account_type', 'from_type', 'create_time','account_data_gt', 'account_data_lt','keyword'],$where)->field($field)->order('create_time desc')->append(['from_type_name', 'account_type_name']);
         return $this->pageQuery($search_model);
     }
 
     /**
-     * 会员余额流水列表(新)
+     * 会员积分流水列表
      * @param array $where
      * @return array
      */
-    public function getPages(array $data = [])
+    public function getPointPage(array $where = [])
+    {
+        $type_where = [];
+        switch ($where['amount_type']){
+            case 'income':
+                $type_where = [
+                    ['account_data', '>',  0 ],
+                ];
+                break;
+            case 'disburse':
+                $type_where = [
+                    ['account_data', '<',  0 ],
+                ];
+                break;
+            default:
+                break;
+        }
+        $where['member_id'] = $this->member_id;
+        $field = 'id, member_id, site_id, account_type, account_data, from_type, related_id, create_time, memo';
+        $search_model = $this->model->where([['site_id', '=', $this->site_id]])->where($type_where)->withSearch(['member_id','account_type', 'from_type', 'create_time','account_data_gt', 'account_data_lt'],$where)->field($field)->order('create_time desc')->append(['from_type_name', 'account_type_name']);
+        $list = $this->pageQuery($search_model);
+        $list['data'] = $this->monthlyGrouping($list['data']);
+        return $list;
+    }
+
+    /**
+     * 会员余额流水列表
+     * @param array $where
+     * @return array
+     */
+    public function getBalancePage(array $data = [])
     {
 
         switch ($data['from_type']){
@@ -83,6 +114,7 @@ class MemberAccountService extends BaseApiService
 
 
         $where['member_id'] = $this->member_id;
+        $where['create_time'] = $data['create_time'];
         $field = 'id, member_id, site_id, account_type, account_data, account_sum, from_type, related_id, create_time, memo';
         $search_model = $this->model->where([['site_id', '=', $this->site_id]])->where($type_where)->withSearch(['member_id', 'create_time'],$where)->field($field)->order('create_time desc')->append(['from_type_name', 'account_type_name']);
         return $this->pageQuery($search_model);
@@ -134,6 +166,42 @@ class MemberAccountService extends BaseApiService
         ])->sum('account_data'));
 
         return $data;
+    }
+
+    /**
+     * 按年月分组数据（例如账单）
+     * @param array $arr_data 分组的数组
+     * @param string $time_field 时间分组字段
+     * @return array
+     */
+    function monthlyGrouping($arr_data, $time_field = 'create_time')
+    {
+        if (empty($time_field)) {
+            return $arr_data;
+        }
+        //按月份分组
+        $arr_month = [];
+        //全部年月数据
+        $arr_return_data = [];
+        foreach ($arr_data as $data) {
+            //按月份分组
+            $year_month = mb_substr($data[$time_field], 0, 7);
+
+            $arr_month[$year_month]['month_data'][] = $data;
+
+            if (!isset($arr_month[$year_month]['month_info']))
+            {
+                $arr_month[$year_month]['month_info'] =
+                    [
+                        'year' => mb_substr($year_month, 0, 4),
+                        'month' => mb_substr($year_month, 5, 2),
+                    ];
+            }
+        }
+        foreach ($arr_month as $month) {
+            $arr_return_data[] = $month ?? [];
+        }
+        return $arr_return_data;
     }
 
 }
