@@ -40,12 +40,16 @@
 
     const setTabbar = ()=>{
         let list = useConfigStore().tabbarList;
-        for(let i=0;i<list.length;i++){
-            if(list[i].key == addon){
-                Object.assign(tabbar,list[i]);
-                break;
-            }
-        }
+		if(list.length == 1){
+			Object.assign(tabbar,list[0]);
+		}else{
+			for(let i=0;i<list.length;i++){
+				if(list[i].key == addon){
+					Object.assign(tabbar,list[i]);
+					break;
+				}
+			}
+		}
     }
 
     setTabbar()
@@ -59,6 +63,18 @@
         }
         , { immediate: true }
     )
+
+    if(!props.addon) {
+        watch(
+            () => useConfigStore().tabbarList,
+            (newValue, oldValue) => {
+                if (newValue) {
+                    setTabbar()
+                }
+            }
+            , { deep: true, immediate: true }
+        )
+    }
 
 	const value = computed(() => {
         let query:any = currShareRoute().params;

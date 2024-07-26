@@ -1,9 +1,16 @@
 import i18n, { language } from "./i18n"
 import useSystemStore from '@/stores/system'
+import { getCurrentInstance } from 'vue'
 
 const t = (message: string) => {
-    const route = useSystemStore().currRoute
-    const file = language.getFileKey(`/${ route }`)
+    let route = '/' + useSystemStore().currRoute
+    // #ifdef H5
+    route = getCurrentInstance()?.appContext.config.globalProperties.$route.path || ('/' + useSystemStore().currRoute)
+    // #endif
+    // #ifdef MP
+    route = '/' + (getCurrentInstance()?.root.ctx.$scope.__route__ || useSystemStore().currRoute)
+    // #endif
+    const file = language.getFileKey(route)
     const key = `${ file.fileKey }.${ message }`
     if (i18n.global.t(message) != message) return i18n.global.t(message)
     return i18n.global.t(key) != key ? i18n.global.t(key) : ''
@@ -17,5 +24,3 @@ export default {
         app.use(i18n);
     }
 };
-
-

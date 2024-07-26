@@ -13,8 +13,7 @@
 			<text class="mb-[20rpx]">{{ t('siteId') }}</text>
 			<u-input v-model="formData.siteId" clearable :placeholder="t('siteIdPlaceholder')" />
 		</view>
-		<u-button type="primary" :text="t('confirm') " @click="save" class="mt-[80rpx]">
-		</u-button>
+        <button class="mt-[80rpx] bg-[var(--primary-color)] text-[#fff] h-[80rpx] leading-[80rpx] rounded-[100rpx] text-[28rpx]" @click="save">{{t('confirm')}}</button>
 	</view>
 </template>
 

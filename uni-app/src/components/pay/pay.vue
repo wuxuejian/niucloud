@@ -25,7 +25,7 @@
 				</view>
 			</scroll-view>
 			<view class="p-[30rpx]">
-				<u-button type="primary" :loading="loading" :text="t('pay.confirmPay')" shape="circle" @click="confirmPay"></u-button>
+                <button class="primary-btn-bg h-[80rpx] rounded-[50rpx] leading-[80rpx] text-[28rpx] text-[#fff]" hover-class="none" :loading="loading" @click="confirmPay">{{t('pay.confirmPay')}}</button>
 			</view>
 		</view>
 	</u-popup>
@@ -109,6 +109,16 @@
 					// #endif
 					break;
 				default:
+                    if (res.data.url) {
+                        redirect({
+                            url: res.data.url,
+                            param: res.data.param || {},
+                            mode: 'redirectTo',
+                            success() {
+                            }
+                        })
+                        return
+                    }
                     toPayResult()
 			}
 		}).catch(() => {
@@ -135,8 +145,10 @@
 			})
 		}
 	})
-
+	const repeat = ref(false)
 	const open = (tradeType : string, tradeId : number, payReturn: string = '') => {
+		if (repeat.value) return
+		repeat.value = true
         // 设置支付后跳转页面
         uni.setStorageSync('payReturn', encodeURIComponent(payReturn))
 
@@ -153,11 +165,14 @@
                     toPayResult()
 					return
 				}
-
 				type.value = data.pay_type_list[0] ? data.pay_type_list[0].key : ''
 				show.value = true
+				repeat.value = false
+
 			})
-			.catch(() => { })
+			.catch(() => {
+				repeat.value = false
+			})
 	}
 
     const toPayResult = ()=> {

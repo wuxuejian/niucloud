@@ -64,10 +64,9 @@
 						</view>
 					</template>
 				</view>
-				
-				<scroll-view scroll-x="true" class="whitespace-nowrap" v-if="diyComponent.blockStyle.value == 'style-3'">
+				<scroll-view scroll-x="true" class="whitespace-nowrap" :id="'warpStyle3-'+diyComponent.id" v-if="diyComponent.blockStyle.value == 'style-3'">
 					<view v-for="(item,index) in diyComponent.list" :key="item.id" class="inline-flex">
-						<view @click="diyStore.toRedirect(item.link)" class="flex flex-col items-center justify-between p-[10rpx] bg-white mt-[20rpx] w-[157rpx] h-[200rpx] rounded-[10rpx] box-border" :class="{'mr-[14rpx]': (index+1 != diyComponent.list.length)}">
+						<view :id="'item'+index+diyComponent.id" @click="diyStore.toRedirect(item.link)" class="flex flex-col items-center justify-between p-[10rpx] bg-white mt-[20rpx] w-[157rpx] h-[200rpx] rounded-[10rpx] box-border" :style="itemStyle3"  :class="{'!mr-[0rpx]': index+1 === diyComponent.list.length}">
 							<view class="w-[141rpx] h-[141rpx]" v-if="item.imageUrl">
 								<image class="w-[141rpx] h-[141rpx]" :src="img(item.imageUrl)" mode="aspectFit" />
 							</view>
@@ -81,9 +80,9 @@
 					</view>
 				</scroll-view>
 				
-				<scroll-view scroll-x="true" class="whitespace-nowrap" v-if="diyComponent.blockStyle.value == 'style-4'">
+				<scroll-view scroll-x="true" class="whitespace-nowrap" :id="'warpStyle4-'+diyComponent.id" v-if="diyComponent.blockStyle.value == 'style-4'">
 					<view v-for="(item,index) in diyComponent.list" :key="item.id" class="inline-flex">
-						<view @click="diyStore.toRedirect(item.link)" class="flex flex-col items-center justify-between p-[4rpx] bg-[#F93D02] mt-[20rpx] rounded-[20rpx] box-border" :class="{'mr-[14rpx]': index+1 != diyComponent.list.length}" :style="{ background : 'linear-gradient('+ item.listFrame.startColor +','+ item.listFrame.endColor + ')' }">
+						<view :id="'item'+index+diyComponent.id" @click="diyStore.toRedirect(item.link)" class="flex flex-col items-center justify-between p-[4rpx] bg-[#F93D02] mt-[20rpx] rounded-[20rpx] box-border" :class="{'!mr-[0rpx]': index+1 === diyComponent.list.length}" :style="'background :linear-gradient('+ item.listFrame.startColor +','+ item.listFrame.endColor + ');'+itemStyle4">
 							<view class="w-[149rpx] h-[149rpx] box-border px-[18rpx] pt-[16rpx] pb-[6rpx] bg-[#fff] flex flex-col items-center rounded-[16rpx]">
 								<view class="w-[112rpx] h-[102rpx]" v-if="item.imageUrl">
 									<image class="w-[112rpx] h-[102rpx]" :src="img(item.imageUrl)" mode="aspectFit" />
@@ -160,7 +159,35 @@
 
 		return style;
 	});
-	
+	//商品样式三
+	const itemStyle3 = ref('');
+	const setItemStyle3 = ()=>{
+		// #ifdef  MP-WEIXIN
+			uni.createSelectorQuery().in(instance).select('#warpStyle3-'+diyComponent.value.id).boundingClientRect((res:any) => {
+				uni.createSelectorQuery().in(instance).select('#item0'+diyComponent.value.id).boundingClientRect((data:any) => {
+					itemStyle3.value = `margin-right:${(res.width - data.width*4)/3}px;`
+				}).exec()
+			}).exec()
+		// #endif
+		// #ifdef  H5
+			itemStyle3.value= 'margin-right:14rpx;'
+		// #endif
+	};
+	//商品样式四
+	const itemStyle4 = ref('');
+	const setItemStyle4 = ()=>{
+		// #ifdef  MP-WEIXIN
+			uni.createSelectorQuery().in(instance).select('#warpStyle4-'+diyComponent.value.id).boundingClientRect((res:any) => {
+				uni.createSelectorQuery().in(instance).select('#item0'+diyComponent.value.id).boundingClientRect((data:any) => {
+					itemStyle4.value = `margin-right:${(res.width - data.width*4)/3}px;`
+
+				}).exec()
+			}).exec()
+		// #endif
+		// #ifdef  H5
+			itemStyle4.value= 'margin-right:14rpx;'
+		// #endif
+	};
     const btnCss = (item:any) => {
         var style = '';
         style += `background:linear-gradient(90deg,${item.startColor},${item.endColor});`;
@@ -198,6 +225,9 @@
             query.select('.diy-active-cube').boundingClientRect((data: any) => {
                 height.value = data.height;
             }).exec();
+
+			if(diyComponent.value.blockStyle.value == 'style-3') setItemStyle3()
+			if(diyComponent.value.blockStyle.value == 'style-4') setItemStyle4()
         })
     }
 </script>

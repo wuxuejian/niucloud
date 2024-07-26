@@ -1,5 +1,5 @@
 <template>
-	<view :style="warpCss" class="overflow-hidden" v-if="info && list && list.length">
+	<view :style="warpCss" class="overflow-hidden" v-if="info&&list && list.length">
 		<view v-if="diyComponent.style == 'style-1'" class="rounded-t-[16rpx] flex items-center justify-between style-bg-1 py-[20rpx] px-[30rpx]">
 			<view class="flex items-end">
 				<image :src="img('static/resource/images/diy/member/VIP_02.png')" mode="aspectFit" class="w-[50rpx] h-[36rpx]" />
@@ -25,29 +25,32 @@
 		</view>
 		<view v-if="diyComponent.style == 'style-3'" class="rounded-[16rpx] style-bg-3 p-[30rpx]">
 			<view class="flex items-center justify-between style-border-3 mb-[22rpx] pb-[22rpx]">
-				<view class="flex flex-col">
-					<view class="flex items-center">
-						<view class="flex justify-end leading-[30rpx] box-border text-[#fff] pr-[10rpx] text-[26rpx] w-[120rpx] h-[30rpx] bg-contain bg-no-repeat" :style="{'backgroundImage': 'url('+img('static/resource/images/diy/member/VIP.png')+')'}">
-							VIP.{{currIndex}}
+				<view class="flex flex-col flex-1">
+					<view class="flex items-center justify-between">
+						<view class="flex items-center">
+							<view class="flex justify-end leading-[30rpx] box-border text-[#fff] pr-[10rpx] text-[26rpx] w-[120rpx] h-[30rpx] bg-contain bg-no-repeat" :style="{'backgroundImage': 'url('+img('static/resource/images/diy/member/VIP.png')+')'}">
+								VIP.{{currIndex}}
+							</view>
+							<text class="text-[#733F02] ml-[8rpx] text-[30rpx] font-bold max-w-[380rpx] truncate">{{info.member_level_name}}</text>
 						</view>
-						<text class="text-[#733F02] ml-[8rpx] text-[30rpx] font-bold max-w-[380rpx] truncate">{{info.member_level_name}}</text>
+						<view class="flex items-center" @click="toLink('/app/pages/member/level')">
+							<view class="flex items-center">
+								<image :src="img('static/resource/images/diy/member/rule.png')" mode="aspectFit" class="w-[20rpx] h-[20rpx]" />
+								<text class="text-[18rpx] text-[#733F02] ml-[6rpx] leading-[24rpx]">规则</text>
+							</view>
+							<view class="ml-[6rpx] text-[#733F02] !text-[26rpx] nc-iconfont nc-icon-youV6xx"></view>
+						</view>
 					</view>
 					<text class="text-[28rpx] text-[#794200] mt-[16rpx]">购物或邀请好友可以提升等级</text>
 				</view>
-				<view class="flex items-center" @click="toLink('/app/pages/member/level')">
-					<view class="flex flex-col items-center justify-center">
-						<image :src="img('static/resource/images/diy/member/rule.png')" mode="aspectFit" class="w-[26rpx] h-[26rpx]" />
-						<text class="text-[24rpx] text-[#733F02] mt-[10rpx]">规则</text>
-					</view>
-					<view class="ml-[10rpx] text-[#733F02] !text-[26rpx] nc-iconfont nc-icon-youV6xx"></view>
-				</view>
+	
 			</view>
 			<view class="flex items-center justify-between">
 				<view class="flex flex-col flex-1">
 					<view class="overflow-hidden rounded-[20rpx]">
 						<progress :percent="progress()" activeColor="#fff" backgroundColor="rgba(255,5,5,.1)" stroke-width="6" />
 					</view>
-					<text class="text-[24rpx] text-[#794200] mt-[16rpx]" v-if="upgradeGrowth > 0">还差{{upgradeGrowth}}成长值即可升级为{{ list[afterCurrIndex].level_name }}</text>
+					<text class="text-[24rpx] leading-[1.4] text-[#794200] mt-[16rpx]" v-if="upgradeGrowth > 0">还差{{upgradeGrowth}}成长值即可升级为{{ list[afterCurrIndex].level_name }}</text>
 					<text class="text-[24rpx] text-[#794200] mt-[16rpx]" v-else>恭喜您升级为最高等级</text>
 				</view>
 				<view class="flex items-center rounded-[30rpx] bg-[rgb(245,230,185)] p-[16rpx] ml-[40rpx]" @click="toLink('/app/pages/member/level')">
@@ -96,42 +99,41 @@
 	)
 
     // 获取会员等级列表
-    let list:any = ref([])
-    let upgradeGrowth = ref(0) // 升级下级会员所需的成长值
-    let currIndex = ref(0) //当前会员索引
-    let afterCurrIndex = ref(-1)  // 下一个会员等级索引
-    let benefits_arr:any = ref([]) //当前会员权益
-
+    const upgradeGrowth = ref(0) // 升级下级会员所需的成长值
+    const currIndex = ref(0) //当前会员索引
+    const afterCurrIndex = ref(-1)  // 下一个会员等级索引
+    const benefits_arr:any = ref([]) //当前会员权益
+	const wap_member_info = ref(uni.getStorageSync('wap_member_info'));
 	const info:any = computed(() => {
 		// 装修模式
 		if (diyStore.mode == 'decorate') {
 			upgradeGrowth.value = 0;
 			benefits_arr.value = [{'title': '商品包邮'}];
 			currIndex.value = 1;
-			list.value = [{}];
-
 			return {
 				member_level_name: '会员等级',
 				growth: 5
 			}
 		} else {
-			if (memberStore.info) {
-                getMemberLevelFn();
-            }
-			return memberStore.info;
+			return wap_member_info.value||{};
 		}
 	})
-
-	const getMemberLevelFn = ()=> {
-        getMemberLevel().then((res: any) => {
-            list.value = res.data;
-			if(!list.value.length) return false;
-			
+	const list:any = computed(() => {
+		// 装修模式
+		if (diyStore.mode == 'decorate') {
+			return [{}];
+		}else{
+			getMemberLevelFn(memberStore.levelList)
+			return memberStore.levelList
+		}
+		
+	})
+	const getMemberLevelFn = (list:any)=> {
+			if(!list||!list.length) return false;
 	        let isSet = false;
-
             // 刚进来处理会员等级数据
-            if (info.value && list.value && list.value.length) {
-                list.value.forEach((item: any, index: any) => {
+            if (info.value && list && list.length) {
+                list.forEach((item: any, index: any) => {
                     if (item.level_id == info.value.member_level) {
                         currIndex.value = index + 1;
                         // 会员权益
@@ -153,21 +155,19 @@
 
             if (info.value.member_level) {
                 if(afterCurrIndex.value == -1){
-                    afterCurrIndex.value = list.value.length - 1;
+                    afterCurrIndex.value = list.length - 1;
                 }
 
-                if (list.value[afterCurrIndex.value] && list.value[afterCurrIndex.value].growth) {
-                    upgradeGrowth.value = list.value[afterCurrIndex.value].growth - info.value.growth;
+                if (list[afterCurrIndex.value] && list[afterCurrIndex.value].growth) {
+                    upgradeGrowth.value = list[afterCurrIndex.value].growth - info.value.growth;
                 }
             }else{
                 // 当前会员没有会员等级，则展示会员等级中的最后一个等级
-                info.value.member_level_name = list.value[0].level_name;
-                upgradeGrowth.value = list.value[0].growth;
+                info.value.member_level_name = list[0].level_name;
+                upgradeGrowth.value = list[0].growth;
                 afterCurrIndex.value = 0;
                 currIndex.value = 1;
             }
-
-        })
     }
 
 	// 进度条值
