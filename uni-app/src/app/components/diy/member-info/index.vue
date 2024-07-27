@@ -7,7 +7,7 @@
 			<!-- #endif -->
 			<view v-if="info" class="flex ml-[32rpx] mr-[52rpx]  items-center relative">
 				<!-- 唤起获取微信 -->
-				<u-avatar :src="img(info.headimg1)" size="55" leftIcon="none" :default-url="img('static/resource/images/default_headimg.png')" @click="clickAvatar"></u-avatar>
+				<u-avatar :src="img(info.headimg)" size="55" leftIcon="none" :default-url="img('static/resource/images/default_headimg.png')" @click="clickAvatar"></u-avatar>
 				<view class="ml-[22rpx]">
 					<view class="text-[#222222] flex pr-[50rpx] flex-wrap items-center">
 						<view class="text-[#222222] truncate max-w-[320rpx] font-bold text-lg mr-[16rpx]" :style="{ color : diyComponent.textColor }">{{ info.nickname }}</view>
